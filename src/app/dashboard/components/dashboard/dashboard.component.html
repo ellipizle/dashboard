@@ -1,0 +1,45 @@
+
+ <gridster [options]="options">
+    <gridster-item [item]="item" *ngFor="let item of items" #gridsterItem>
+        <div >
+        <button mat-button [matMenuTriggerFor]="menu" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">{{item.title}}</button>
+            <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>dialpad</mat-icon>
+                <span>View</span>
+            </button>
+            <button mat-menu-item (click)="editWidget(item)">
+                <mat-icon>voicemail</mat-icon>
+                <span>Edit</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>notifications_off</mat-icon>
+                <span>Share</span>
+            </button>
+            </mat-menu>
+        </div>
+        <ng-container [ngSwitch]="item.type">
+              <ng-template [ngSwitchCase]="'bar'">
+                    <app-bar-chart
+                        [unitHeight]="unitHeight"
+                        [item]="item">
+                    </app-bar-chart>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'line'">
+                    <app-line-chart
+                        [unitHeight]="unitHeight"
+                        [item]="item">
+                    </app-line-chart>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'guarge'">
+                    <app-guarge
+                        [unitHeight]="unitHeight"
+                        [item]="item">
+                    </app-guarge>
+              </ng-template>
+        </ng-container>
+
+
+    </gridster-item>
+</gridster>
+

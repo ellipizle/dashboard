@@ -1,0 +1,68 @@
+/* You can add global styles to this file, and also import other style files */
+// Plus imports for other components in your app.
+@import 'styles/layout';
+@import 'styles/dashboard-theme';
+@import 'styles/typography';
+@import 'styles/forms';
+@import 'styles/overrides';
+
+body,
+html {
+	height: 100%;
+	color: $dark-primary-text;
+}
+
+body {
+	margin: 0;
+	background: #161719;
+}
+
+.img > img {
+	width: 100%;
+	height: 100%;
+}
+
+.dashboard-logo {
+	font-size: 90%;
+	margin-left: 3rem;
+	font-weight: $black;
+	padding: 1rem 2rem;
+	display: block;
+	margin-top: 24px;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.clear-both {
+	clear: both;
+}
+
+.dropdown:hover .mat-button-focus-overlay {
+	opacity: 0 !important;
+}
+
+.danger {
+	color: red;
+}
+
+.success {
+	color: green;
+}
+
+.d-none {
+	display: none;
+}
+
+.cursor {
+	cursor: pointer;
+}

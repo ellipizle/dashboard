@@ -1,0 +1,27 @@
+$dashboard-app-background: #f7f8fb;
+$cool-grey: #eceff1;
+$blue-grey-400-dark: #4b636e;
+$primary: #eb7b18;
+$secondary: green;
+$accent: #e02f44;
+
+$alpha-100: 1;
+$alpha-87: .87;
+$alpha-54: .54;
+$alpha-38: .38;
+$alpha-16: .16;
+$alpha-9: .09;
+$alpha-1: .1;
+
+$bg-primary: rgba($primary, $alpha-1);
+$text-primary: rgba(black, $alpha-87);
+$text-secondary: rgba(black, $alpha-54);
+$text-disabled: rgba(black, $alpha-38);
+
+$roboto: Roboto, "Helvetica Neue", sans-serif;
+$product-sans: 'Product sans', Helvetica, Arial, serif;
+
+$black: 600;
+$bold: 500;
+$regular: 400;
+$light: 300;

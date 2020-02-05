@@ -1,0 +1,69 @@
+@import '../node_modules/@angular/material/theming';
+@import 'variables';
+$config: mat-typography-config();
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+// $custom-typography: mat-typography-config(
+//   $font-family: 'Roboto, monospace',
+//   $headline: mat-typography-level(32px, 48px, 700),
+//   $body-1: mat-typography-level(16px, 24px, 500)
+// );
+
+mat-expansion-panel-header {
+	@include mat-typography-level-to-styles($config, headline);
+}
+
+a {
+	text-decoration: none;
+}
+
+// .user-menu {
+// 	color: $cool-grey;
+// 	.mat-menu {
+// 		color: $cool-grey;
+
+// 		&:hover {
+// 			color: rgba(0, 0, 0, .87);
+// 		}
+// 	}
+
+// 	.mat-icon {
+// 		color: $cool-grey;
+
+// 		&:hover {
+// 			color: $dark-secondary-text;
+// 		}
+// 	}
+// }
+
+.mat-card a {
+	text-decoration: none;
+	color: $dark-primary-text;
+	&:active,
+	&:visited {
+		color: $dark-primary-text;
+	}
+}
+
+.positive {
+	color: mat-color($dashboard-app-primary);
+}
+.negetive {
+	color: red;
+}
+
+.mat-typography {
+	.mat-headline,
+	.mat-display-1,
+	mat-subheading-2,
+	.mat-title,
+	.mat-expansion-panel-header,
+	button {
+		font-family: $product-sans;
+	}
+
+	button {
+		font-weight: 500;
+	}
+}

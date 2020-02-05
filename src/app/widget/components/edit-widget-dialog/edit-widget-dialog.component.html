@@ -1,0 +1,27 @@
+<h3 style="margin-top: 0px;">Edit Widget</h3>
+<form [formGroup]="widgetForm">
+  <div mat-dialog-content>
+    <!-- <div fxLayout="row wrap" fxLayoutAlign="center start"> -->
+      <div fxLayout="column">
+         <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Title</mat-label>
+          <input matInput  placeholder="Widget Title" formControlName="title">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Chart Type</mat-label>
+          <mat-select placeholder="Chart Type" formControlName="type">
+            <mat-option *ngFor="let chart of charts " [value]="chart.value">{{chart.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    <!-- </div> -->
+  </div>
+  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+    <button type="submit" mat-raised-button color="primary" (click)="submitForm()" cdkFocusInitial>
+    Update
+    </button>
+  </div>
+</form>
+

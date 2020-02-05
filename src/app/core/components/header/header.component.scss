@@ -1,0 +1,40 @@
+button {
+	align-items: center;
+	font-weight: 500;
+	padding: 6px 8px;
+	line-height: 18px;
+	background: #2a2a2c;
+	color: #8e8e8e;
+	border: 1px solid #2f2f32;
+	margin-left: 4px;
+	white-space: nowrap;
+	border-radius: 2px;
+}
+mat-toolbar {
+	background: transparent;
+
+	.dashboard-logo {
+		color: #d8d9da;
+		margin-left: -2rem;
+	}
+}
+
+.dashboard-sidebar-is-mobile .dashboard-sidebar-toolbar {
+	position: fixed;
+	/* Make sure the toolbar will stay on top of the content as it scrolls past. */
+	z-index: 2;
+}
+
+h1.dashboard-sidebar-app-name {
+	margin-left: 8px;
+}
+
+.dashboard-sidebar-fill-remaining-space {
+	/* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+	flex: 1 1 auto;
+}
+
+.user {
+	cursor: pointer;
+}

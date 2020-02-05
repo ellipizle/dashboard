@@ -1,0 +1,98 @@
+@import 'variables';
+
+.menu {
+	color: #eb7b18;
+	position: absolute;
+	top: 0;
+	margin: 1rem;
+	z-index: 2;
+}
+
+mat-sidenav-content {
+	margin-left: 5em;
+}
+
+.side-menu {
+	width: 5em;
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding-top: 64px;
+	height: 100%;
+	z-index: 100;
+	background-color: #000;
+	// box-shadow: 2px 0 12px 0 rgba(0, 0, 0, 0.06);
+
+	a {
+		color: $text-disabled;
+		border-left: 3px solid transparent;
+
+		&:hover {
+			color: $text-secondary;
+		}
+
+		&.active {
+			color: $primary;
+			border-color: $primary;
+			background-color: $bg-primary;
+		}
+	}
+}
+
+mat-sidenav-container {
+	// z-index: 200;
+}
+
+.diftg-sidebar-container {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+mat-sidenav {
+	width: 280px;
+	// padding-top: 64px;
+	mat-toolbar {
+		padding: 0;
+		background: transparent;
+	}
+
+	mat-nav-list {
+		margin-right: 8px;
+
+		a {
+			color: $text-secondary;
+			border-radius: 0 50px 50px 0;
+			font: $bold .9rem $product-sans;
+
+			span {
+				padding-left: 1rem;
+			}
+
+			&:hover {
+				color: $text-primary;
+			}
+
+			&.active {
+				color: $primary;
+				background-color: $bg-primary;
+			}
+		}
+	}
+}
+
+.diftg-sidebar-sidenav-container {
+	/* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+	flex: 1;
+}
+
+.diftg-sidebar-is-mobile .diftg-sidebar-sidenav-container {
+	/* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+	flex: 1 0 auto;
+}
