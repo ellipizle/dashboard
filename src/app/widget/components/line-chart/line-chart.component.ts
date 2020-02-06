@@ -67,7 +67,7 @@ export class LineChartComponent implements OnInit, OnChanges, AfterViewInit {
 		this.options = {
 			grid: {
 				right: '35',
-				bottom: '15',
+				bottom: '25',
 				top: '15',
 				left: '45'
 			},
