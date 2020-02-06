@@ -64,6 +64,12 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewInit {
 		const optionsHeight: number = this.item.rows * (this.unitHeight - 10) + (this.item.rows - 4) * 10 - 35;
 		const optionsWidth: number = this.item.cols * (this.unitHeight - 10) + (this.item.cols - 4) * 10;
 		this.options = {
+			grid: {
+				right: '35',
+				bottom: '15',
+				top: '15',
+				left: '45'
+			},
 			textStyle: {
 				color: '#fff'
 			},

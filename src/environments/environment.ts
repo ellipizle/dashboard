@@ -3,16 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  firebase: {
-    apiKey: 'AIzaSyCeCmPSfRMWG19Lv3HSh-ayuftYPGayuos',
-    authDomain: 'instagram-scraper-001.firebaseapp.com',
-    databaseURL: 'https://instagram-scraper-001.firebaseio.com',
-    projectId: 'instagram-scraper-001',
-    storageBucket: 'instagram-scraper-001.appspot.com',
-    messagingSenderId: '376160392671'
-  },
-  instagramURL:"https://instagram.com/"
+	production: false
 };
 
 /*

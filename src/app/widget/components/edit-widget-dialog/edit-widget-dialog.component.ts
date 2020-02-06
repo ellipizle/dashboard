@@ -12,8 +12,7 @@ export class EditWidgetDialogComponent implements OnInit {
 	widgetForm = this._fb.group({
 		title: [ '', Validators.required ],
 		query: [ '' ],
-		type: [ '' ],
-		id: [ '' ]
+		type: [ '' ]
 	});
 
 	constructor(
@@ -27,19 +26,16 @@ export class EditWidgetDialogComponent implements OnInit {
 			let data = {
 				title: this.formData.title,
 				query: this.formData.query,
-				type: this.formData.tyle
+				type: this.formData.type
 			};
 			this.widgetForm.patchValue(data);
 		}
 	}
 
 	submitForm() {
-		let data: any = {
-			formValue: this.widgetForm.value
-		};
-		if (this.formData) {
-			data.id = this.formData.id;
-		}
-		this.dialogRef.close(data);
+		// let data: any = {
+		// 	formValue: this.widgetForm.value
+		// };
+		this.dialogRef.close({ ...this.formData, ...this.widgetForm.value });
 	}
 }

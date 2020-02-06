@@ -65,21 +65,66 @@ export class GuargeComponent implements OnInit, OnChanges, AfterViewInit {
 		const optionsHeight: number = this.item.rows * (this.unitHeight - 10) + (this.item.rows - 4) * 10 - 35;
 		const optionsWidth: number = this.item.cols * (this.unitHeight - 10) + (this.item.cols - 4) * 10;
 		this.options = {
-			tooltip: {
-				formatter: '{a} <br/>{b} : {c}%'
-			},
-			toolbox: {
-				feature: {
-					restore: {},
-					saveAsImage: {}
-				}
-			},
+			right: 0,
+			// bottom: '5%',
+			// tooltip: {
+			// 	formatter: '{a} <br/>{b} : {c}%'
+			// },
+			// toolbox: {
+			// 	feature: {
+			// 		restore: {},
+			// 		saveAsImage: {}
+			// 	}
+			// },
 			series: [
 				{
 					name: 'disk',
 					type: 'gauge',
-					detail: { formatter: '{value}%' },
-					data: [ { value: 50, name: 'disk space' } ]
+					// z: 3,
+					min: 0,
+					max: 220,
+					splitNumber: 4,
+					radius: '100%',
+					// // radius: [ 50, '50%' ],
+					// center: [ '50%', '50%' ],
+					axisLine: {
+						lineStyle: {
+							width: 5
+						}
+					},
+					axisTick: {
+						length: 10,
+						lineStyle: {
+							color: 'auto'
+						}
+					},
+					splitLine: {
+						length: 10,
+						lineStyle: {
+							color: 'auto'
+						}
+					},
+					axisLabel: {
+						// backgroundColor: 'auto',
+						// borderRadius: 2,
+						// color: '#eee',
+						// padding: 0,
+						// textShadowBlur: 2,
+						// textShadowOffsetX: 1,
+						// textShadowOffsetY: 1,
+						// textShadowColor: '#222'
+					},
+					title: {
+						// fontWeight: 'bolder',
+						fontSize: 10,
+						fontStyle: 'italic'
+					},
+					detail: {
+						offsetCenter: [ 0, '90%' ],
+						fontSize: 20,
+						formatter: '{value}%'
+					},
+					data: [ { value: 50, name: 'disk' } ]
 				}
 			]
 		};

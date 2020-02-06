@@ -28,8 +28,8 @@ export class DashboardComponent {
 	constructor(private _dialog: MatDialog) {
 		this.unitHeight = 0;
 		this.items = [
-			{ x: 0, y: 0, rows: 3, cols: 4, id: 'aoie23', title: 'Disk Usage', type: 'guarge' },
-			{ x: 0, y: 0, rows: 3, cols: 8, id: 'qwas23', title: 'Memory', type: 'bar' }
+			{ x: 0, y: 0, rows: 2, cols: 3, id: 'aoie23', title: 'Disk Usage', type: 'guarge' },
+			{ x: 0, y: 0, rows: 2, cols: 9, id: 'qwas23', title: 'Memory', type: 'bar' }
 		];
 		this.options = {
 			itemResizeCallback: this.itemResize.bind(this),
@@ -96,6 +96,16 @@ export class DashboardComponent {
 			if (res) {
 				//update ites
 				console.log(res);
+				this.items.filter((item) => {
+					if (item.id == res.id) {
+						return res;
+					}
+				});
+				for (let i = 0; i < this.items.length; i++) {
+					if (this.items[i].id == res.id) {
+						this.items[i] = res;
+					}
+				}
 			}
 		});
 	}
