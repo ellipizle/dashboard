@@ -120,7 +120,7 @@ export class GuargeComponent implements OnInit, OnChanges, AfterViewInit {
 						fontStyle: 'italic'
 					},
 					detail: {
-						offsetCenter: [ 0, '90%' ],
+						offsetCenter: [ 0, '80%' ],
 						fontSize: 20,
 						formatter: '{value}%'
 					},
