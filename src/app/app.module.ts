@@ -11,9 +11,18 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { AngularResizedEventModule } from 'angular-resize-event';
 @NgModule({
 	declarations: [ AppComponent ],
-	imports: [ BrowserModule, HttpClientModule, NoopAnimationsModule, CoreModule, RouterModule, FlexLayoutModule ],
+	imports: [
+		BrowserModule,
+		HttpClientModule,
+		AngularResizedEventModule,
+		NoopAnimationsModule,
+		CoreModule,
+		RouterModule,
+		FlexLayoutModule
+	],
 	providers: [],
 	bootstrap: [ AppComponent ]
 	// entryComponents: [ ConfirmDialogComponent ]
