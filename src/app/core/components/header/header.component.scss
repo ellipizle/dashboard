@@ -10,6 +10,34 @@ button {
 	white-space: nowrap;
 	border-radius: 2px;
 }
+::ng-deep .mat-button-toggle-button {
+	.mat-button-toggle-label-content {
+		line-height: 2px;
+		padding: 0 5px;
+	}
+}
+
+mat-button-toggle {
+	background: #2a2a2c;
+	color: #8e8e8e;
+	border: 1px solid #2f2f32;
+	.mat-icon {
+		color: #8e8e8e;
+	}
+	.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+		line-height: 2px;
+		padding: 0 5px;
+	}
+}
+
+::ng-deep mat-button-toggle-group {
+	height: 40px;
+	align-items: center;
+	margin-left: 4px;
+}
+::ng-deep .mat-icon-button {
+	width: auto;
+}
 ::ng-deep .mat-drawer-content {
 	position: relative;
 	z-index: 1;
@@ -19,7 +47,6 @@ button {
 }
 mat-toolbar {
 	background: transparent;
-
 	.dashboard-logo {
 		color: #d8d9da;
 		margin-left: -2rem;
@@ -37,11 +64,74 @@ h1.dashboard-sidebar-app-name {
 }
 
 .dashboard-sidebar-fill-remaining-space {
-	/* This fills the remaining space, by using flexbox.
-     Every toolbar row uses a flexbox row layout. */
 	flex: 1 1 auto;
 }
+.refresh-time {
+	font-size: 14px;
+	color: rgb(235, 123, 24);
+}
+::ng-deep .mat-list {
+	background: #000000;
+	// min-width: 180px !important;
+	.mat-list-item {
+		cursor: pointer;
+		height: 28px;
+		font-size: 14px;
+		color: #d8d9da;
+		.mat-icon-no-color {
+			color: #d8d9da;
+		}
+	}
+	.mat-list-item:hover {
+		background: #1f1f20 !important;
+		border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
+		border-image-slice: 1;
+		border-style: solid;
+		border-top: 0;
+		border-right: 0;
+		border-bottom: 0;
+		border-left-width: 2px;
+	}
+}
 
-.user {
-	cursor: pointer;
+// ::ng-deep .mat-menu-panel {
+// 	background: #161719;
+// 	box-shadow: rgb(0, 0, 0) 0px 0px 20px;
+// 	// min-width: 180px !important;
+// 	// min-width: 512px !important;
+// 	// max-width: 580px !important;
+// 	.mat-menu-item {
+// 		color: #d8d9da;
+// 		.mat-icon-no-color {
+// 			color: #d8d9da;
+// 		}
+// 	}
+// 	.mat-menu-item:hover {
+// 		background: #1f1f20 !important;
+// 		// color: #eb7b18;
+// 		// border-color: #eb7b18;
+
+// 		border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
+// 		// border-image-slice: 1;
+// 		// border-style: solid;
+// 		// border-top: 0;
+// 		// border-right: 0;
+// 		// border-bottom: 0;
+// 		// border-left-width: 2px;
+// 	}
+// }
+
+.datePicker {
+	background: #161719;
+	margin-top: 10px;
+	box-shadow: rgb(0, 0, 0) 0px 0px 20px;
+	width: 300px;
+	padding: 15px;
+	font-size: 16px;
+	color: #fff;
+}
+
+mat-form-field {
+	//   margin-right: 12px;
+	color: #fff;
 }

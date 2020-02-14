@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { MatIconRegistry } from '@angular/material';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -9,5 +9,7 @@ export class AppComponent {
 	title = 'Dashboard';
 	dashboardUser = 'musa';
 
-	constructor() {}
+	constructor(public matIconRegistry: MatIconRegistry) {
+		matIconRegistry.registerFontClassAlias('fas'); // tried with 'fas' and with 'fa'
+	}
 }

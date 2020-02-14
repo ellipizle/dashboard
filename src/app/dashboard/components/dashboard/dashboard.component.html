@@ -1,41 +1,32 @@
 
  <gridster [options]="options">
-    <gridster-item [item]="item" *ngFor="let item of items" #gridsterItem>
-        <div >
-        <button mat-button [matMenuTriggerFor]="menu" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">{{item.title}}</button>
-            <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-                <mat-icon>dialpad</mat-icon>
-                <span>View</span>
-            </button>
-            <button mat-menu-item (click)="editWidget(item)">
-                <mat-icon>voicemail</mat-icon>
-                <span>Edit</span>
-            </button>
-            <button mat-menu-item>
-                <mat-icon>notifications_off</mat-icon>
-                <span>Share</span>
-            </button>
-            </mat-menu>
-        </div>
+    <gridster-item [item]="item" *ngFor="let item of items; let i = index" #gridsterItem>
+        <app-panel-header
+        [item]="item"
+        (edit)="editWidget($event)"
+         (view)="viewWidget($event)"
+        (remove)="removeWidget($event)">
+    </app-panel-header>
         <ng-container [ngSwitch]="item.type">
               <ng-template [ngSwitchCase]="'bar'">
-                    <app-bar-chart
-                        [unitHeight]="unitHeight"
+                    <app-bar (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
-                    </app-bar-chart>
+                    </app-bar>
               </ng-template>
-              <ng-template [ngSwitchCase]="'line'">
-                    <app-line-chart
-                        [unitHeight]="unitHeight"
+              <ng-template [ngSwitchCase]="'area'">
+                    <app-area-stack (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
-                    </app-line-chart>
+                    </app-area-stack>
               </ng-template>
-              <ng-template [ngSwitchCase]="'guarge'">
-                    <app-guarge
-                        [unitHeight]="unitHeight"
+              <ng-template [ngSwitchCase]="'pie'">
+                    <app-pie (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
-                    </app-guarge>
+                    </app-pie>
+              </ng-template>
+                              <ng-template [ngSwitchCase]="'bar-animation'">
+                    <app-bar-animation (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="item">
+                    </app-bar-animation>
               </ng-template>
         </ng-container>
 

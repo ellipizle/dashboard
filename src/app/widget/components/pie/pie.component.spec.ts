@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditWidgetDialogComponent } from './edit-widget-dialog.component';
+import { PieComponent } from './pie.component';
 
-describe('EditWidgetDialogComponent', () => {
-  let component: EditWidgetDialogComponent;
-  let fixture: ComponentFixture<EditWidgetDialogComponent>;
+describe('PieComponent', () => {
+  let component: PieComponent;
+  let fixture: ComponentFixture<PieComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditWidgetDialogComponent ]
+      declarations: [ PieComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditWidgetDialogComponent);
+    fixture = TestBed.createComponent(PieComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

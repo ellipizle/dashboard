@@ -5,9 +5,10 @@ import { SharedModule } from '../shared/shared.module';
 import { WidgetModule } from '../widget/widget.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DashboaradRoutingModule } from './dashboard-routing.module';
-
+import { PanelHeaderComponent } from './components/panel-header/panel-header.component';
+import { ViewPanelComponent } from './components/view-panel/view-panel.component';
 @NgModule({
-	declarations: [ DashboardComponent ],
+	declarations: [ DashboardComponent, PanelHeaderComponent, ViewPanelComponent ],
 	exports: [ DashboardComponent ],
 	imports: [ SharedModule, WidgetModule, HttpClientModule, GridsterModule, DashboaradRoutingModule ]
 })

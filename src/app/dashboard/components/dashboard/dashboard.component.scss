@@ -1,13 +1,7 @@
 :host {
 	.grid-stack {
 	}
-	.mat-button {
-		border-radius: none !important;
-		width: 100%;
-	}
-	button:hover {
-		background: #343436;
-	}
+
 	gridster {
 		margin: 0px auto;
 		width: 98%;
@@ -16,28 +10,5 @@
 	gridster-item {
 		background: #212124;
 		color: #d8d9da;
-	}
-}
-::ng-deep .mat-menu-panel {
-	background: #161719;
-	min-width: 180px !important;
-	.mat-menu-item {
-		color: #d8d9da;
-		.mat-icon-no-color {
-			color: #d8d9da;
-		}
-	}
-	.mat-menu-item:hover {
-		background: #1f1f20 !important;
-		// color: #eb7b18;
-		// border-color: #eb7b18;
-
-		border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
-		border-image-slice: 1;
-		border-style: solid;
-		border-top: 0;
-		border-right: 0;
-		border-bottom: 0;
-		border-left-width: 2px;
 	}
 }

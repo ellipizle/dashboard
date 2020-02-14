@@ -13,14 +13,15 @@ import {
 import { ResizedEvent } from 'angular-resize-event';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { DatasourceService } from '../../services/datasource.service';
-import { GuargeWidget } from '../../interfaces/widget';
+import { Widget } from '../../interfaces/widget';
 @Component({
 	selector: 'app-guarge',
 	templateUrl: './guarge.component.html',
-	styleUrls: [ './guarge.component.scss' ]
+	styleUrls: [ './guarge.component.scss' ],
+	encapsulation: ViewEncapsulation.None
 })
 export class GuargeComponent implements OnInit, OnChanges, AfterViewInit {
-	@Input() public item: GuargeWidget;
+	@Input() public item: Widget;
 	@Input() public data: any;
 	@Input() public unitHeight: number;
 

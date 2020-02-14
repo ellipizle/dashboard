@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, SimpleChanges, ViewChild, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	SimpleChanges,
+	ViewChild,
+	Component,
+	OnInit,
+	ViewEncapsulation,
+	HostListener
+} from '@angular/core';
 import { graphic } from 'echarts';
 import {
 	CompactType,
@@ -11,7 +19,10 @@ import {
 	DisplayGrid
 } from 'angular-gridster2';
 import { MatDialog } from '@angular/material';
-import { BaseWidget, EditWidgetDialogComponent } from '../../../widget';
+import { Router } from '@angular/router';
+import { Widget } from '../../../widget';
+import { DashboardService } from '../../../shared/services/dashboard.service';
+import { WidgetDialogComponent } from '../../../shared/widget-dialog/widget-dialog.component';
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
@@ -22,27 +33,43 @@ export class DashboardComponent {
 	query = `100 - ((node_filesystem_avail_bytes{instance=~"localhost:9100",job=~"node_exporter",device!~'rootfs'} * 100) / node_filesystem_size_bytes{instance=~"localhost:9100",job=~"node_exporter",device!~'rootfs'})`;
 	public options: GridsterConfig;
 	public unitHeight: number;
-	public items: Array<BaseWidget>;
+	public items: Array<Widget>;
 	sampleData: any;
 
-	constructor(private _dialog: MatDialog) {
+	@HostListener('window:resize', [ '$event' ])
+	onResize(event) {
+		// event.target.innerWidth;
+		console.log('on resize');
+		this.options.api.resize();
+	}
+
+	constructor(private _dialog: MatDialog, private dashboardSvc: DashboardService, private router: Router) {
+		this.dashboardSvc.getQueries().subscribe((res) => {
+			console.log(res);
+		});
+		this.dashboardSvc.getCharts().subscribe((res) => {
+			console.log(res);
+		});
 		this.unitHeight = 0;
 		this.items = [
-			{ x: 0, y: 0, rows: 2, cols: 3, id: 'aoie23', title: 'Disk Usage', type: 'guarge' },
-			{ x: 0, y: 0, rows: 2, cols: 9, id: 'qwas23', title: 'Memory', type: 'bar' }
+			{ x: 0, y: 0, rows: 4, cols: 5, id: 'qwas23', title: 'Pie', type: 'pie' },
+			{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Area Chart', type: 'area' },
+			{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Bar', type: 'bar' },
+			{ x: 0, y: 0, rows: 2, cols: 12, id: 'qwas23', title: 'Bar Animation', type: 'bar-animation' }
 		];
 		this.options = {
+			itemChangeCallback: this.itemChange.bind(this),
 			itemResizeCallback: this.itemResize.bind(this),
 			pushItems: true,
 			minCols: 12,
 			maxCols: 12,
 			minRows: 5,
-			fixedRowHeight: 120,
+			// fixedRowHeight: 120,
 			gridType: 'scrollVertical',
 			displayGrid: DisplayGrid.None,
 			// fixedColWidth: number;
-			// keepFixedHeightInMobile: boolean,
-			// keepFixedWidthInMobile?: boolean,
+			// keepFixedHeightInMobile: true,
+			// keepFixedWidthInMobile: true,
 			// compactType?: compactTypes;
 			// maxRows?: number;
 			// defaultItemCols?: number;
@@ -71,6 +98,9 @@ export class DashboardComponent {
 		}
 		itemComponent.gridster.curRowHeight += (item.cols * 100 - item.rows) / 10000;
 	}
+	public itemChange(item: GridsterItem, itemComponent: GridsterItemComponentInterface): void {
+		console.log('on grid resize');
+	}
 
 	public ngOnChanges(changes: SimpleChanges): void {
 		if (this.options.api) {
@@ -81,20 +111,24 @@ export class DashboardComponent {
 		}
 	}
 
-	public viewWidget(widget: BaseWidget) {
-		console.log(widget);
+	public removeWidget(widget: Widget) {
+		console.log('console view widget ', widget);
 	}
 
-	public editWidget(widget: BaseWidget) {
+	public viewWidget(widget: Widget) {
+		this.dashboardSvc.setSelectedItemObs(widget);
+		this.router.navigate([ 'dashboard', widget.id ]);
+	}
+
+	public editWidget(widget: Widget) {
 		console.log(widget);
-		const dialogRef = this._dialog.open(EditWidgetDialogComponent, {
+		const dialogRef = this._dialog.open(WidgetDialogComponent, {
 			width: '600px',
 			data: widget
 		});
 
 		dialogRef.afterClosed().subscribe((res) => {
 			if (res) {
-				//update ites
 				console.log(res);
 				this.items.filter((item) => {
 					if (item.id == res.id) {

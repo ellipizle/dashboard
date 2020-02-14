@@ -1,0 +1,36 @@
+.mat-button {
+	border-radius: none !important;
+	width: 100%;
+}
+button:hover {
+	background: #343436;
+}
+
+.break {
+	color: #464748;
+	border: 0.5px solid;
+}
+::ng-deep .mat-menu-content:not(:empty) {
+	padding-bottom: 0px;
+}
+::ng-deep .mat-menu-panel {
+	background: #161719;
+	// min-width: 180px !important;
+	.mat-menu-item {
+		height: 40px;
+		color: #d8d9da;
+		.mat-icon-no-color {
+			color: #d8d9da;
+		}
+	}
+	.mat-menu-item:hover {
+		background: #1f1f20 !important;
+		border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
+		border-image-slice: 1;
+		border-style: solid;
+		border-top: 0;
+		border-right: 0;
+		border-bottom: 0;
+		border-left-width: 2px;
+	}
+}

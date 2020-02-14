@@ -2,12 +2,62 @@
 
 
   <a href="#"><span class="dashboard-logo mat-headline gradient-mask">#DASHBOARD</span></a>
+  <mat-form-field>
+  <mat-select [(value)]="selectedTheme">
+    <mat-option value="dark">Dark</mat-option>
+    <mat-option value="default">Default</mat-option>
+  </mat-select>
+</mat-form-field>
+
   <span class="dashboard-sidebar-fill-remaining-space"></span>
 
 
 
-  <button mat-icon-button>
-    <mat-icon  aria-hidden="false" aria-label="Notifications">video_label</mat-icon>
+  <button mat-icon-button (click)="newWidget()" matTooltip="Add Panel" >
+    <mat-icon  aria-hidden="false" aria-label="Notifications">assessment</mat-icon>
   </button>
+    <button mat-icon-button matTooltip="Save Dashboard" >
+    <mat-icon  aria-hidden="false" aria-label="Save">save</mat-icon>
+  </button>
+
+    <button mat-icon-button  [satPopoverAnchor]='popDatePicker'  (click)="onDatePicker()">
+    <mat-icon  aria-hidden="false" aria-label="Toggle Down">access_time</mat-icon> Last 2 hours
+      <mat-icon  aria-hidden="false" aria-label="Toggle Down" *ngIf="timeRangeToggle">keyboard_arrow_down</mat-icon>
+      <mat-icon  aria-hidden="false" aria-label="Toggle Up"  *ngIf="!timeRangeToggle">keyboard_arrow_up</mat-icon>
+       <sat-popover #popDatePicker hasBackdrop  verticalAlign="below" horizontalAlign="end" >
+        <div  class="datePicker" fxLayout="row" fxLayoutAlign="space-between">
+             <div fxFlex>
+                  <ngx-mat-drp (selectedDateRangeChanged)="updateRange($event)" [options]="options" #dateRangePicker></ngx-mat-drp>
+          </div>
+        </div>
+        </sat-popover>
+      </button>
+
+      <!--Refresh  -->
+      <mat-button-toggle-group>
+        <mat-button-toggle mat-icon-button > <mat-icon  aria-hidden="false" aria-label="Refresh">autorenew</mat-icon></mat-button-toggle>
+        <mat-button-toggle mat-icon-button  [satPopoverAnchor]='poprefresh' (click)="refreshToggleClicked()">
+         <span class="refresh-time"> {{refreshTime === 'Off'?'':refreshTime}}</span>
+             <mat-icon  aria-hidden="false" aria-label="Toggle Down" *ngIf="refreshToggle">keyboard_arrow_down</mat-icon>
+              <mat-icon  aria-hidden="false" aria-label="Toggle Up" *ngIf="!refreshToggle">keyboard_arrow_up</mat-icon>
+                <sat-popover #poprefresh hasBackdrop  verticalAlign="below" horizontalAlign="end" >
+        <mat-list>
+            <mat-list-item *ngFor="let time of refreshList" (click)="refreshTimeSelected(time)"> {{time}} </mat-list-item>
+            </mat-list>
+        </sat-popover>
+        </mat-button-toggle>
+
+
+      </mat-button-toggle-group>
+ <mat-menu #menu="matMenu">
+      <div  class="date-picker-container" fxLayout="row" fxLayoutAlign="space-between">
+        <div>2<ngx-mat-drp (selectedDateRangeChanged)="updateRange($event)" [options]="options" #dateRangePicker></ngx-mat-drp></div>
+          <div>
+                <mat-list>
+            <mat-list-item *ngFor="let time of refreshList" (click)="refreshTimeSelected(time)"> {{time}} </mat-list-item>
+            </mat-list>
+          </div>
+      </div>
+            </mat-menu>
 
 </mat-toolbar>

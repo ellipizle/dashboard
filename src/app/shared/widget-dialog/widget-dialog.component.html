@@ -1,4 +1,4 @@
-<h3 style="margin-top: 0px;">Edit Widget</h3>
+<h3 style="margin-top: 0px;">{{formData? 'Update': 'New'}} Panel</h3>
 <form [formGroup]="widgetForm">
   <div mat-dialog-content>
     <!-- <div fxLayout="row wrap" fxLayoutAlign="center start"> -->
@@ -6,6 +6,14 @@
          <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Title</mat-label>
           <input matInput  placeholder="Widget Title" formControlName="title">
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Select Query</mat-label>
+          <mat-select placeholder="Select Query" formControlName="query">
+            <mat-option *ngFor="let query of queryOption " [value]="query">{{query?.name}}</mat-option>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex="100">
@@ -20,7 +28,7 @@
   <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
     <button mat-button (click)="dialogRef.close()">Cancel</button>
     <button type="submit" mat-raised-button color="primary" (click)="submitForm()" cdkFocusInitial>
-    Update
+    {{formData? 'Update': 'Add'}}
     </button>
   </div>
 </form>

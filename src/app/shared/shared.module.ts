@@ -6,9 +6,12 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { MaterialModule } from '../material';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { SatPopoverModule } from '@ncstate/sat-popover';
+import { CenterMenuDirective } from './directives/center-menu.directive';
+import { WidgetDialogComponent } from './widget-dialog/widget-dialog.component';
 @NgModule({
-	declarations: [ ConfirmDialogComponent ],
-	imports: [ CommonModule, FlexLayoutModule, DragDropModule, MaterialModule ],
+	declarations: [ ConfirmDialogComponent, WidgetDialogComponent, CenterMenuDirective ],
+	imports: [ CommonModule, ReactiveFormsModule, FormsModule, FlexLayoutModule, DragDropModule, MaterialModule ],
 	exports: [
 		CommonModule,
 		FlexLayoutModule,
@@ -16,8 +19,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 		MaterialModule,
 		NgxEchartsModule,
 		ReactiveFormsModule,
-		FormsModule
+		FormsModule,
+		SatPopoverModule,
+		CenterMenuDirective
 	],
-	entryComponents: [ ConfirmDialogComponent ]
+	entryComponents: [ ConfirmDialogComponent, WidgetDialogComponent ]
 })
 export class SharedModule {}

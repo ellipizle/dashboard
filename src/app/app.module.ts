@@ -8,17 +8,19 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { environment } from 'src/environments/environment';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularResizedEventModule } from 'angular-resize-event';
+import { FontAwesomeModule } from '@fortawesome/fontawesome-free';
 @NgModule({
 	declarations: [ AppComponent ],
 	imports: [
 		BrowserModule,
 		HttpClientModule,
 		AngularResizedEventModule,
-		NoopAnimationsModule,
+		BrowserAnimationsModule,
 		CoreModule,
 		RouterModule,
 		FlexLayoutModule

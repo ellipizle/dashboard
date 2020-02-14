@@ -13,7 +13,7 @@ import {
 import { ResizedEvent } from 'angular-resize-event';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { DatasourceService } from '../../services/datasource.service';
-import { LineWidget } from '../../interfaces/widget';
+import { Widget } from '../../interfaces/widget';
 @Component({
 	selector: 'app-line-chart',
 	templateUrl: './line-chart.component.html',

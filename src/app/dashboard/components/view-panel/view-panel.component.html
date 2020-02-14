@@ -1,0 +1,30 @@
+<div *ngIf="widget">
+<app-panel-header
+        [item]="widget"
+           (edit)="editWidget($event)"
+         (view)="viewWidget($event)"
+        (remove)="removeWidget($event)">
+    </app-panel-header>
+        <ng-container [ngSwitch]="widget.type">
+              <ng-template [ngSwitchCase]="'bar'">
+                    <app-bar
+                        [item]="widget">
+                    </app-bar>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'area'">
+                    <app-area-stack
+                        [item]="widget">
+                    </app-area-stack>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'pie'">
+                    <app-pie
+                        [item]="widget">
+                    </app-pie>
+              </ng-template>
+                    <ng-template [ngSwitchCase]="'bar-animation'">
+                    <app-bar-animation
+                        [item]="widget">
+                    </app-bar-animation>
+              </ng-template>
+        </ng-container>
+</div>
