@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 	styleUrls: [ './widget-dialog.component.scss' ]
 })
 export class WidgetDialogComponent implements OnInit {
-	charts = [ { name: 'Bar', value: 'bar' }, { name: 'Guarge', value: 'guarge' }, { name: 'Line', value: 'line' } ];
+	formSubmitted: boolean;
 	queryOption = [];
 	chartsOption = [];
 	widgetForm = this._fb.group({
@@ -26,16 +26,15 @@ export class WidgetDialogComponent implements OnInit {
 		private dashboardSvc: DashboardService
 	) {
 		this.dashboardSvc.getQueriesObs().subscribe((res) => {
-			this.queryOption = res;
+			if (res) this.queryOption = res;
 		});
 
 		this.dashboardSvc.getChartsObs().subscribe((res) => {
-			this.chartsOption = res;
+			if (res) this.chartsOption = res;
 		});
 	}
 
 	ngOnInit() {
-		console.log('new uid: ');
 		if (this.formData) {
 			let data = {
 				id: this.formData.id,
@@ -48,10 +47,15 @@ export class WidgetDialogComponent implements OnInit {
 	}
 
 	submitForm() {
-		if (this.formData) {
-			this.dialogRef.close({ ...this.formData, ...this.widgetForm.value });
+		this.formSubmitted = false;
+		if (this.widgetForm.valid) {
+			if (this.formData) {
+				this.dialogRef.close({ ...this.formData, ...this.widgetForm.value });
+			} else {
+				this.dialogRef.close({ ...this.widgetForm.value, ...{ x: 0, y: 0, rows: 4, cols: 5 } });
+			}
 		} else {
-			this.dialogRef.close({ ...this.formData, ...{ x: 0, y: 0, rows: 4, cols: 5 } });
+			this.formSubmitted = true;
 		}
 	}
 }

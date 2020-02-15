@@ -1,19 +1,19 @@
 
  <gridster [options]="options">
-    <gridster-item [item]="item" *ngFor="let item of items; let i = index" #gridsterItem>
+    <gridster-item [item]="item" *ngFor="let item of layout; let i = index">
         <app-panel-header
         [item]="item"
         (edit)="editWidget($event)"
          (view)="viewWidget($event)"
         (remove)="removeWidget($event)">
     </app-panel-header>
-        <ng-container [ngSwitch]="item.type">
+        <ng-container [ngSwitch]="item.type.metadata.name">
               <ng-template [ngSwitchCase]="'bar'">
                     <app-bar (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
                     </app-bar>
               </ng-template>
-              <ng-template [ngSwitchCase]="'area'">
+              <ng-template [ngSwitchCase]="'area-graph'">
                     <app-area-stack (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
                     </app-area-stack>

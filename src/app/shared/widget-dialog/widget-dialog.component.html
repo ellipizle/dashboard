@@ -6,21 +6,24 @@
          <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Title</mat-label>
           <input matInput  placeholder="Widget Title" formControlName="title">
+           <mat-error *ngIf="formSubmitted && widgetForm.get('title').invalid">panel title  is require</mat-error>
         </mat-form-field>
 
 
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Select Query</mat-label>
           <mat-select placeholder="Select Query" formControlName="query">
-            <mat-option *ngFor="let query of queryOption " [value]="query">{{query?.name}}</mat-option>
+            <mat-option *ngFor="let query of queryOption " [value]="query">{{query?.metadata?.name}}</mat-option>
           </mat-select>
+           <mat-error *ngIf="formSubmitted && widgetForm.get('query').invalid">query type is require</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Chart Type</mat-label>
           <mat-select placeholder="Chart Type" formControlName="type">
-            <mat-option *ngFor="let chart of charts " [value]="chart.value">{{chart.name}}</mat-option>
+            <mat-option *ngFor="let chart of chartsOption " [value]="chart">{{chart?.metadata?.name}}</mat-option>
           </mat-select>
+           <mat-error *ngIf="formSubmitted && widgetForm.get('type').invalid">chart type is require</mat-error>
         </mat-form-field>
       </div>
     <!-- </div> -->

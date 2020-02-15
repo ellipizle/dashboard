@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Input, OnDestroy }
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
+import { PanelService } from '../../../shared/services/panel.service';
 import { Widget } from '../../interfaces/widget';
 @Component({
 	selector: 'app-area-stack',
@@ -14,8 +15,11 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	@Input() public data: any;
 	@Input() public unitHeight: number;
 
-	height: any;
-	width: any;
+	startTime: any = 1581722395;
+	endTime: any = 1581723395;
+	step: any = 15;
+	url: any;
+
 	echartsInstance: ECharts;
 
 	themeSubscription: any;
@@ -23,23 +27,32 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
-		private dataSource: DatasourceService
+		private dataSource: DatasourceService,
+		private panelService: PanelService
 	) {}
 	onChartInit(e: ECharts) {
 		this.echartsInstance = e;
 	}
-	public onResize(event) {
-		if (this.echartsInstance) this.echartsInstance.resize();
-		this.height = this.item.rows * (this.unitHeight - 10) + (this.item.rows - 4) * 10 - 35;
-		this.width = this.item.cols * (this.unitHeight - 10) + (this.item.cols - 4) * 10;
-		this.cd.detectChanges();
+	replace(value, matchingString, replacerString) {
+		return value.replace(matchingString, replacerString);
+	}
+
+	getData() {
+		let url = this.item.query.spec.base_url;
+		url = this.replace(url, '+', '%2B');
+		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+		url = this.replace(url, '{{step}}', `=${this.step}`);
+		this.panelService.getPanelData(url).subscribe((res) => {
+			console.log(res);
+		});
 	}
 
 	ngAfterViewInit() {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			const colors: any = config.theme.variables;
 			const echarts: any = config.echart;
-
+			this.getData();
 			this.options = {
 				backgroundColor: echarts.bg,
 				color: [

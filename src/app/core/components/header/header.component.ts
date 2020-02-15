@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgxDrpOptions, PresetItem, Range } from 'ngx-mat-daterange-picker';
 import { WidgetDialogComponent } from '../../../shared/widget-dialog/widget-dialog.component';
 import { DashboardService } from '../../../shared/services/dashboard.service';
+import { LayoutService } from '../../../shared/services/layout.service';
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import * as _moment from 'moment';
@@ -28,7 +29,11 @@ export class HeaderComponent implements OnInit {
 	options: NgxDrpOptions;
 	presets: Array<PresetItem> = [];
 
-	constructor(private _dialog: MatDialog, private dashboardSvc: DashboardService) {}
+	constructor(
+		private layoutService: LayoutService,
+		private _dialog: MatDialog,
+		private dashboardSvc: DashboardService
+	) {}
 
 	ngOnInit() {
 		const today = new Date();
@@ -63,7 +68,6 @@ export class HeaderComponent implements OnInit {
 
 	onDatePicker() {
 		this.refreshToggle == !this.refreshToggle;
-		console.log(!this.refreshToggle);
 		this.popDatePicker.toggle();
 	}
 
@@ -107,6 +111,8 @@ export class HeaderComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe((res) => {
 			if (res) {
+				console.log(res);
+				this.layoutService.addItem(res);
 			}
 		});
 	}
