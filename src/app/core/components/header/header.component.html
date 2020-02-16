@@ -35,29 +35,20 @@
 
       <!--Refresh  -->
       <mat-button-toggle-group>
-        <mat-button-toggle mat-icon-button > <mat-icon  aria-hidden="false" aria-label="Refresh">autorenew</mat-icon></mat-button-toggle>
+        <mat-button-toggle mat-icon-button  (click)="onRefresh()"> <mat-icon  aria-hidden="false" aria-label="Refresh">autorenew</mat-icon></mat-button-toggle>
         <mat-button-toggle mat-icon-button  [satPopoverAnchor]='poprefresh' (click)="refreshToggleClicked()">
          <span class="refresh-time"> {{refreshTime === 'Off'?'':refreshTime}}</span>
              <mat-icon  aria-hidden="false" aria-label="Toggle Down" *ngIf="refreshToggle">keyboard_arrow_down</mat-icon>
               <mat-icon  aria-hidden="false" aria-label="Toggle Up" *ngIf="!refreshToggle">keyboard_arrow_up</mat-icon>
                 <sat-popover #poprefresh hasBackdrop  verticalAlign="below" horizontalAlign="end" >
         <mat-list>
-            <mat-list-item *ngFor="let time of refreshList" (click)="refreshTimeSelected(time)"> {{time}} </mat-list-item>
+            <mat-list-item *ngFor="let time of refreshList" (click)="refreshTimeSelected(time)">  {{time.label}}  </mat-list-item>
             </mat-list>
         </sat-popover>
         </mat-button-toggle>
 
 
       </mat-button-toggle-group>
- <mat-menu #menu="matMenu">
-      <div  class="date-picker-container" fxLayout="row" fxLayoutAlign="space-between">
-        <div>2<ngx-mat-drp (selectedDateRangeChanged)="updateRange($event)" [options]="options" #dateRangePicker></ngx-mat-drp></div>
-          <div>
-                <mat-list>
-            <mat-list-item *ngFor="let time of refreshList" (click)="refreshTimeSelected(time)"> {{time}} </mat-list-item>
-            </mat-list>
-          </div>
-      </div>
-            </mat-menu>
+
 
 </mat-toolbar>

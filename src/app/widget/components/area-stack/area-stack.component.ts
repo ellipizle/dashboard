@@ -3,7 +3,11 @@ import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
 import { PanelService } from '../../../shared/services/panel.service';
+import { TimerService } from '../../../shared/services/timer.service';
 import { Widget } from '../../interfaces/widget';
+import { data } from 'time-series';
+import * as _moment from 'moment';
+const moment = _moment;
 @Component({
 	selector: 'app-area-stack',
 	templateUrl: './area-stack.component.html',
@@ -24,17 +28,47 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 
 	themeSubscription: any;
 	options: any = {};
+	colors: any;
+	echarts: any;
+	interval;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
 		private dataSource: DatasourceService,
-		private panelService: PanelService
-	) {}
+		private panelService: PanelService,
+		private timerService: TimerService
+	) {
+		//get chart styles
+		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
+			this.colors = config.theme.variables;
+			this.echarts = config.echart;
+		});
+		this.timerService.getRefreshObs().subscribe((res) => {
+			if (res) {
+				this.getData();
+			}
+		});
+		this.timerService.getIntervalObs().subscribe((res) => {
+			let self = this;
+			if (typeof res === 'number') {
+				this.interval = window.setInterval(function() {
+					// console.log('hello timer');
+					self.getData();
+				}, res);
+			} else {
+				window.clearInterval(this.interval);
+			}
+		});
+	}
 	onChartInit(e: ECharts) {
 		this.echartsInstance = e;
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
+	}
+	ngAfterViewInit() {
+		// this.drawChart(this.formatSeries(data.data));
+		this.getData();
 	}
 
 	getData() {
@@ -42,141 +76,111 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
 		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{step}}', `=${this.step}`);
-		this.panelService.getPanelData(url).subscribe((res) => {
-			console.log(res);
+		url = this.replace(url, '{{step}}', `${this.step}`);
+		this.panelService.getPanelData(url).subscribe((res: any) => {
+			this.drawChart(this.formatSeries(res.data));
 		});
 	}
 
-	ngAfterViewInit() {
-		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
-			const colors: any = config.theme.variables;
-			const echarts: any = config.echart;
-			this.getData();
-			this.options = {
-				backgroundColor: echarts.bg,
-				color: [
-					colors.warningLight,
-					colors.infoLight,
-					colors.dangerLight,
-					colors.successLight,
-					colors.primaryLight
-				],
-				tooltip: {
-					trigger: 'axis',
-					axisPointer: {
-						type: 'cross',
-						label: {
-							backgroundColor: echarts.tooltipBackgroundColor
-						}
-					}
-				},
-				legend: {
-					data: [
-						'Mail marketing',
-						'Affiliate advertising',
-						'Video ad',
-						'Direct interview',
-						'Search engine'
-					],
-					textStyle: {
-						color: echarts.textColor
-					}
-				},
-				grid: {
-					left: '3%',
-					right: '4%',
-					bottom: '3%',
-					containLabel: true
-				},
-				xAxis: [
-					{
-						type: 'category',
-						boundaryGap: false,
-						data: [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ],
-						axisTick: {
-							alignWithLabel: true
-						},
-						axisLine: {
-							lineStyle: {
-								color: echarts.axisLineColor
-							}
-						},
-						axisLabel: {
-							textStyle: {
-								color: echarts.textColor
-							}
-						}
-					}
-				],
-				yAxis: [
-					{
-						type: 'value',
-						axisLine: {
-							lineStyle: {
-								color: echarts.axisLineColor
-							}
-						},
-						splitLine: {
-							lineStyle: {
-								color: echarts.splitLineColor
-							}
-						},
-						axisLabel: {
-							textStyle: {
-								color: echarts.textColor
-							}
-						}
-					}
-				],
-				series: [
-					{
-						name: 'Mail marketing',
-						type: 'line',
-						stack: 'Total amount',
-						areaStyle: { normal: { opacity: echarts.areaOpacity } },
-						data: [ 120, 132, 101, 134, 90, 230, 210 ]
-					},
-					{
-						name: 'Affiliate advertising',
-						type: 'line',
-						stack: 'Total amount',
-						areaStyle: { normal: { opacity: echarts.areaOpacity } },
-						data: [ 220, 182, 191, 234, 290, 330, 310 ]
-					},
-					{
-						name: 'Video ad',
-						type: 'line',
-						stack: 'Total amount',
-						areaStyle: { normal: { opacity: echarts.areaOpacity } },
-						data: [ 150, 232, 201, 154, 190, 330, 410 ]
-					},
-					{
-						name: 'Direct interview',
-						type: 'line',
-						stack: 'Total amount',
-						areaStyle: { normal: { opacity: echarts.areaOpacity } },
-						data: [ 320, 332, 301, 334, 390, 330, 320 ]
-					},
-					{
-						name: 'Search engine',
-						type: 'line',
-						stack: 'Total amount',
-						label: {
-							normal: {
-								show: true,
-								position: 'top',
-								textStyle: {
-									color: echarts.textColor
-								}
-							}
-						},
-						areaStyle: { normal: { opacity: echarts.areaOpacity } },
-						data: [ 820, 932, 901, 934, 1290, 1330, 1320 ]
-					}
-				]
-			};
+	formatSeries(data) {
+		let results = data.result;
+		let dateList: Array<any> = [];
+		let series: Array<any> = [];
+		results.forEach((result, index) => {
+			if (index == 0) {
+				dateList = result.values.map((date) => date[0]);
+			}
+			const valueList = result.values.map((date) => date[1]);
+			series.push({
+				type: 'line',
+				areaStyle: { normal: { opacity: this.echarts.areaOpacity } },
+				data: valueList
+			});
 		});
+		return { dateList: dateList, series: series };
+	}
+
+	drawChart(data) {
+		const colors: any = this.colors;
+		const echarts: any = this.echarts;
+		this.options = {
+			backgroundColor: echarts.bg,
+			color: [
+				colors.warningLight,
+				colors.infoLight,
+				colors.dangerLight,
+				colors.successLight,
+				colors.primaryLight
+			],
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross',
+					label: {
+						backgroundColor: echarts.tooltipBackgroundColor
+					}
+				}
+			},
+			grid: {
+				top: '4%',
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				containLabel: true
+			},
+			xAxis: [
+				{
+					// type: 'category',
+					boundaryGap: false,
+					data: data.dateList,
+					axisTick: {
+						alignWithLabel: true
+					},
+					axisLine: {
+						lineStyle: {
+							color: echarts.axisLineColor
+						}
+					},
+					axisLabel: {
+						formatter: function(time) {
+							var date = new Date(time);
+							return moment.unix(time).format('d/M/Y, h:mm');
+						},
+						textStyle: {
+							color: echarts.textColor
+						}
+					},
+					axisPointer: {
+						label: {
+							formatter: function(axisValue) {
+								return moment.unix(axisValue.value).format('d/M/Y, h:mm');
+							}
+						}
+					}
+				}
+			],
+			yAxis: [
+				{
+					type: 'value',
+					axisLine: {
+						lineStyle: {
+							color: echarts.axisLineColor
+						}
+					},
+					splitLine: {
+						lineStyle: {
+							color: echarts.splitLineColor
+						}
+					},
+					axisLabel: {
+						textStyle: {
+							color: echarts.textColor
+						}
+					}
+				}
+			],
+			series: data.series
+		};
 	}
 
 	ngOnDestroy(): void {

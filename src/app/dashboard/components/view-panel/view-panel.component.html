@@ -5,13 +5,13 @@
          (view)="viewWidget($event)"
         (remove)="removeWidget($event)">
     </app-panel-header>
-        <ng-container [ngSwitch]="widget.type">
+        <ng-container [ngSwitch]="widget.type.metadata.name">
               <ng-template [ngSwitchCase]="'bar'">
                     <app-bar
                         [item]="widget">
                     </app-bar>
               </ng-template>
-              <ng-template [ngSwitchCase]="'area'">
+              <ng-template [ngSwitchCase]="'area-graph'">
                     <app-area-stack
                         [item]="widget">
                     </app-area-stack>

@@ -3,6 +3,7 @@ import { NgxDrpOptions, PresetItem, Range } from 'ngx-mat-daterange-picker';
 import { WidgetDialogComponent } from '../../../shared/widget-dialog/widget-dialog.component';
 import { DashboardService } from '../../../shared/services/dashboard.service';
 import { LayoutService } from '../../../shared/services/layout.service';
+import { TimerService } from '../../../shared/services/timer.service';
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import * as _moment from 'moment';
@@ -19,8 +20,20 @@ export class HeaderComponent implements OnInit {
 	themeControl = new FormControl();
 	refreshToggle: boolean = false;
 	timeRangeToggle: boolean;
-	refreshTime: string;
-	refreshList = [ 'Off', '5s', '10s', '30s', '1ms', '5m', '15m', '30m', '1h', '2h', '1d' ];
+	refreshTime: any;
+	refreshList = [
+		{ label: 'Off', value: 'Off' },
+		{ label: '5s', value: 5000 },
+		{ label: '10s', value: 10000 },
+		{ label: '30s', value: 30000 },
+		{ label: '1m', value: 60000 },
+		{ label: '5m', value: 300000 },
+		{ label: '15m', value: 900000 },
+		{ label: '30m', value: 1800000 },
+		{ label: '1h', value: 3600000 },
+		{ label: '2h', value: 7200000 },
+		{ label: '1d', value: 86400000 }
+	];
 	themes = [ 'Dark', 'Default' ];
 	selectedTheme: string = 'dark';
 
@@ -30,6 +43,7 @@ export class HeaderComponent implements OnInit {
 	presets: Array<PresetItem> = [];
 
 	constructor(
+		private timer: TimerService,
 		private layoutService: LayoutService,
 		private _dialog: MatDialog,
 		private dashboardSvc: DashboardService
@@ -76,10 +90,15 @@ export class HeaderComponent implements OnInit {
 		this.popRefresh.toggle();
 	}
 
-	refreshTimeSelected(time) {
-		this.refreshTime = time;
+	onRefresh() {
+		this.timer.setRefreshObs(true);
 	}
 
+	refreshTimeSelected(time) {
+		this.refreshTime = time.label;
+		this.timer.setIntervalObs(time.value);
+		this.popRefresh.toggle();
+	}
 	// helper function to create initial presets
 	setupPresets() {
 		const backDate = (numOfDays) => {

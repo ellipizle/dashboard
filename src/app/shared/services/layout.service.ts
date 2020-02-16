@@ -15,10 +15,18 @@ import { Widget } from '../../widget/interfaces/widget';
 })
 export class LayoutService {
 	items = [
-		{ x: 0, y: 0, rows: 4, cols: 5, id: 'qwas23', title: 'Pie', type: 'pie' },
-		{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Area Chart', type: 'area' },
-		{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Bar', type: 'bar' },
-		{ x: 0, y: 0, rows: 2, cols: 12, id: 'qwas23', title: 'Bar Animation', type: 'bar-animation' }
+		{ x: 0, y: 0, rows: 4, cols: 5, id: 'qwas23', title: 'Pie', type: { metadata: { name: 'pie' } } },
+		{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Area Chart', type: { metadata: { name: 'area-graph' } } },
+		{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Bar', type: { metadata: { name: 'bar' } } },
+		{
+			x: 0,
+			y: 0,
+			rows: 2,
+			cols: 12,
+			id: 'qwas23',
+			title: 'Bar Animation',
+			type: { metadata: { name: 'animation-bar' } }
+		}
 	];
 	public layout: Array<Widget> = [];
 	public options: GridsterConfig = {
@@ -56,7 +64,9 @@ export class LayoutService {
 		}
 	};
 
-	constructor() {}
+	constructor() {
+		// this.layout = this.items;
+	}
 
 	deleteItem(id: string): void {
 		const item = this.layout.find((d) => d.id === id);

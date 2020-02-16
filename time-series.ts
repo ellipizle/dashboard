@@ -1,4 +1,4 @@
-const data = {
+export const data = {
 	status: 'success',
 	data: {
 		resultType: 'matrix',
