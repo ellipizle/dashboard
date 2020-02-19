@@ -10,6 +10,7 @@ export class PanelHeaderComponent implements OnInit {
 	@Input() item: any;
 	@Output() edit: any = new EventEmitter();
 	@Output() view: any = new EventEmitter();
+	@Output() panelJson: any = new EventEmitter();
 	@Output() remove: any = new EventEmitter();
 
 	constructor() {}

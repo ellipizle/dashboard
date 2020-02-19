@@ -1,13 +1,16 @@
 <mat-toolbar class="dashboard-sidebar-toolbar">
 
 
-  <a href="#"><span class="dashboard-logo mat-headline gradient-mask">#DASHBOARD</span></a>
-  <mat-form-field>
+  <a href="#" *ngIf="!detailView"><span class="dashboard-logo mat-headline gradient-mask">#DASHBOARD</span></a>
+  <mat-form-field *ngIf="!detailView">
   <mat-select [(value)]="selectedTheme">
     <mat-option value="dark">Dark</mat-option>
     <mat-option value="default">Default</mat-option>
   </mat-select>
 </mat-form-field>
+<button class="button-back" (click)="goBack()" *ngIf="detailView">
+                 <mat-icon fontSet="fas" fontIcon="fa-arrow-left"></mat-icon>
+</button>
 
   <span class="dashboard-sidebar-fill-remaining-space"></span>
 
@@ -21,15 +24,18 @@
   </button>
 
     <button mat-icon-button  [satPopoverAnchor]='popDatePicker'  (click)="onDatePicker()">
-    <mat-icon  aria-hidden="false" aria-label="Toggle Down">access_time</mat-icon> Last 2 hours
+    <mat-icon  aria-hidden="false" aria-label="Toggle Down">access_time</mat-icon> {{range}}
       <mat-icon  aria-hidden="false" aria-label="Toggle Down" *ngIf="timeRangeToggle">keyboard_arrow_down</mat-icon>
       <mat-icon  aria-hidden="false" aria-label="Toggle Up"  *ngIf="!timeRangeToggle">keyboard_arrow_up</mat-icon>
        <sat-popover #popDatePicker hasBackdrop  verticalAlign="below" horizontalAlign="end" >
-        <div  class="datePicker" fxLayout="row" fxLayoutAlign="space-between">
+               <mat-list>
+            <mat-list-item *ngFor="let range of rangeList" (click)="updateRange(range)">  {{range.label}}  </mat-list-item>
+            </mat-list>
+        <!-- <div  class="datePicker" fxLayout="row" fxLayoutAlign="space-between">
              <div fxFlex>
                   <ngx-mat-drp (selectedDateRangeChanged)="updateRange($event)" [options]="options" #dateRangePicker></ngx-mat-drp>
           </div>
-        </div>
+        </div> -->
         </sat-popover>
       </button>
 

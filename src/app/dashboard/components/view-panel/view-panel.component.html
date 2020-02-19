@@ -6,7 +6,7 @@
         (remove)="removeWidget($event)">
     </app-panel-header>
         <ng-container [ngSwitch]="widget.type.metadata.name">
-              <ng-template [ngSwitchCase]="'bar'">
+              <ng-template [ngSwitchCase]="'bar'-chart">
                     <app-bar
                         [item]="widget">
                     </app-bar>
@@ -16,15 +16,15 @@
                         [item]="widget">
                     </app-area-stack>
               </ng-template>
-              <ng-template [ngSwitchCase]="'pie'">
+              <ng-template [ngSwitchCase]="'pie-chart'">
                     <app-pie
                         [item]="widget">
                     </app-pie>
               </ng-template>
-                    <ng-template [ngSwitchCase]="'bar-animation'">
-                    <app-bar-animation
+                   <ng-template [ngSwitchCase]="'line-graph'">
+                    <app-line-chart
                         [item]="widget">
-                    </app-bar-animation>
+                    </app-line-chart>
               </ng-template>
         </ng-container>
 </div>

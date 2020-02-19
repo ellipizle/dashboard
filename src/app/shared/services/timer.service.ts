@@ -5,10 +5,19 @@ import { map, scan, tap, takeUntil, takeWhile, switchMap } from 'rxjs/operators'
 	providedIn: 'root'
 })
 export class TimerService {
-	private refresh$ = new Subject();
-	private timer$ = new BehaviorSubject(false);
+	public refresh$ = new Subject();
+	public dateRange$ = new BehaviorSubject(false);
+	public timer$ = new BehaviorSubject(false);
 	private unsubscribe$: Subject<void> = new Subject<void>();
 	constructor() {}
+
+	getDateRangeObs(): Observable<any> {
+		return this.dateRange$.asObservable();
+	}
+
+	setDateRangeObs(range: any) {
+		this.dateRange$.next(range);
+	}
 
 	getRefreshObs(): Observable<any> {
 		return this.refresh$.asObservable();

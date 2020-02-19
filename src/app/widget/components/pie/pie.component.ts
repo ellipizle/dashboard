@@ -15,7 +15,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input() public index: any;
 
-	startTime: any = 1581722395;
+	duration: any = 1581722395;
 	endTime: any = 1581723395;
 	step: any = 15;
 	url: any;
@@ -65,14 +65,23 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	ngAfterViewInit() {
-		this.getData();
+		// this.getData();
+
+		this.timerService.getDateRangeObs().subscribe((res: any) => {
+			if (res) {
+				console.log('date range called');
+				this.duration = res.short;
+				this.getData();
+			}
+		});
+		this.cd.detectChanges();
 	}
 
 	getData() {
 		let url = this.item.query.spec.base_url;
 		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{step}}', `=${this.step}`);
 		this.panelService.getPanelData(url).subscribe((res: any) => {
 			this.drawPie(this.formatSeries(res.data));

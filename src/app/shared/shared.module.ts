@@ -9,8 +9,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 import { CenterMenuDirective } from './directives/center-menu.directive';
 import { WidgetDialogComponent } from './widget-dialog/widget-dialog.component';
+import { JsonDialogComponent } from './json-dialog/json-dialog.component';
 @NgModule({
-	declarations: [ ConfirmDialogComponent, WidgetDialogComponent, CenterMenuDirective ],
+	declarations: [ ConfirmDialogComponent, WidgetDialogComponent, CenterMenuDirective, JsonDialogComponent ],
 	imports: [ CommonModule, ReactiveFormsModule, FormsModule, FlexLayoutModule, DragDropModule, MaterialModule ],
 	exports: [
 		CommonModule,
@@ -23,6 +24,6 @@ import { WidgetDialogComponent } from './widget-dialog/widget-dialog.component';
 		SatPopoverModule,
 		CenterMenuDirective
 	],
-	entryComponents: [ ConfirmDialogComponent, WidgetDialogComponent ]
+	entryComponents: [ ConfirmDialogComponent, WidgetDialogComponent, JsonDialogComponent ]
 })
 export class SharedModule {}

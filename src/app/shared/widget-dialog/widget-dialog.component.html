@@ -21,7 +21,7 @@
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Chart Type</mat-label>
           <mat-select placeholder="Chart Type" formControlName="type">
-            <mat-option *ngFor="let chart of chartsOption " [value]="chart">{{chart?.metadata?.name}}</mat-option>
+            <mat-option *ngFor="let chart of chartsTypes " [value]="chart">{{chart?.metadata?.name}}</mat-option>
           </mat-select>
            <mat-error *ngIf="formSubmitted && widgetForm.get('type').invalid">chart type is require</mat-error>
         </mat-form-field>

@@ -15,6 +15,7 @@ import { LayoutService } from '../../../shared/services/layout.service';
 import { DashboardService } from '../../../shared/services/dashboard.service';
 import { DialogService } from '../../../shared/dialog/dialog.service';
 import { WidgetDialogComponent } from '../../../shared/widget-dialog/widget-dialog.component';
+import { JsonDialogComponent } from '../../../shared/json-dialog/json-dialog.component';
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
@@ -61,9 +62,21 @@ export class DashboardComponent {
 			});
 	}
 
+	public jsonWidget(widget: Widget) {
+		const dialogRef = this._dialog.open(JsonDialogComponent, {
+			width: '8900px',
+			data: widget
+		});
+		dialogRef.afterClosed().subscribe((res) => {
+			if (res) {
+				// this.layoutService.editItem(res);
+			}
+		});
+	}
+
 	public viewWidget(widget: Widget) {
 		this.dashboardSvc.setSelectedItemObs(widget);
-		this.router.navigate([ 'dashboard', widget.id ]);
+		this.router.navigate([ 'dashboard/panel', widget.id ]);
 	}
 
 	public editWidget(widget: Widget) {

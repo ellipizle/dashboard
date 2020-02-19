@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { DashboardService } from '../../../shared/services/dashboard.service';
 import { Router } from '@angular/router';
 import { WidgetDialogComponent } from '../../../shared/widget-dialog/widget-dialog.component';
+import { JsonDialogComponent } from '../../../shared/json-dialog/json-dialog.component';
 @Component({
 	selector: 'app-view-panel',
 	templateUrl: './view-panel.component.html',
@@ -15,6 +16,18 @@ export class ViewPanelComponent implements OnInit {
 		this.dashboard.getSelectedItemObs().subscribe((res) => {
 			console.log(res);
 			this.widget = res;
+		});
+	}
+
+	public jsonWidget(widget: Widget) {
+		const dialogRef = this._dialog.open(JsonDialogComponent, {
+			width: '8900px',
+			data: widget
+		});
+		dialogRef.afterClosed().subscribe((res) => {
+			if (res) {
+				// this.layoutService.editItem(res);
+			}
 		});
 	}
 	public viewWidget(widget: Widget) {

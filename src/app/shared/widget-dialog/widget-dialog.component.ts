@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DashboardService } from '../services/dashboard.service';
 import { v4 as uuid } from 'uuid';
+import { ChartType, Query } from '../../widget/interfaces/widget';
 @Component({
 	selector: 'app-widget-dialog',
 	templateUrl: './widget-dialog.component.html',
@@ -10,8 +11,9 @@ import { v4 as uuid } from 'uuid';
 })
 export class WidgetDialogComponent implements OnInit {
 	formSubmitted: boolean;
-	queryOption = [];
-	chartsOption = [];
+	queryOption: Array<Query> = [];
+	chartsOption: Array<ChartType> = [];
+	chartsTypes: Array<ChartType> = [];
 	widgetForm = this._fb.group({
 		id: [ uuid() ],
 		title: [ '', Validators.required ],
@@ -31,6 +33,9 @@ export class WidgetDialogComponent implements OnInit {
 
 		this.dashboardSvc.getChartsObs().subscribe((res) => {
 			if (res) this.chartsOption = res;
+		});
+		this.widgetForm.get('query').valueChanges.subscribe((val: any) => {
+			this.chartsTypes = this.chartsOption.filter((type) => type.spec.category === val.spec.query_category);
 		});
 	}
 

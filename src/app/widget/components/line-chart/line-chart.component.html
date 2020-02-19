@@ -1,4 +1,2 @@
-	 <div echarts (resized)="onResize($event)"
-[options]="options" (chartInit)="onChartInit($event)"
-[style.width.px]="width"  [style.height.px]="height">
-</div>
+<div class="spinner" *ngIf="pending"><i class="fas fa-spinner fa-spin"></i></div>
+<div echarts [options]="options" class="echart"></div>

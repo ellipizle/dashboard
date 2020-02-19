@@ -5,10 +5,11 @@
         [item]="item"
         (edit)="editWidget($event)"
          (view)="viewWidget($event)"
+           (panelJson)="jsonWidget($event)"
         (remove)="removeWidget($event)">
     </app-panel-header>
         <ng-container [ngSwitch]="item.type.metadata.name">
-              <ng-template [ngSwitchCase]="'bar'">
+              <ng-template [ngSwitchCase]="'bar-chart'">
                     <app-bar (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
                     </app-bar>
@@ -18,15 +19,15 @@
                         [item]="item">
                     </app-area-stack>
               </ng-template>
-              <ng-template [ngSwitchCase]="'pie'">
+              <ng-template [ngSwitchCase]="'pie-chart'">
                     <app-pie (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
                     </app-pie>
               </ng-template>
-                              <ng-template [ngSwitchCase]="'bar-animation'">
-                    <app-bar-animation (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                    <ng-template [ngSwitchCase]="'line-graph'">
+                    <app-line-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
-                    </app-bar-animation>
+                    </app-line-chart>
               </ng-template>
         </ng-container>
 

@@ -10,6 +10,25 @@ button {
 	white-space: nowrap;
 	border-radius: 2px;
 }
+.button-back {
+	cursor: pointer;
+	align-items: center;
+	background: rgba(0, 0, 0, 0);
+	border: 2px solid #d8d9da;
+	border-radius: 50%;
+	width: 45px;
+	height: 45px;
+	-webkit-transition: -webkit-transform .1s ease .1s;
+	transition: -webkit-transform .1s ease .1s;
+	-o-transition: transform .1s ease .1s;
+	transition: transform .1s ease .1s;
+	transition: transform .1s ease .1s, -webkit-transform .1s ease .1s;
+	color: #d8d9da;
+	mat-icon {
+		margin-left: -5px;
+		font-size: 34px;
+	}
+}
 ::ng-deep .mat-button-toggle-button {
 	.mat-button-toggle-label-content {
 		line-height: 2px;

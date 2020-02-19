@@ -7,6 +7,7 @@ import { TimerService } from '../../../shared/services/timer.service';
 import { Widget } from '../../interfaces/widget';
 import { data } from 'time-series';
 import * as _moment from 'moment';
+import { combineLatest } from 'rxjs/operators';
 const moment = _moment;
 @Component({
 	selector: 'app-area-stack',
@@ -15,13 +16,11 @@ const moment = _moment;
 })
 export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
-	@Input() public index: any;
-	@Input() public data: any;
-	@Input() public unitHeight: number;
+	pending: boolean;
 
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
-	step: any = 15;
+	step: any = 1;
 	url: any;
 
 	echartsInstance: ECharts;
@@ -43,13 +42,39 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
 		});
+		// 	combineLatest(
+		// 	this.timerService.dateRange$,
+		// 	this.timerService.refresh$,
+		// 	this.timerService.timer$
+		// ).subscribe((res: any) => {
+		// 	if (res[0]) {
+		// 	}
+		// 	if (res[1]) {
+		// 		this.getData();
+		// 	}
+
+		// 	if (res[2]) {
+		// 		let self = this;
+		// 		if (typeof res[2] === 'number') {
+		// 			this.interval = window.setInterval(function() {
+		// 				// console.log('hello timer');
+		// 				self.getData();
+		// 			}, res[2]);
+		// 		} else {
+		// 			window.clearInterval(this.interval);
+		// 		}
+		// 	}
+		// });
+
 		this.timerService.getRefreshObs().subscribe((res) => {
 			if (res) {
+				console.log('refresh called');
 				this.getData();
 			}
 		});
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
+			console.log('interval called');
 			if (typeof res === 'number') {
 				this.interval = window.setInterval(function() {
 					// console.log('hello timer');
@@ -68,7 +93,15 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	}
 	ngAfterViewInit() {
 		// this.drawChart(this.formatSeries(data.data));
-		this.getData();
+		this.timerService.getDateRangeObs().subscribe((res: any) => {
+			if (res) {
+				console.log('date range called');
+				this.startTime = res.start;
+				this.endTime = res.end;
+				this.getData();
+			}
+		});
+		this.cd.detectChanges();
 	}
 
 	getData() {
@@ -77,9 +110,16 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
 		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
 		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.panelService.getPanelData(url).subscribe((res: any) => {
-			this.drawChart(this.formatSeries(res.data));
-		});
+		this.pending = true;
+		this.panelService.getPanelData(url).subscribe(
+			(res: any) => {
+				this.drawChart(this.formatSeries(res.data));
+				this.pending = false;
+			},
+			(error) => {
+				this.pending = false;
+			}
+		);
 	}
 
 	formatSeries(data) {
@@ -143,7 +183,6 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							var date = new Date(time);
 							return moment.unix(time).format('d/M/Y, h:mm');
 						},
 						textStyle: {

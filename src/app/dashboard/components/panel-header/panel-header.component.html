@@ -31,7 +31,5 @@
       </div>
 
             <mat-menu #subMenu="matMenu">
-              <button mat-menu-item>Shut down</button>
-              <button mat-menu-item>Restart</button>
-              <button mat-menu-item>Hibernate</button>
+              <button mat-menu-item (click)="panelJson.emit(item)">Panel Json</button>
             </mat-menu>
