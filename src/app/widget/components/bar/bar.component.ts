@@ -65,6 +65,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			if (res) {
 				console.log('date range called');
 				this.duration = res.short;
+				this.step = res.step;
 				this.getData();
 			}
 		});

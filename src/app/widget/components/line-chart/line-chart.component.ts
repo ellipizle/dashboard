@@ -90,6 +90,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 				console.log('date range called');
 				this.startTime = res.start;
 				this.endTime = res.end;
+				this.step = res.step;
 				this.getData();
 			}
 		});
