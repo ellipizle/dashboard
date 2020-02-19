@@ -119,7 +119,7 @@ export class HeaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.timer.setDateRangeObs(this.setRange({ label: 'Last 1 hour', short: '1h', start: 0, end: 0 }));
+		this.timer.setDateRangeObs(this.setRange({ label: 'Last 1 hour', short: '1h', start: 0, end: 0, step: 60 }));
 	}
 	goBack() {
 		this.route.navigate([ 'dashboard' ]);
