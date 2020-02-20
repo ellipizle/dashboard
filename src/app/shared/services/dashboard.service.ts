@@ -45,4 +45,11 @@ export class DashboardService {
 	getCharts() {
 		return this.http.get(`${this.baseUrl}apis/ws.io/v1/dashboardcharts`);
 	}
+
+	saveDashboard(payload) {
+		return this.http.post(`${this.baseUrl}apis/ws.io/v1/usersettings/dashboard-user1`, payload);
+	}
+	getDashboard() {
+		return this.http.get(`${this.baseUrl}apis/ws.io/v1/usersettings/dashboard-user1`);
+	}
 }

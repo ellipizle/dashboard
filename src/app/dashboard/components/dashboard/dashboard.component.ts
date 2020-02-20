@@ -7,6 +7,7 @@ import {
 	ViewEncapsulation,
 	HostListener
 } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridsterConfig } from 'angular-gridster2';

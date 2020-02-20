@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import * as _moment from 'moment';
 const moment = _moment;
-
+import { map } from 'rxjs/operators';
 import { Location } from '@angular/common';
 @Component({
 	selector: 'app-header',
@@ -50,6 +50,44 @@ export class HeaderComponent implements OnInit {
 		{ label: 'Last 24 hours', short: '24h', start: 0, end: 0, step: 1440 },
 		{ label: 'Last 2 days', short: '2d', start: 0, end: 0, step: 2880 }
 	];
+
+	dash = {
+		apiVersion: 'ws.io/v1',
+		kind: 'UserSetting',
+		metadata: {
+			name: 'dashboard-user1'
+		},
+		spec: {
+			dashboard_layouts: [
+				{
+					name: 'dashboard1',
+					layout: ''
+				}
+			]
+		}
+	};
+
+	getDashboard() {
+		this.dashboardSvc
+			.getDashboard()
+			.pipe
+			// map((res) => {
+			// 	let dash: any = res;
+			// 	dash.spec.dashboard_layouts = JSON.parse(dash.spec.dashboard_layouts);
+			// 	return dash;
+			// })
+			()
+			.subscribe((res: any) => {
+				this.dash = res;
+				this.layoutService.layout = JSON.parse(res.spec.dashboard_layouts[0].layout);
+			});
+	}
+
+	saveDashboard() {
+		let layout = this.layoutService.layout;
+		this.dash.spec.dashboard_layouts[0].layout = JSON.stringify(layout);
+		this.dashboardSvc.saveDashboard(this.dash).subscribe((res) => {}, (error) => {});
+	}
 	public setRange(range) {
 		switch (range.short) {
 			case '5m': {
@@ -116,6 +154,7 @@ export class HeaderComponent implements OnInit {
 				this.detailView = false;
 			}
 		});
+		this.getDashboard();
 	}
 
 	ngOnInit() {

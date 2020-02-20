@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ChangeDetectorRef, Input, OnDestroy, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, HostListener, ChangeDetectorRef, Input, OnDestroy, ElementRef } from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
 import { Widget } from '../../interfaces/widget';
@@ -13,6 +13,11 @@ import { data } from 'pie';
 })
 export class BarComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
+	@HostListener('window:resize', [ '$event' ])
+	onResized(event) {
+		this.echartsInstance.resize();
+		this.cd.detectChanges();
+	}
 
 	duration: any = 1581722395;
 	step: any = 15;
@@ -25,6 +30,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	colors: any;
 	echarts: any;
 	interval;
+	pending: boolean;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -78,9 +84,16 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.panelService.getPanelData(url).subscribe((res: any) => {
-			this.drawBar(this.formatSeries(res.data));
-		});
+		this.pending = true;
+		this.panelService.getPanelData(url).subscribe(
+			(res: any) => {
+				this.pending = false;
+				this.drawBar(this.formatSeries(res.data));
+			},
+			(error) => {
+				this.pending = false;
+			}
+		);
 	}
 	formatSeries(data) {
 		let legend: string;

@@ -7,7 +7,8 @@ import {
 	ChangeDetectorRef,
 	Input,
 	ElementRef,
-	OnDestroy
+	OnDestroy,
+	HostListener
 } from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -38,6 +39,12 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	colors: any;
 	echarts: any;
 	interval;
+	pending: boolean;
+	@HostListener('window:resize', [ '$event' ])
+	onResized(event) {
+		this.echartsInstance.resize();
+		this.cd.detectChanges();
+	}
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -103,9 +110,16 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
 		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
 		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.panelService.getPanelData(url).subscribe((res: any) => {
-			this.drawLine(this.formatSeries(res.data));
-		});
+		this.pending = true;
+		this.panelService.getPanelData(url).subscribe(
+			(res: any) => {
+				this.pending = false;
+				this.drawLine(this.formatSeries(res.data));
+			},
+			(error) => {
+				this.pending = false;
+			}
+		);
 	}
 	formatSeries(data) {
 		let results = data.result;
@@ -127,6 +141,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	}
 
 	drawLine(data) {
+		console.log(data);
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
 
@@ -137,20 +152,6 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 				trigger: 'item',
 				formatter: '{a} <br/>{b} : {c}'
 			},
-			toolbox: {
-				show: true,
-				feature: {
-					dataZoom: {
-						yAxisIndex: 'none'
-					},
-					dataView: {
-						readOnly: false,
-						lang: [ 'data view', 'turn off', 'refresh' ]
-					},
-					saveAsImage: {}
-				}
-			},
-
 			// legend: {
 			// 	left: 'left',
 			// 	data: [ 'Line 1', 'Line 2', 'Line 3' ],

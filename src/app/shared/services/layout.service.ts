@@ -67,7 +67,11 @@ export class LayoutService {
 	constructor() {
 		// this.layout = this.items;
 	}
-
+	changedOptions() {
+		if (this.options.api && this.options.api.optionsChanged) {
+			this.options.api.optionsChanged();
+		}
+	}
 	deleteItem(id: string): void {
 		const item = this.layout.find((d) => d.id === id);
 		this.layout.splice(this.layout.indexOf(item), 1);

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, HostListener, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -17,7 +17,11 @@ const moment = _moment;
 export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	pending: boolean;
-
+	@HostListener('window:resize', [ '$event' ])
+	onResized(event) {
+		this.echartsInstance.resize();
+		this.cd.detectChanges();
+	}
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
 	step: any = 1;
@@ -95,7 +99,6 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		// this.drawChart(this.formatSeries(data.data));
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
-				console.log('date range called');
 				this.startTime = res.start;
 				this.endTime = res.end;
 				this.step = res.step;
