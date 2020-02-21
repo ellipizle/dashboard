@@ -55,12 +55,12 @@ export class HeaderComponent implements OnInit {
 		apiVersion: 'ws.io/v1',
 		kind: 'UserSetting',
 		metadata: {
-			name: 'dashboard-user1'
+			name: 'dashboard-user2'
 		},
 		spec: {
 			dashboard_layouts: [
 				{
-					name: 'dashboard1',
+					name: 'dashboard2',
 					layout: ''
 				}
 			]

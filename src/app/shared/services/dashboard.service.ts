@@ -47,7 +47,7 @@ export class DashboardService {
 	}
 
 	saveDashboard(payload) {
-		return this.http.post(`${this.baseUrl}apis/ws.io/v1/usersettings/dashboard-user1`, payload);
+		return this.http.put(`${this.baseUrl}apis/ws.io/v1/usersettings/dashboard-user1`, payload);
 	}
 	getDashboard() {
 		return this.http.get(`${this.baseUrl}apis/ws.io/v1/usersettings/dashboard-user1`);

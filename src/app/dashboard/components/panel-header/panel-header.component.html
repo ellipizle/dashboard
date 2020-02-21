@@ -1,5 +1,5 @@
 
-        <button mat-button [appCenterMenu]="menuTrigger" >{{item.title}}
+        <button   mat-button appCenterMenu (click)="open()">{{item.title}}
         <mat-icon  aria-hidden="false" aria-label="Toggle Down" *ngIf="menuToggle">keyboard_arrow_down</mat-icon>
         <mat-icon  aria-hidden="false" aria-label="Toggle Up"  *ngIf="!menuToggle">keyboard_arrow_up</mat-icon>
         </button>
