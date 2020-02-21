@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgxDrpOptions, PresetItem, Range } from 'ngx-mat-daterange-picker';
 import { Router } from '@angular/router';
 import { WidgetDialogComponent } from '../../../shared/widget-dialog/widget-dialog.component';
-import { DashboardService } from '../../../shared/services/dashboard.service';
-import { LayoutService } from '../../../shared/services/layout.service';
-import { TimerService } from '../../../shared/services/timer.service';
+
+import { NotificationService, LayoutService, DashboardService, TimerService } from '../../../shared/services';
+
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import * as _moment from 'moment';
@@ -86,7 +86,14 @@ export class HeaderComponent implements OnInit {
 	saveDashboard() {
 		let layout = this.layoutService.layout;
 		this.dash.spec.dashboard_layouts[0].layout = JSON.stringify(layout);
-		this.dashboardSvc.saveDashboard(this.dash).subscribe((res) => {}, (error) => {});
+		this.dashboardSvc.saveDashboard(this.dash).subscribe(
+			(res) => {
+				this.noticeSvc.openSnackBar('Dashboard saved successfully', '');
+			},
+			(error) => {
+				this.noticeSvc.openSnackBar('Failed to saved dashboard', '');
+			}
+		);
 	}
 	public setRange(range) {
 		switch (range.short) {
@@ -140,12 +147,14 @@ export class HeaderComponent implements OnInit {
 
 	constructor(
 		private timer: TimerService,
+		private noticeSvc: NotificationService,
 		private layoutService: LayoutService,
 		private _dialog: MatDialog,
 		private dashboardSvc: DashboardService,
 		private route: Router,
 		private location: Location
 	) {
+		// this.noticeSvc.openSnackBar('Dashboard saved successfully', '');
 		this.route.events.subscribe((res) => {
 			let url = this.location.path().split('/');
 			if (url[2] && url[2] == 'panel') {
