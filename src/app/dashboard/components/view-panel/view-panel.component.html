@@ -1,8 +1,9 @@
-<div *ngIf="widget">
+<div *ngIf="widget" class="view-panel">
 <app-panel-header
         [item]="widget"
            (edit)="editWidget($event)"
          (view)="viewWidget($event)"
+           (panelJson)="jsonWidget($event)"
         (remove)="removeWidget($event)">
     </app-panel-header>
         <ng-container [ngSwitch]="widget.type.metadata.name">

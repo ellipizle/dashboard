@@ -37,7 +37,7 @@ export class LayoutService {
 		maxCols: 12,
 		minRows: 5,
 		// fixedRowHeight: 120,
-		gridType: 'scrollVertical',
+		// gridType: 'scrollVertical',
 		displayGrid: DisplayGrid.None,
 		// fixedColWidth: number;
 		// keepFixedHeightInMobile: true,

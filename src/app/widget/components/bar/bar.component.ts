@@ -114,6 +114,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	}
 
 	drawBar(data) {
+		// console.log(this.item.query.spec.x_axis_label)
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
 
@@ -128,13 +129,14 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			},
 			grid: {
 				top: '3%',
-				left: '3%',
-				right: '4%',
+				left: '5%',
+				right: '5%',
 				bottom: '5%',
 				containLabel: true
 			},
 			xAxis: [
 				{
+					name: this.item.query.spec.x_axis_label,
 					type: 'category',
 					data: data.xAxis,
 					axisTick: {

@@ -163,12 +163,13 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 			grid: {
 				top: '4%',
 				left: '3%',
-				right: '4%',
-				bottom: '3%',
+				right: '14%',
+				bottom: '13%',
 				containLabel: true
 			},
 			xAxis: [
 				{
+					name: this.item.query.spec.x_axis_label,
 					// type: 'category',
 					data: data.dateList,
 					axisTick: {

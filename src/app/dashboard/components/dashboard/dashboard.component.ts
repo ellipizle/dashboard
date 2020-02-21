@@ -52,7 +52,6 @@ export class DashboardComponent {
 	}
 
 	public removeWidget(widget: Widget) {
-		console.log('console view widget ', widget);
 		this.dialogService
 			.openConfirmDialog({ title: 'Remove Panel', msg: 'Are you sure you want to remove panel?' })
 			.afterClosed()
@@ -65,8 +64,9 @@ export class DashboardComponent {
 
 	public jsonWidget(widget: Widget) {
 		const dialogRef = this._dialog.open(JsonDialogComponent, {
-			width: '8900px',
-			data: widget
+			width: '1000px',
+			data: widget,
+			panelClass: 'json-panel'
 		});
 		dialogRef.afterClosed().subscribe((res) => {
 			if (res) {

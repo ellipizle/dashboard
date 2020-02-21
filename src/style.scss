@@ -12,6 +12,20 @@ html {
 	height: 100%;
 	color: $dark-primary-text;
 }
+.custom-drop {
+	background: blue;
+}
+.json-panel {
+	mat-dialog-container {
+		background: #161719;
+		color: #fff;
+		.mat-dialog-content {
+			background: #000;
+			display: block;
+			margin: 0 4px;
+		}
+	}
+}
 
 body {
 	margin: 0;

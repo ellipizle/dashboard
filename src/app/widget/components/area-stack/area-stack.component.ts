@@ -174,6 +174,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			},
 			xAxis: [
 				{
+					name: this.item.query.spec.x_axis_label,
 					// type: 'category',
 					boundaryGap: false,
 					data: data.dateList,

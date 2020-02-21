@@ -2,12 +2,24 @@
 <mat-dialog-content *ngIf="data">
   <pre>
   <code>
-     {{ data | json }}
+    	<span #value [innerHtml]="data | json">
+
+    	</span>
   </code>
 </pre>
 </mat-dialog-content>
 <mat-dialog-actions>
   <!-- <button mat-button [mat-dialog-close]="true">Yes</button> -->
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-  <button mat-button [mat-dialog-close]="false" color="green">Copy to Clipboard</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="false" class="copy"
+  [clipboard]="value?.innerHTML?.trim()"
+				(clipboardCopy)="logSuccess($event)"
+				(clipboardError)="logError($event)">Copy to Clipboard</button>
 </mat-dialog-actions>
+
+<!-- </mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+</mat-dialog-actions> -->

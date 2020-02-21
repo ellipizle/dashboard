@@ -10,8 +10,9 @@ import { SatPopoverModule } from '@ncstate/sat-popover';
 import { CenterMenuDirective } from './directives/center-menu.directive';
 import { WidgetDialogComponent } from './widget-dialog/widget-dialog.component';
 import { JsonDialogComponent } from './json-dialog/json-dialog.component';
+import { ClipboardDirective } from './directives/clipboard.directive';
 @NgModule({
-	declarations: [ ConfirmDialogComponent, WidgetDialogComponent, CenterMenuDirective, JsonDialogComponent ],
+	declarations: [ ConfirmDialogComponent, WidgetDialogComponent, CenterMenuDirective, JsonDialogComponent, ClipboardDirective ],
 	imports: [ CommonModule, ReactiveFormsModule, FormsModule, FlexLayoutModule, DragDropModule, MaterialModule ],
 	exports: [
 		CommonModule,

@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DashboardService } from '../services/dashboard.service';
 import { ChartType, Query } from '../../widget/interfaces/widget';
 import { ConfigService } from '../../core/services/config.service';
+import { NotificationService } from '../services';
 @Component({
 	selector: 'app-json-dialog',
 	templateUrl: './json-dialog.component.html',
@@ -19,7 +20,8 @@ export class JsonDialogComponent implements OnInit {
 		public dialogRef: MatDialogRef<JsonDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public widgetData,
 		private dashboardSvc: DashboardService,
-		private configSvc: ConfigService
+		private configSvc: ConfigService,
+		private notificationService: NotificationService
 	) {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
@@ -41,7 +43,13 @@ export class JsonDialogComponent implements OnInit {
 			}
 		}
 	}
-
+	logSuccess(event) {
+		console.log(event);
+		this.notificationService.openSnackBar('Content copied to clipboard', '');
+	}
+	logError(event) {
+		this.notificationService.openSnackBar('failed to copyto clipboard', '');
+	}
 	submitForm() {
 		this.formSubmitted = false;
 		this.dialogRef.close();

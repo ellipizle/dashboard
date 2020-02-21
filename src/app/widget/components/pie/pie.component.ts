@@ -149,12 +149,13 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			},
 			legend: {
 				orient: 'vertical',
-				left: 'left',
+				left: '5%',
 				data: data.dateList,
 				textStyle: {
 					color: echarts.textColor
 				}
 			},
+
 			series: [
 				{
 					name: data.legend,

@@ -88,7 +88,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
 				this.pending = false;
-				this.drawAnimatedBar(this.formatSeries(res.data));
+				this.drawBar(this.formatSeries(res.data));
 			},
 			(error) => {
 				this.pending = false;
@@ -146,6 +146,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 			// },
 			xAxis: [
 				{
+					name: this.item.query.spec.x_axis_label,
 					data: data.dateList,
 					silent: false,
 					axisTick: {
