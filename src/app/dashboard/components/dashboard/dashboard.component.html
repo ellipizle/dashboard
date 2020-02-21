@@ -29,6 +29,11 @@
                         [item]="item">
                     </app-line-chart>
               </ng-template>
+                             <ng-template [ngSwitchCase]="'bar-animation'">
+                    <app-bar-animation (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="item">
+                    </app-bar-animation>
+              </ng-template>
         </ng-container>
 
 

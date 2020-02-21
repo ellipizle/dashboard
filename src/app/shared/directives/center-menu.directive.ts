@@ -24,6 +24,7 @@ export class CenterMenuDirective {
 	@HostListener('click', [ '$event' ])
 	onclick(e) {
 		this._setVariables();
+		console.log(e);
 		//menu not opened by keyboard down arrow, have to set this so MatMenuTrigger knows the menu was opened with a mouse click
 		this.menuTrigger['_openedBy'] = e.button === 0 ? 'mouse' : null;
 
