@@ -3,7 +3,7 @@
 
   <a href="#" *ngIf="!detailView"><span class="dashboard-logo mat-headline gradient-mask">#DASHBOARD</span></a>
   <mat-form-field *ngIf="!detailView">
-  <mat-select [(value)]="selectedTheme">
+  <mat-select [(value)]="selectedTheme" (selectionChange)="onChangeTheme($event.value)">
     <mat-option value="dark">Dark</mat-option>
     <mat-option value="default">Default</mat-option>
   </mat-select>

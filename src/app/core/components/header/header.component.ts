@@ -11,6 +11,8 @@ import * as _moment from 'moment';
 const moment = _moment;
 import { map } from 'rxjs/operators';
 import { Location } from '@angular/common';
+import { DARK_THEME, DEFAULT_THEME, Dark_echarts, Default_echarts } from '../../theme';
+import { ConfigService } from '../../services/config.service';
 @Component({
 	selector: 'app-header',
 	templateUrl: './header.component.html',
@@ -153,7 +155,8 @@ export class HeaderComponent implements OnInit {
 		private _dialog: MatDialog,
 		private dashboardSvc: DashboardService,
 		private route: Router,
-		private location: Location
+		private location: Location,
+		private configSvc: ConfigService
 	) {
 		// this.noticeSvc.openSnackBar('Dashboard saved successfully', '');
 		this.route.events.subscribe((res) => {
@@ -165,6 +168,14 @@ export class HeaderComponent implements OnInit {
 			}
 		});
 		this.getDashboard();
+	}
+	onChangeTheme(theme) {
+		console.log(theme);
+		if (theme === 'dark') {
+			this.configSvc.setSelectedThemeObs({ echart: Dark_echarts, theme: DARK_THEME });
+		} else {
+			this.configSvc.setSelectedThemeObs({ echart: Default_echarts, theme: DEFAULT_THEME });
+		}
 	}
 
 	ngOnInit() {

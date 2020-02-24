@@ -31,6 +31,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	echarts: any;
 	interval;
 	pending: boolean;
+	chartData;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -42,6 +43,9 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
+			if (this.chartData) {
+				this.drawBar(this.formatSeries(this.chartData));
+			}
 		});
 
 		this.timerService.getRefreshObs().subscribe((res) => {

@@ -34,6 +34,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	colors: any;
 	echarts: any;
 	interval;
+	chartData;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -45,43 +46,20 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
+			if (this.chartData) {
+				this.drawChart(this.formatSeries(this.chartData));
+			}
 		});
-		// 	combineLatest(
-		// 	this.timerService.dateRange$,
-		// 	this.timerService.refresh$,
-		// 	this.timerService.timer$
-		// ).subscribe((res: any) => {
-		// 	if (res[0]) {
-		// 	}
-		// 	if (res[1]) {
-		// 		this.getData();
-		// 	}
-
-		// 	if (res[2]) {
-		// 		let self = this;
-		// 		if (typeof res[2] === 'number') {
-		// 			this.interval = window.setInterval(function() {
-		// 				// console.log('hello timer');
-		// 				self.getData();
-		// 			}, res[2]);
-		// 		} else {
-		// 			window.clearInterval(this.interval);
-		// 		}
-		// 	}
-		// });
 
 		this.timerService.getRefreshObs().subscribe((res) => {
 			if (res) {
-				console.log('refresh called');
 				this.getData();
 			}
 		});
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
-			console.log('interval called');
 			if (typeof res === 'number') {
 				this.interval = window.setInterval(function() {
-					// console.log('hello timer');
 					self.getData();
 				}, res);
 			} else {
@@ -96,7 +74,6 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	ngAfterViewInit() {
-		// this.drawChart(this.formatSeries(data.data));
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
 				this.startTime = res.start;
@@ -117,6 +94,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
+				this.chartData = res.data;
 				this.drawChart(this.formatSeries(res.data));
 				this.pending = false;
 			},
