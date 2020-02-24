@@ -53,7 +53,10 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
+
 			if (this.chartData) {
+				console.log('in style');
+				console.log(config.theme);
 				this.drawPie(this.formatSeries(this.chartData));
 			}
 		});
@@ -105,6 +108,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
+				this.chartData = res.data;
 				this.pending = false;
 				this.drawPie(this.formatSeries(res.data));
 			},

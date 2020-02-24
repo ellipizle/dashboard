@@ -140,7 +140,7 @@ export class HeaderComponent implements OnInit {
 		return range;
 	}
 	themes = [ 'Dark', 'Default' ];
-	selectedTheme: string = 'dark';
+	selectedTheme: string = 'default';
 
 	//date range
 	range: any = 'Last 1 hour';
@@ -170,12 +170,13 @@ export class HeaderComponent implements OnInit {
 		this.getDashboard();
 	}
 	onChangeTheme(theme) {
-		console.log(theme);
 		if (theme === 'dark') {
 			this.configSvc.setSelectedThemeObs({ echart: Dark_echarts, theme: DARK_THEME });
 		} else {
 			this.configSvc.setSelectedThemeObs({ echart: Default_echarts, theme: DEFAULT_THEME });
 		}
+		var element = document.getElementById('body');
+		element.classList.toggle('dashboard-dark-theme');
 	}
 
 	ngOnInit() {

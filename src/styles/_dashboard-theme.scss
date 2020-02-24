@@ -21,12 +21,81 @@ $dark-primary: mat-palette($mat-blue-grey);
 $dark-accent: mat-palette($mat-amber, A200, A100, A400);
 $dark-warn: mat-palette($mat-deep-orange);
 $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+gridster-item {
+	color: #212124 !important;
+	background: #d8d9da;
+}
+.header-button {
+	color: #212124;
+	background: #fff;
+}
+.header-button:hover {
+	background: #d8d9da;
+}
+.mat-menu-panel {
+	background: #fff;
+	// min-width: 180px !important;
+	.mat-menu-item {
+		height: 40px;
+		color: #161719;
+		.mat-icon-no-color {
+			color: #161719;
+		}
+	}
+	.mat-menu-item:hover {
+		background: #d8d9da !important;
+		border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
+		border-image-slice: 1;
+		border-style: solid;
+		border-top: 0;
+		border-right: 0;
+		border-bottom: 0;
+		border-left-width: 2px;
+	}
+}
+
+// button {
+// 	background: #2a2a2c;
+// 	color: #8e8e8e;
+// 	border: 1px solid #2f2f32;
+// }
 
 // Include the alternative theme styles inside of a block with a CSS class. You can make this
 // CSS class whatever you want. In this example, any component inside of an element with
 // `.unicorn-dark-theme` will be affected by this alternate dark theme instead of the default theme.
 .dashboard-dark-theme {
-	@include angular-material-theme($dark-theme);
+	gridster-item {
+		background: #212124 !important;
+		color: #d8d9da;
+	}
+	.header-button {
+		background: #212124;
+		color: #fff;
+	}
+	.header-button:hover {
+		background: #343436;
+	}
+	.mat-menu-panel {
+		background: #161719;
+		// min-width: 180px !important;
+		.mat-menu-item {
+			height: 40px;
+			color: #d8d9da;
+			.mat-icon-no-color {
+				color: #d8d9da;
+			}
+		}
+		.mat-menu-item:hover {
+			background: #1f1f20 !important;
+			border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
+			border-image-slice: 1;
+			border-style: solid;
+			border-top: 0;
+			border-right: 0;
+			border-bottom: 0;
+			border-left-width: 2px;
+		}
+	}
 }
 
 .side-menu a {

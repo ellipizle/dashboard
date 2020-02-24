@@ -118,6 +118,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
+				this.chartData = res.data;
 				this.pending = false;
 				this.drawLine(this.formatSeries(res.data));
 			},

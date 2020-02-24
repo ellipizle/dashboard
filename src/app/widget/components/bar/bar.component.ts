@@ -91,6 +91,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
+				this.chartData = res.data;
 				this.pending = false;
 				this.drawBar(this.formatSeries(res.data));
 			},

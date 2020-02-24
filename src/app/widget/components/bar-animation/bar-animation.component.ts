@@ -6,6 +6,9 @@ import { TimerService } from '../../../shared/services/timer.service';
 import { PanelService } from '../../../shared/services/panel.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
+import * as _moment from 'moment';
+import { combineLatest } from 'rxjs/operators';
+const moment = _moment;
 @Component({
 	selector: 'app-bar-animation',
 	templateUrl: './bar-animation.component.html',
@@ -19,8 +22,9 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		this.cd.detectChanges();
 	}
 
-	duration: any = 1581722395;
-	step: any = 15;
+	startTime: any = 1581722395;
+	endTime: any = 1581723395;
+	step: any = 1;
 	url: any;
 
 	echartsInstance: ECharts;
@@ -73,8 +77,8 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
-				console.log('date range called');
-				this.duration = res.short;
+				this.startTime = res.start;
+				this.endTime = res.end;
 				this.step = res.step;
 				this.getData();
 			}
@@ -85,12 +89,13 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 	getData() {
 		let url = this.item.query.spec.base_url;
 		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
 		url = this.replace(url, '{{step}}', `${this.step}`);
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
+				this.chartData = res.data;
 				this.pending = false;
 				this.drawBar(this.formatSeries(res.data));
 			},
@@ -100,39 +105,46 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		);
 	}
 	formatSeries(data) {
-		let legend: string;
 		let results = data.result;
 		let dateList: Array<any> = [];
-		let dataArray: Array<any> = [];
+		let series: Array<any> = [];
 		results.forEach((result, index) => {
-			let name: string;
-			let metric = result.metric;
-			for (let key in metric) {
-				legend = key;
-				name = metric[key];
+			if (index == 0) {
+				dateList = result.values.map((date) => date[0]);
 			}
-			dateList.push(name);
-			// 	{
-			// 	name: 'bar',
-			// 	type: 'bar',
-			// 	data: data1,
-			// 	animationDelay: (idx) => idx * 10
-			// },
-			// {
-			// 	name: 'bar2',
-			// 	type: 'bar',
-			// 	data: data2,
-			// 	animationDelay: (idx) => idx * 10 + 100
-			// }
-			dataArray.push({
-				name: name,
+			const valueList = result.values.map((date) => date[1]);
+			series.push({
 				type: 'bar',
-				data: result.value,
+				data: valueList,
+				// name: name,
 				animationDelay: (idx) => idx * 10 + (index + 1 * 100)
 			});
 		});
-		return { dateList: dateList, data: dataArray, legend: legend };
+		return { dateList: dateList, data: series };
 	}
+
+	// formatSeries(data) {
+	// 	let legend: string;
+	// 	let results = data.result;
+	// 	let dateList: Array<any> = [];
+	// 	let dataArray: Array<any> = [];
+	// 	results.forEach((result, index) => {
+	// 		let name: string;
+	// 		let metric = result.metric;
+	// 		for (let key in metric) {
+	// 			legend = key;
+	// 			name = metric[key];
+	// 		}
+	// 		dateList.push(name);
+	// 		dataArray.push({
+	// 			name: name,
+	// 			type: 'bar',
+	// 			data: result.value,
+	// 			animationDelay: (idx) => idx * 10 + (index + 1 * 100)
+	// 		});
+	// 	});
+	// 	return { dateList: dateList, data: dataArray, legend: legend };
+	// }
 
 	drawBar(data) {
 		const colors: any = this.colors;
@@ -162,6 +174,9 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 						}
 					},
 					axisLabel: {
+						formatter: function(time) {
+							return moment.unix(time).format('d/M/Y, h:mm');
+						},
 						textStyle: {
 							color: echarts.textColor
 						}
