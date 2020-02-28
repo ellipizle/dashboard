@@ -1,14 +1,12 @@
 import {
 	Component,
 	OnInit,
-	Output,
-	EventEmitter,
+	HostListener,
 	AfterViewInit,
 	ChangeDetectorRef,
 	Input,
 	ElementRef,
-	OnDestroy,
-	HostListener
+	OnDestroy
 } from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -17,17 +15,20 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
-import * as _moment from 'moment';
-const moment = _moment;
 @Component({
-	selector: 'app-line-chart',
-	templateUrl: './line-chart.component.html',
-	styleUrls: [ './line-chart.component.scss' ]
+	selector: 'app-donut-chart',
+	templateUrl: './donut-chart.component.html',
+	styleUrls: [ './donut-chart.component.scss' ]
 })
-export class LineChartComponent implements AfterViewInit, OnDestroy {
+export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
-
-	startTime: any = 1581722395;
+	@Input() public index: any;
+	@HostListener('window:resize', [ '$event' ])
+	onResized(event) {
+		this.echartsInstance.resize();
+		this.cd.detectChanges();
+	}
+	duration: any = 1581722395;
 	endTime: any = 1581723395;
 	step: any = 15;
 	url: any;
@@ -41,11 +42,6 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	interval;
 	pending: boolean;
 	chartData;
-	@HostListener('window:resize', [ '$event' ])
-	onResized(event) {
-		this.echartsInstance.resize();
-		this.cd.detectChanges();
-	}
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -57,19 +53,13 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
+
 			if (this.chartData) {
-				this.drawLine(this.formatSeries(this.chartData));
+				console.log('in style');
+				console.log(config.theme);
+				this.drawPie(this.formatSeries(this.chartData));
 			}
 		});
-
-		// this.timerService.getDateRangeObs().subscribe((res: any) => {
-		// 	if (res) {
-		// 		console.log('date range called');
-		// 		this.startTime = res.start;
-		// 		this.endTime = res.end;
-		// 		this.getData();
-		// 	}
-		// });
 
 		this.timerService.getRefreshObs().subscribe((res) => {
 			if (res) {
@@ -96,12 +86,12 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	ngAfterViewInit() {
+		// this.getData();
+
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
 				console.log('date range called');
-				this.startTime = res.start;
-				this.endTime = res.end;
-				// this.step = res.step;
+				this.duration = res.short;
 				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
 				this.getData();
 			}
@@ -112,15 +102,15 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	getData() {
 		let url = this.item.query[0].spec.base_url;
 		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{step}}', `=${this.step}`);
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
 				this.chartData = res.data;
 				this.pending = false;
-				this.drawLine(this.formatSeries(res.data));
+				this.drawPie(this.formatSeries(res.data));
 			},
 			(error) => {
 				this.pending = false;
@@ -128,94 +118,82 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		);
 	}
 	formatSeries(data) {
+		let legend: string;
 		let results = data.result;
 		let dateList: Array<any> = [];
-		let series: Array<any> = [];
-		results.forEach((result, index) => {
-			if (index == 0) {
-				dateList = result.values.map((date) => date[0]);
+		let dataArray: Array<any> = [];
+		results.forEach((result) => {
+			let name: string;
+			let metric = result.metric;
+			for (let key in metric) {
+				legend = key;
+				name = metric[key];
 			}
-			const valueList = result.values.map((date) => date[1]);
-			series.push({
-				type: 'line',
-				name: this.item.query[0].metadata.name,
-				// areaStyle: { normal: { opacity: this.echarts.areaOpacity } },
-				data: valueList
+			dateList.push(name);
+			dataArray.push({
+				name: name,
+				value: result.value[1]
 			});
 		});
-		return { dateList: dateList, series: series };
+		return { dateList: dateList, data: dataArray, legend: legend };
 	}
 
-	drawLine(data) {
-		console.log(data);
+	drawPie(data) {
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
 
 		this.options = {
 			backgroundColor: echarts.bg,
-			color: [ colors.danger, colors.primary, colors.info ],
+			color: [
+				colors.warningLight,
+				colors.infoLight,
+				colors.dangerLight,
+				colors.successLight,
+				colors.primaryLight
+			],
 			tooltip: {
 				trigger: 'item',
-				formatter: '{a} <br/>{b} : {c}'
+				formatter: '{a} <br/>{b} : {c} ({d}%)'
 			},
-			// legend: {
-			// 	left: 'left',
-			// 	data: [ 'Line 1', 'Line 2', 'Line 3' ],
-			// 	textStyle: {
-			// 		color: echarts.textColor
-			// 	}
-			// },
-			grid: {
-				top: '4%',
-				left: '3%',
-				right: '14%',
-				bottom: '13%',
-				containLabel: true
+			legend: {
+				orient: 'vertical',
+				left: '5%',
+				data: data.dateList,
+				textStyle: {
+					color: echarts.textColor
+				}
 			},
-			xAxis: [
+
+			series: [
 				{
-					name: this.item.query[0].spec.x_axis_label,
-					// type: 'category',
-					data: data.dateList,
-					axisTick: {
-						alignWithLabel: true
-					},
-					axisLine: {
-						lineStyle: {
-							color: echarts.axisLineColor
+					name: data.legend,
+					type: 'pie',
+					radius: [ '50%', '70%' ],
+					center: [ '50%', '70%' ],
+					data: data.data,
+					itemStyle: {
+						emphasis: {
+							shadowBlur: 10,
+							shadowOffsetX: 0,
+							shadowColor: echarts.itemHoverShadowColor
 						}
 					},
-					axisLabel: {
-						formatter: function(time) {
-							return moment.unix(time).format('d/M/Y, h:mm');
-						},
-						textStyle: {
-							color: echarts.textColor
+					label: {
+						normal: {
+							textStyle: {
+								color: echarts.textColor
+							}
+						}
+					},
+					labelLine: {
+						normal: {
+							lineStyle: {
+								color: echarts.axisLineColor
+							}
 						}
 					}
 				}
-			],
-			yAxis: [
-				{
-					type: 'log',
-					axisLine: {
-						lineStyle: {
-							color: echarts.axisLineColor
-						}
-					},
-					splitLine: {
-						lineStyle: {
-							color: echarts.splitLineColor
-						}
-					},
-					axisLabel: {
-						textStyle: {
-							color: echarts.textColor
-						}
-					}
-				}
-			],
-			series: data.series
+			]
 		};
 	}
 

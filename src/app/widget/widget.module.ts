@@ -9,6 +9,12 @@ import { AreaStackComponent } from './components/area-stack/area-stack.component
 import { BarAnimationComponent } from './components/bar-animation/bar-animation.component';
 import { PieComponent } from './components/pie/pie.component';
 import { BarComponent } from './components/bar/bar.component';
+import { DonutChartComponent } from './components/donut-chart/donut-chart.component';
+import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.component';
+
+import { GaugeChartModule } from 'angular-gauge-chart';
+import { TableComponent } from './components/table/table.component';
+import { SummaryComponent } from './components/summary/summary.component';
 
 const COMPONENTS = [
 	BarChartComponent,
@@ -17,11 +23,15 @@ const COMPONENTS = [
 	AreaStackComponent,
 	BarAnimationComponent,
 	PieComponent,
-	BarComponent
+	BarComponent,
+	DonutChartComponent,
+	GaugeChartComponent,
+	TableComponent,
+	SummaryComponent
 ];
 @NgModule({
 	declarations: [ ...COMPONENTS ],
-	imports: [ SharedModule ],
+	imports: [ SharedModule, GaugeChartModule ],
 	exports: [ ...COMPONENTS ]
 })
 export class WidgetModule {}

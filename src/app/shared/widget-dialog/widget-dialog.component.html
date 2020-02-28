@@ -1,5 +1,5 @@
 <h3 style="margin-top: 0px;">{{formData? 'Update': 'New'}} Panel</h3>
-<form [formGroup]="widgetForm">
+<form [formGroup]="widgetForm" class="form">
   <div mat-dialog-content>
     <!-- <div fxLayout="row wrap" fxLayoutAlign="center start"> -->
       <div fxLayout="column">
@@ -11,20 +11,40 @@
 
 
         <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Select Query</mat-label>
-          <mat-select placeholder="Select Query" formControlName="query">
-            <mat-option *ngFor="let query of queryOption " [value]="query">{{query?.metadata?.name}}</mat-option>
-          </mat-select>
-           <mat-error *ngIf="formSubmitted && widgetForm.get('query').invalid">query type is require</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Chart Type</mat-label>
           <mat-select placeholder="Chart Type" formControlName="type">
-            <mat-option *ngFor="let chart of chartsTypes " [value]="chart">{{chart?.metadata?.name}}</mat-option>
+            <mat-option *ngFor="let chart of chartsOption " [value]="chart">{{chart?.metadata?.name}}</mat-option>
           </mat-select>
            <mat-error *ngIf="formSubmitted && widgetForm.get('type').invalid">chart type is require</mat-error>
         </mat-form-field>
+ <div  fxLayout="row wrap" >
+   <div fxFlex="80%"></div>
+    <button fxFlex="20%"mat-icon-button color="primary" class="add-query" [disabled]="widgetForm.value.type == '' || maxCount <= 0" (click)="addItem()" >
+    <mat-icon  aria-hidden="false" aria-label="Notifications">add_box</mat-icon>
+  </button>
+ </div>
+  <div  fxFlex="100">
+ <hr>
+  </div>
+
+              <div formArrayName="query" fxFlex="100">
+                      <div *ngFor="let query of widgetForm.controls['query']['controls']; let i=index">
+                      <div [formGroupName]="i" fxLayout="row"  fxLayoutAlign="space-between stretch" >
+                        <button fxFlexAlign="center" mat-icon-button class="remove-query"  (click)="removeItem(i)"  fxFlex="15%">
+                        <mat-icon  aria-hidden="false" aria-label="Notifications">remove_circle</mat-icon>
+                      </button>
+                              <mat-form-field  fxFlexAlign="center" appearance="outline"  fxFlex="80%" >
+                              <mat-label>Select Query</mat-label>
+                              <mat-select placeholder="Select Query" formControlName="query" (selectionChange)="onSelected($event.value)">
+                                <mat-option *ngFor="let query of queryTypes " [value]="query">{{query?.metadata?.name}}</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="formSubmitted && widgetForm.get('query').invalid">query type is require</mat-error>
+                            </mat-form-field>
+                            </div>
+                      </div>
+              </div>
+
+
       </div>
     <!-- </div> -->
   </div>

@@ -26,6 +26,7 @@
 		"@angular/router": "~7.2.4",
 		"@ncstate/sat-popover": "^4.0.0",
 		"@types/echarts": "^4.4.2",
+		"angular-gauge-chart": "^0.7.2",
 		"angular-gridster2": "^7.2.0",
 		"angular-resize-event": "^1.2.1",
 		"core-js": "^2.5.4",

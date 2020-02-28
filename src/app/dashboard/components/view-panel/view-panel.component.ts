@@ -14,6 +14,7 @@ import { DialogService } from '../../../shared/dialog/dialog.service';
 })
 export class ViewPanelComponent implements OnInit {
 	widget: Widget;
+	filter: string;
 	constructor(
 		private dialogService: DialogService,
 		private layoutService: LayoutService,
@@ -25,6 +26,10 @@ export class ViewPanelComponent implements OnInit {
 			console.log(res);
 			this.widget = res;
 		});
+	}
+
+	public onFilter(filter: string) {
+		this.filter = filter;
 	}
 
 	public jsonWidget(widget: Widget) {

@@ -1,0 +1,26 @@
+:host {
+}
+.form {
+	button {
+		// align-items: center;
+		// font-weight: 500;
+		// padding: 6px 8px;
+		// line-height: 18px;
+		// background: #2a2a2c;
+		color: #fff;
+		// border: 1px solid #2f2f32;
+		// margin-left: 4px;
+		// white-space: nowrap;
+		border-radius: 2px;
+	}
+}
+.add-query {
+	background: green;
+}
+::ng-deep .mat-icon-button {
+	width: auto;
+}
+.remove-query {
+	margin-top: -20px;
+	background: red;
+}

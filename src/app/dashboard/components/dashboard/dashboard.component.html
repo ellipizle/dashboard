@@ -34,6 +34,16 @@
                         [item]="item">
                     </app-bar-animation>
               </ng-template>
+            <ng-template [ngSwitchCase]="'pie-donut-chart'">
+                    <app-donut-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="item">
+                    </app-donut-chart>
+              </ng-template>
+                        <ng-template [ngSwitchCase]="'gauge'">
+                    <app-gauge-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="item">
+                    </app-gauge-chart>
+              </ng-template>
         </ng-container>
 
 

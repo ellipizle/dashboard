@@ -14,13 +14,13 @@ import { Widget } from '../../interfaces/widget';
 import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
-import { data } from 'pie';
+
 @Component({
-	selector: 'app-pie',
-	templateUrl: './pie.component.html',
-	styleUrls: [ './pie.component.scss' ]
+	selector: 'app-gauge-chart',
+	templateUrl: './gauge-chart.component.html',
+	styleUrls: [ './gauge-chart.component.scss' ]
 })
-export class PieComponent implements AfterViewInit, OnDestroy {
+export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input() public index: any;
 	@HostListener('window:resize', [ '$event' ])
@@ -36,12 +36,25 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 	echartsInstance: ECharts;
 
 	themeSubscription: any;
-	options: any = {};
 	colors: any;
 	echarts: any;
 	interval;
 	pending: boolean;
 	chartData;
+	public canvasWidth = 300;
+	public needleValue = 65;
+	public centralLabel = '';
+	public name = 'Gauge chart';
+	public bottomLabel = '65';
+	public options = {
+		hasNeedle: true,
+		needleColor: 'gray',
+		needleUpdateSpeed: 1000,
+		arcColors: [ 'rgb(44, 151, 222)', 'lightgray' ],
+		arcDelimiters: [ 30 ],
+		rangeLabel: [ '0', '100' ],
+		needleStartValue: 50
+	};
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -69,6 +82,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			let self = this;
 			if (typeof res === 'number') {
 				this.interval = window.setInterval(function() {
+					// console.log('hello timer');
 					self.getData();
 				}, res);
 			} else {
@@ -83,6 +97,8 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	ngAfterViewInit() {
+		// this.getData();
+
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
 				this.duration = res.short;
@@ -104,7 +120,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			(res: any) => {
 				this.chartData = res.data;
 				this.pending = false;
-				this.drawPie(this.formatSeries(res.data));
+				this.drawPie(res.data);
 			},
 			(error) => {
 				this.pending = false;
@@ -135,60 +151,8 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 	drawPie(data) {
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
-
-		this.options = {
-			backgroundColor: echarts.bg,
-			color: [
-				colors.warningLight,
-				colors.infoLight,
-				colors.dangerLight,
-				colors.successLight,
-				colors.primaryLight
-			],
-			tooltip: {
-				trigger: 'item',
-				formatter: '{a} <br/>{b} : {c} ({d}%)'
-			},
-			legend: {
-				orient: 'vertical',
-				left: '5%',
-				data: data.dateList,
-				textStyle: {
-					color: echarts.textColor
-				}
-			},
-
-			series: [
-				{
-					name: data.legend,
-					type: 'pie',
-					radius: '80%',
-					center: [ '50%', '50%' ],
-					data: data.data,
-					itemStyle: {
-						emphasis: {
-							shadowBlur: 10,
-							shadowOffsetX: 0,
-							shadowColor: echarts.itemHoverShadowColor
-						}
-					},
-					label: {
-						normal: {
-							textStyle: {
-								color: echarts.textColor
-							}
-						}
-					},
-					labelLine: {
-						normal: {
-							lineStyle: {
-								color: echarts.axisLineColor
-							}
-						}
-					}
-				}
-			]
-		};
+		this.options.rangeLabel = data.result[0].value[1];
+		this.name = this.item.query[0].metadata.name;
 	}
 
 	ngOnDestroy(): void {

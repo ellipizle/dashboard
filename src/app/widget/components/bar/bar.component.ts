@@ -75,7 +75,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			if (res) {
 				console.log('date range called');
 				this.duration = res.short;
-				this.step = res.step;
+				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
 				this.getData();
 			}
 		});
@@ -83,7 +83,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		let url = this.item.query.spec.base_url;
+		let url = this.item.query[0].spec.base_url;
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
@@ -141,7 +141,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			},
 			xAxis: [
 				{
-					name: this.item.query.spec.x_axis_label,
+					name: this.item.query[0].spec.x_axis_label,
 					type: 'category',
 					data: data.xAxis,
 					axisTick: {

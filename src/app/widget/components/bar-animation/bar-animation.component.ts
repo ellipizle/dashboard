@@ -24,7 +24,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
-	step: any = 1;
+	step: any = 60;
 	url: any;
 
 	echartsInstance: ECharts;
@@ -79,7 +79,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 			if (res) {
 				this.startTime = res.start;
 				this.endTime = res.end;
-				this.step = res.step;
+				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
 				this.getData();
 			}
 		});
@@ -87,7 +87,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		let url = this.item.query.spec.base_url;
+		let url = this.item.query[0].spec.base_url;
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
 		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
@@ -162,7 +162,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 			// },
 			xAxis: [
 				{
-					name: this.item.query.spec.x_axis_label,
+					name: this.item.query[0].spec.x_axis_label,
 					data: data.dateList,
 					silent: false,
 					axisTick: {
