@@ -20,7 +20,16 @@ import { TimerService } from '../../../shared/services/timer.service';
 })
 export class TableComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
-	@Input() filter: any;
+	@Input('filter')
+	set filter(query: string) {
+		if (query) {
+			console.log(this.item);
+			console.log(query);
+			this._filter = query;
+			this.getFilterData();
+		}
+	}
+	_filter: string;
 	displayedColumns = [];
 	dataSource: any;
 	startTime: any = 1581722395;
@@ -100,11 +109,11 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 		this.currentView == 'all' ? this.getAllData() : this.getFilterData();
 	}
 	getFilterData() {
-		let url = this.item.query[0].spec.all_data_url;
+		let url = this.item.query[0].spec.filtered_data_url;
 		let REPLACE = this.queryName();
 		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, REPLACE, `${this.duration}`);
-		url = this.replace(url, REPLACE, `${this.duration}`);
+		url = this.replace(url, REPLACE, `"${this._filter}"`);
+		url = this.replace(url, REPLACE, `"${this._filter}"`);
 		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
 		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);

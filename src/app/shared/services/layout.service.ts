@@ -24,7 +24,7 @@ export class LayoutService {
 	public layout: Array<Widget> = [];
 	public options: GridsterConfig = {
 		// itemChangeCallback: this.itemChange.bind(this),
-		itemResizeCallback: this.itemResize.bind(this),
+		// itemResizeCallback: this.itemResize.bind(this),
 		pushItems: true,
 		minCols: 12,
 		maxCols: 12,

@@ -19,7 +19,8 @@
               </ng-template>
               <ng-template [ngSwitchCase]="'pie-chart'">
                     <app-pie
-                        [item]="widget">
+                        [item]="widget"
+                        (filter)="onFilter($event)">
                     </app-pie>
               </ng-template>
                    <ng-template [ngSwitchCase]="'line-graph'">
@@ -43,7 +44,7 @@
                     </app-gauge-chart>
               </ng-template>
                             <ng-template [ngSwitchCase]="'summary-bar'">
-                    <app-summary  (mousedoxwn)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                    <app-summary  (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="widget">
                     </app-summary>
               </ng-template>

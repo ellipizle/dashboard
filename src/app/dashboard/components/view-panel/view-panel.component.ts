@@ -29,6 +29,7 @@ export class ViewPanelComponent implements OnInit {
 	}
 
 	public onFilter(filter: string) {
+		console.log('in view panel fiter', filter);
 		this.filter = filter;
 	}
 

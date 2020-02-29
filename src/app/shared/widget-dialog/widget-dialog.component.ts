@@ -73,7 +73,7 @@ export class WidgetDialogComponent implements OnInit {
 
 	initAction() {
 		return this._fb.group({
-			query: [ '' ]
+			query: [ '', Validators.required ]
 		});
 	}
 	ngOnInit() {
