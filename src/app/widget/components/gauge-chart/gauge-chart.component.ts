@@ -25,7 +25,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	@Input() public index: any;
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
-		this.echartsInstance.resize();
+		// this.echartsInstance.resize();
 		this.cd.detectChanges();
 	}
 	duration: any = 1581722395;
@@ -41,7 +41,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	interval;
 	pending: boolean;
 	chartData;
-	public canvasWidth = 300;
+	public canvasWidth = 800;
 	public needleValue = 65;
 	public centralLabel = '';
 	public name = 'Gauge chart';
@@ -82,7 +82,6 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 			let self = this;
 			if (typeof res === 'number') {
 				this.interval = window.setInterval(function() {
-					// console.log('hello timer');
 					self.getData();
 				}, res);
 			} else {
@@ -97,8 +96,6 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	ngAfterViewInit() {
-		// this.getData();
-
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
 				this.duration = res.short;
@@ -120,6 +117,9 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 			(res: any) => {
 				this.chartData = res.data;
 				this.pending = false;
+				console.log('In Guarge');
+				console.log(this.item);
+				console.log(res.data);
 				this.drawPie(res.data);
 			},
 			(error) => {
@@ -151,7 +151,11 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	drawPie(data) {
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
-		this.options.rangeLabel = data.result[0].value[1];
+		this.options.arcDelimiters = [ Math.round(data.result[0].value[1]) ];
+		this.needleValue = Math.round(data.result[0].value[1]);
+		this.bottomLabel = `${data.result[0].metric[Object.keys(data.result[0].metric)[0]]} ${Math.round(
+			data.result[0].value[1]
+		)}`;
 		this.name = this.item.query[0].metadata.name;
 	}
 

@@ -134,6 +134,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 				}
 				const seriesData = result.values.map((date) => date[1]);
 				series.push({
+					stack: 'Total amount',
 					type: 'line',
 					name: name,
 					areaStyle: { normal: { opacity: this.echarts.areaOpacity } },

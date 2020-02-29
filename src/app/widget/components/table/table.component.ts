@@ -60,6 +60,7 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	queryName() {
+		console.log(this.item.query[0].metadata.name);
 		switch (this.item.query[0].metadata.name) {
 			case 'throughput-wired':
 				return '{{ELLIPEE}}';
@@ -129,8 +130,13 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 		);
 	}
 	getAllData() {
-		let url = this.item.query[0].spec.all_data_url;
+		let url =
+			this.item.type.metadata.name == 'summary-bar'
+				? this.item.query[2].spec.all_data_url
+				: this.item.query[0].spec.all_data_url;
 		url = this.replace(url, '+', '%2B');
+		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
 		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
 		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);

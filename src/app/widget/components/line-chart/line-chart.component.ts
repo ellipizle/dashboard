@@ -41,6 +41,9 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	interval;
 	pending: boolean;
 	chartData;
+	seriesData = [];
+	legendData = [];
+	xAxisData = [];
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
 		this.echartsInstance.resize();
@@ -57,19 +60,10 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
-			if (this.chartData) {
-				this.drawLine(this.formatSeries(this.chartData));
+			if (this.seriesData) {
+				this.drawLine(this.formatSeries(this.seriesData));
 			}
 		});
-
-		// this.timerService.getDateRangeObs().subscribe((res: any) => {
-		// 	if (res) {
-		// 		console.log('date range called');
-		// 		this.startTime = res.start;
-		// 		this.endTime = res.end;
-		// 		this.getData();
-		// 	}
-		// });
 
 		this.timerService.getRefreshObs().subscribe((res) => {
 			if (res) {
@@ -81,7 +75,6 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 			let self = this;
 			if (typeof res === 'number') {
 				this.interval = window.setInterval(function() {
-					// console.log('hello timer');
 					self.getData();
 				}, res);
 			} else {
@@ -98,10 +91,8 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
-				console.log('date range called');
 				this.startTime = res.start;
 				this.endTime = res.end;
-				// this.step = res.step;
 				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
 				this.getData();
 			}
@@ -110,44 +101,58 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		let url = this.item.query[0].spec.base_url;
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				this.chartData = res.data;
-				this.pending = false;
-				this.drawLine(this.formatSeries(res.data));
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
+		this.seriesData = [];
+		let numberOfCalls = this.item.query.length;
+		for (let index = 0; index < numberOfCalls; index++) {
+			let url = this.item.query[index].spec.base_url;
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+			url = this.replace(url, '{{step}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					res.data['name'] = this.item.query[index].spec.title;
+					this.seriesData.push(res.data);
+					if (index + 1 == numberOfCalls) {
+						setTimeout(() => {
+							this.drawLine(this.formatSeries(this.seriesData));
+							this.pending = false;
+						}, 1000);
+					}
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
 	}
-	formatSeries(data) {
-		let results = data.result;
+	formatSeries(array) {
 		let dateList: Array<any> = [];
 		let series: Array<any> = [];
-		results.forEach((result, index) => {
-			if (index == 0) {
-				dateList = result.values.map((date) => date[0]);
-			}
-			const valueList = result.values.map((date) => date[1]);
-			series.push({
-				type: 'line',
-				name: this.item.query[0].metadata.name,
-				// areaStyle: { normal: { opacity: this.echarts.areaOpacity } },
-				data: valueList
+		let legends: Array<any> = [];
+		let length = array.length;
+		for (let index = 0; index < length; index++) {
+			let results = array[index].result;
+			let name = array[index].name;
+			legends.push(name);
+			results.forEach((result, i) => {
+				if (i == 0) {
+					dateList = result.values.map((date) => date[0]);
+				}
+				const seriesData = result.values.map((date) => date[1]);
+				series.push({
+					type: 'line',
+					name: name,
+					data: seriesData
+				});
 			});
-		});
-		return { dateList: dateList, series: series };
+		}
+
+		return { dateList: dateList, series: series, legend: legends };
 	}
 
 	drawLine(data) {
-		console.log(data);
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
 
@@ -158,13 +163,12 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 				trigger: 'item',
 				formatter: '{a} <br/>{b} : {c}'
 			},
-			// legend: {
-			// 	left: 'left',
-			// 	data: [ 'Line 1', 'Line 2', 'Line 3' ],
-			// 	textStyle: {
-			// 		color: echarts.textColor
-			// 	}
-			// },
+			legend: {
+				data: data.legend,
+				textStyle: {
+					color: echarts.textColor
+				}
+			},
 			grid: {
 				top: '4%',
 				left: '3%',
@@ -174,7 +178,6 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 			},
 			xAxis: [
 				{
-					name: this.item.query[0].spec.x_axis_label,
 					// type: 'category',
 					data: data.dateList,
 					axisTick: {

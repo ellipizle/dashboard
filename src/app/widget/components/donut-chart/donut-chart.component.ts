@@ -55,8 +55,6 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 			this.echarts = config.echart;
 
 			if (this.chartData) {
-				console.log('in style');
-				console.log(config.theme);
 				this.drawPie(this.formatSeries(this.chartData));
 			}
 		});
@@ -71,7 +69,6 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 			let self = this;
 			if (typeof res === 'number') {
 				this.interval = window.setInterval(function() {
-					// console.log('hello timer');
 					self.getData();
 				}, res);
 			} else {
@@ -86,11 +83,8 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	ngAfterViewInit() {
-		// this.getData();
-
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
-				console.log('date range called');
 				this.duration = res.short;
 				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
 				this.getData();
@@ -169,7 +163,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 					name: data.legend,
 					type: 'pie',
 					radius: [ '50%', '70%' ],
-					center: [ '50%', '70%' ],
+					// center: [ '50%', '70%' ],
 					data: data.data,
 					itemStyle: {
 						emphasis: {

@@ -44,6 +44,11 @@
                         [item]="item">
                     </app-gauge-chart>
               </ng-template>
+                                 <ng-template [ngSwitchCase]="'summary-bar'">
+                    <app-summary  (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="item">
+                    </app-summary>
+              </ng-template>
         </ng-container>
 
 

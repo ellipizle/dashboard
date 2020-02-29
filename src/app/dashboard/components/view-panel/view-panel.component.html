@@ -37,10 +37,15 @@
                         [item]="widget">
                     </app-donut-chart>
               </ng-template>
-                             <ng-template [ngSwitchCase]="'gauge'">
+                    <ng-template [ngSwitchCase]="'gauge'">
                     <app-gauge-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="widget">
                     </app-gauge-chart>
+              </ng-template>
+                            <ng-template [ngSwitchCase]="'summary-bar'">
+                    <app-summary  (mousedoxwn)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="widget">
+                    </app-summary>
               </ng-template>
         </ng-container>
             <hr>

@@ -11,8 +11,16 @@ import { CenterMenuDirective } from './directives/center-menu.directive';
 import { WidgetDialogComponent } from './widget-dialog/widget-dialog.component';
 import { JsonDialogComponent } from './json-dialog/json-dialog.component';
 import { ClipboardDirective } from './directives/clipboard.directive';
+import { RoundPipe } from './pipes/round.pipe';
 @NgModule({
-	declarations: [ ConfirmDialogComponent, WidgetDialogComponent, CenterMenuDirective, JsonDialogComponent, ClipboardDirective ],
+	declarations: [
+		ConfirmDialogComponent,
+		WidgetDialogComponent,
+		CenterMenuDirective,
+		JsonDialogComponent,
+		ClipboardDirective,
+		RoundPipe
+	],
 	imports: [ CommonModule, ReactiveFormsModule, FormsModule, FlexLayoutModule, DragDropModule, MaterialModule ],
 	exports: [
 		CommonModule,
@@ -23,7 +31,8 @@ import { ClipboardDirective } from './directives/clipboard.directive';
 		ReactiveFormsModule,
 		FormsModule,
 		SatPopoverModule,
-		CenterMenuDirective
+		CenterMenuDirective,
+		RoundPipe
 	],
 	entryComponents: [ ConfirmDialogComponent, WidgetDialogComponent, JsonDialogComponent ]
 })

@@ -1,3 +1,19 @@
-<p>
-  summary works!
-</p>
+
+<div class="summary" >
+  <div  fxLayout="column"  fxLayoutGap="20px" >
+    <div *ngFor="let data of seriesData" fxFill  fxLayout="column">
+
+              <h3 class="example-h2">{{data.name}}</h3>
+              <h2>{{data?.result[0].value[1] | round}}</h2>
+
+              <section class="example-section">
+                <mat-progress-bar
+                    class="example-margin"
+                    [value]="data.result[0].value[1]">
+                </mat-progress-bar>
+              </section>
+
+    </div>
+               </div>
+</div>
+

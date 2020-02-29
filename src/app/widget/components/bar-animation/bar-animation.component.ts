@@ -36,6 +36,9 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 	interval;
 	pending: boolean;
 	chartData;
+	seriesData = [];
+	legendData = [];
+	xAxisData = [];
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -47,8 +50,8 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
-			if (this.chartData) {
-				this.drawBar(this.formatSeries(this.chartData));
+			if (this.seriesData) {
+				this.drawBar(this.formatSeries(this.seriesData));
 			}
 		});
 
@@ -87,40 +90,55 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		let url = this.item.query[0].spec.base_url;
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				this.chartData = res.data;
-				this.pending = false;
-				this.drawBar(this.formatSeries(res.data));
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
+		this.seriesData = [];
+		let numberOfCalls = this.item.query.length;
+		for (let index = 0; index < numberOfCalls; index++) {
+			let url = this.item.query[index].spec.base_url;
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+			url = this.replace(url, '{{step}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					res.data['name'] = this.item.query[index].spec.title;
+					this.seriesData.push(res.data);
+					if (index + 1 == numberOfCalls) {
+						setTimeout(() => {
+							this.drawBar(this.formatSeries(this.seriesData));
+							this.pending = false;
+						}, 1000);
+					}
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
 	}
-	formatSeries(data) {
-		let results = data.result;
+	formatSeries(array) {
 		let dateList: Array<any> = [];
 		let series: Array<any> = [];
-		results.forEach((result, index) => {
-			if (index == 0) {
-				dateList = result.values.map((date) => date[0]);
-			}
-			const valueList = result.values.map((date) => date[1]);
-			series.push({
-				type: 'bar',
-				data: valueList,
-				// name: name,
-				animationDelay: (idx) => idx * 10 + (index + 1 * 100)
+		let legends: Array<any> = [];
+		let length = array.length;
+		for (let index = 0; index < length; index++) {
+			let results = array[index].result;
+			let name = array[index].name;
+			legends.push(name);
+			results.forEach((result, i) => {
+				if (i == 0) {
+					dateList = result.values.map((date) => date[0]);
+				}
+				const seriesData = result.values.map((date) => date[1]);
+				series.push({
+					type: 'bar',
+					name: name,
+					animationDelay: (idx) => idx * 10 + (index + 1 * 100),
+					data: seriesData
+				});
 			});
-		});
-		return { dateList: dateList, data: series };
+		}
+		return { dateList: dateList, data: series, legend: legends };
 	}
 
 	// formatSeries(data) {
@@ -153,16 +171,15 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		this.options = {
 			backgroundColor: echarts.bg,
 			color: [ colors.primaryLight, colors.infoLight ],
-			// legend: {
-			// 	data: [ 'bar', 'bar2' ],
-			// 	align: 'left',
-			// 	textStyle: {
-			// 		color: echarts.textColor
-			// 	}
-			// },
+			legend: {
+				data: data.legend,
+				textStyle: {
+					color: echarts.textColor
+				}
+			},
 			xAxis: [
 				{
-					name: this.item.query[0].spec.x_axis_label,
+					// name: this.item.query[0].spec.x_axis_label,
 					data: data.dateList,
 					silent: false,
 					axisTick: {

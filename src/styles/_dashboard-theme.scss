@@ -21,6 +21,10 @@ $dark-primary: mat-palette($mat-blue-grey);
 $dark-accent: mat-palette($mat-amber, A200, A100, A400);
 $dark-warn: mat-palette($mat-deep-orange);
 $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+.summary {
+	color: #212124 !important;
+	background: #fff;
+}
 gridster-item {
 	color: #212124 !important;
 	background: #d8d9da;
@@ -64,6 +68,14 @@ gridster-item {
 // CSS class whatever you want. In this example, any component inside of an element with
 // `.unicorn-dark-theme` will be affected by this alternate dark theme instead of the default theme.
 .dashboard-dark-theme {
+	.summary {
+		background: #212124 !important;
+		color: #fff;
+		h3,
+		h2 {
+			color: #fff;
+		}
+	}
 	gridster-item {
 		background: #212124 !important;
 		color: #d8d9da;
