@@ -6,7 +6,8 @@ import {
 	ChangeDetectorRef,
 	Input,
 	ElementRef,
-	OnDestroy
+	OnDestroy,
+	SimpleChanges
 } from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -23,6 +24,8 @@ import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input() public index: any;
+	@Input() public unitHeight: any;
+	@Input() public parentRef: ElementRef;
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
 		// this.echartsInstance.resize();
@@ -41,7 +44,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	interval;
 	pending: boolean;
 	chartData;
-	public canvasWidth = 800;
+	public canvasWidth = 500;
 	public needleValue = 65;
 	public centralLabel = '';
 	public name = 'Gauge chart';
@@ -60,7 +63,8 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		private cd: ChangeDetectorRef,
 		private dataSource: DatasourceService,
 		private panelService: PanelService,
-		private timerService: TimerService
+		private timerService: TimerService,
+		private elementRef: ElementRef
 	) {
 		//get chart styles
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
@@ -88,6 +92,14 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 				window.clearInterval(this.interval);
 			}
 		});
+	}
+	public ngOnChanges(changes: SimpleChanges): void {
+		if (this.unitHeight) {
+			console.log(this.parentRef['width']);
+			this.canvasWidth = this.parentRef['width'];
+			// console.log(this.elementRef.nativeElement.offsetHeight);
+			// this.onResize('');
+		}
 	}
 	onChartInit(e: ECharts) {
 		this.echartsInstance = e;
@@ -117,9 +129,9 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 			(res: any) => {
 				this.chartData = res.data;
 				this.pending = false;
-				console.log('In Guarge');
-				console.log(this.item);
-				console.log(res.data);
+				// console.log('In Guarge');
+				// console.log(this.item);
+				// console.log(res.data);
 				this.drawPie(res.data);
 			},
 			(error) => {

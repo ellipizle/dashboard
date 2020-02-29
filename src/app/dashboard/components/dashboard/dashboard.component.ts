@@ -25,7 +25,9 @@ import { JsonDialogComponent } from '../../../shared/json-dialog/json-dialog.com
 export class DashboardComponent {
 	// @ViewChild('gridsterItem') gridItem: GridsterItemComponent;
 	query = `100 - ((node_filesystem_avail_bytes{instance=~"localhost:9100",job=~"node_exporter",device!~'rootfs'} * 100) / node_filesystem_size_bytes{instance=~"localhost:9100",job=~"node_exporter",device!~'rootfs'})`;
-
+	get unitHeight() {
+		return this.layoutService.unitHeight;
+	}
 	get options(): GridsterConfig {
 		return this.layoutService.options;
 	}

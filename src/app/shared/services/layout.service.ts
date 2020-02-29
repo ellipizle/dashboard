@@ -14,24 +14,17 @@ import { Widget } from '../../widget/interfaces/widget';
 	providedIn: 'root'
 })
 export class LayoutService {
-	items = [
-		{ x: 0, y: 0, rows: 4, cols: 5, id: 'qwas23', title: 'Pie', type: { metadata: { name: 'pie' } } },
-		{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Area Chart', type: { metadata: { name: 'area-graph' } } },
-		{ x: 0, y: 0, rows: 2, cols: 7, id: 'qwas23', title: 'Bar', type: { metadata: { name: 'bar' } } },
-		{
-			x: 0,
-			y: 0,
-			rows: 2,
-			cols: 12,
-			id: 'qwas23',
-			title: 'Bar Animation',
-			type: { metadata: { name: 'animation-bar' } }
+	unitHeight;
+	public itemResize(item: GridsterItem, itemComponent: GridsterItemComponentInterface): void {
+		if (itemComponent.gridster.curRowHeight > 1) {
+			this.unitHeight = itemComponent.gridster.curRowHeight;
 		}
-	];
+		itemComponent.gridster.curRowHeight += (item.cols * 100 - item.rows) / 10000;
+	}
 	public layout: Array<Widget> = [];
 	public options: GridsterConfig = {
 		// itemChangeCallback: this.itemChange.bind(this),
-		// itemResizeCallback: this.itemResize.bind(this),
+		itemResizeCallback: this.itemResize.bind(this),
 		pushItems: true,
 		minCols: 12,
 		maxCols: 12,

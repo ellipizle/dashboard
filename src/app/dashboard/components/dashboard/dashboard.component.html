@@ -1,6 +1,6 @@
 
  <gridster [options]="options">
-    <gridster-item [item]="item" *ngFor="let item of layout; let i = index">
+    <gridster-item [item]="item" *ngFor="let item of layout; let i = index" #childgrid>
         <app-panel-header
         [item]="item"
         (edit)="editWidget($event)"
@@ -41,10 +41,12 @@
               </ng-template>
                         <ng-template [ngSwitchCase]="'gauge'">
                     <app-gauge-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
-                        [item]="item">
+                        [item]="item"
+                         [parentRef]="childgrid"
+                         [unitHeight]="unitHeight">
                     </app-gauge-chart>
               </ng-template>
-                                 <ng-template [ngSwitchCase]="'summary-bar'">
+                    <ng-template [ngSwitchCase]="'summary-bar'">
                     <app-summary  (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">
                     </app-summary>

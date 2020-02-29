@@ -19,7 +19,6 @@ export class WidgetDialogComponent implements OnInit {
 	widgetForm = this._fb.group({
 		id: [ uuid() ],
 		title: [ '', Validators.required ],
-		// query: [ [], Validators.required ],
 		query: this._fb.array([]),
 		type: [ '', Validators.required ]
 	});
@@ -38,8 +37,9 @@ export class WidgetDialogComponent implements OnInit {
 			if (res) this.chartsOption = res;
 		});
 		this.widgetForm.get('type').valueChanges.subscribe((val: any) => {
-			this.queryTypes = this.queryOption.filter((type) => type.spec.query_category === val.spec.category);
-			this.maxCount = val.spec.max_queries ? val.spec.max_queries : 1;
+			let chart = this.chartsOption.find((chart) => chart.metadata.name === val);
+			this.queryTypes = this.queryOption.filter((type) => type.spec.query_category === chart.spec.category);
+			this.maxCount = chart.spec.max_queries ? chart.spec.max_queries : 1;
 			this.clearItem();
 		});
 	}
@@ -63,14 +63,12 @@ export class WidgetDialogComponent implements OnInit {
 		const addrCtrl = this.initAction();
 		control.push(addrCtrl);
 		this.maxCount--;
-		console.log(this.maxCount);
 	}
 
 	removeItem(i: number) {
 		const control = <FormArray>this.widgetForm.controls['query'];
 		control.removeAt(i);
 		this.maxCount++;
-		console.log(this.maxCount);
 	}
 
 	initAction() {
@@ -83,7 +81,7 @@ export class WidgetDialogComponent implements OnInit {
 			let data = {
 				id: this.formData.id,
 				title: this.formData.title,
-				type: this.formData.type
+				type: this.formData.type.metadata.name
 			};
 			this.widgetForm.patchValue(data);
 			this.transformItem(this.formData.query);
@@ -98,7 +96,7 @@ export class WidgetDialogComponent implements OnInit {
 		query.forEach((term) => {
 			control.push(
 				this._fb.group({
-					query: [ term ]
+					query: [ term.metadata.name ]
 				})
 			);
 		});
@@ -108,7 +106,13 @@ export class WidgetDialogComponent implements OnInit {
 		this.formSubmitted = false;
 		if (this.widgetForm.valid) {
 			let realValue = this.widgetForm.value;
-			realValue['query'] = this.widgetForm.value.query.map((item) => item.query);
+			realValue['type'] = this.chartsOption.find((chart) => chart.metadata.name === realValue.type);
+			let queries = this.widgetForm.value.query.map((item) => item.query);
+			let queriesObject = [];
+			queries.forEach((query) => {
+				queriesObject.push(this.queryOption.find((option) => option.metadata.name === query));
+			});
+			realValue['query'] = queriesObject;
 			if (this.formData) {
 				this.dialogRef.close({ ...this.formData, ...realValue });
 			} else {
