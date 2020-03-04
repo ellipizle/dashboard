@@ -28,9 +28,10 @@ export class LayoutService {
 		pushItems: true,
 		minCols: 12,
 		maxCols: 12,
-		minRows: 5,
+		// row: 200,
+		// minRows: 5,
 		// fixedRowHeight: 120,
-		// gridType: 'scrollVertical',
+		gridType: 'scrollVertical',
 		displayGrid: DisplayGrid.None,
 		// fixedColWidth: number;
 		// keepFixedHeightInMobile: true,
