@@ -92,13 +92,15 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 				this.duration = res.short;
 				console.log('In summary');
 				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
-				this.getData();
+				// this.getData();
 			}
 		});
 		this.cd.detectChanges();
 	}
 
 	getData() {
+		console.log(this.item);
+		console.log(this.step);
 		this.seriesData = [];
 		let numberOfCalls = this.item.query.length;
 		for (let index = 0; index < numberOfCalls; index++) {
@@ -108,6 +110,7 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
 			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+			url = this.replace(url, '{{STEP}}', `${this.step}`);
 			url = this.replace(url, '{{STEP}}', `${this.step}`);
 			this.pending = true;
 			this.finish = false;
@@ -129,33 +132,6 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 				}
 			);
 		}
-	}
-
-	formatSeries(array) {
-		let dateList: Array<any> = [];
-		let series: Array<any> = [];
-		let legends: Array<any> = [];
-		let length = array.length;
-		for (let index = 0; index < length; index++) {
-			let results = array[index].result;
-			let name = array[index].name;
-			legends.push(name);
-			results.forEach((result, i) => {
-				if (i == 0) {
-					dateList = result.values.map((date) => date[0]);
-				}
-				const seriesData = result.values.map((date) => date[1]);
-				series.push({
-					stack: 'Total amount',
-					type: 'line',
-					name: name,
-					areaStyle: { normal: { opacity: this.echarts.areaOpacity } },
-					data: seriesData
-				});
-			});
-		}
-
-		return { dateList: dateList, series: series, legend: legends };
 	}
 
 	ngOnDestroy(): void {

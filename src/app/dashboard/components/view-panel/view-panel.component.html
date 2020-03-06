@@ -56,5 +56,15 @@
               </ng-template>
         </ng-container>
             <hr>
-            <app-table [item]="widget"  [filter]="filter"></app-table>
+            <ng-container [ngSwitch]="widget.type.metadata.name">
+              <ng-template [ngSwitchCase]="'summary-bar'">
+                    <app-table-summary
+                         [item]="widget"  [filter]="filter">
+                    </app-table-summary>
+              </ng-template>
+                  <ng-template ngSwitchDefault>
+                         <app-table [item]="widget"  [filter]="filter"></app-table>
+                  </ng-template>
+             </ng-container>
+
 </div>

@@ -41,6 +41,7 @@ export interface Query {
 	spec?: {
 		all_data_url?: string;
 		filtered_data_url?: string;
+		prev_url?: string;
 		base_url?: string;
 		param?: string;
 		port?: number;

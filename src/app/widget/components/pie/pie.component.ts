@@ -135,7 +135,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			dateList.push(name);
 			dataArray.push({
 				name: name,
-				value: result.value[1]
+				value: Math.round(result.value[1])
 			});
 		});
 		return { dateList: dateList, data: dataArray, legend: legend };

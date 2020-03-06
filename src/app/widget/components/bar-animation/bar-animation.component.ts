@@ -144,7 +144,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 				if (i == 0) {
 					dateList = result.values.map((date) => date[0]);
 				}
-				const seriesData = result.values.map((date) => date[1]);
+				const seriesData = result.values.map((date) => Math.round(date[1]));
 				series.push({
 					type: 'bar',
 					name: name,

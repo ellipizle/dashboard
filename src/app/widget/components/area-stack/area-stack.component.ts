@@ -144,19 +144,15 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		let legends: Array<any> = [];
 		let length = array.length;
 		for (let index = 0; index < length; index++) {
-			console.log(array);
-
 			let results = array[index].result;
 			let name = array[index].name;
 			this.sementChar[name];
-			// console.log(name);
-			// console.log(array[index].result);
 			legends.push(name);
 			results.forEach((result, i) => {
 				if (i == 0) {
 					dateList = result.values.map((date) => date[0]);
 				}
-				const seriesData = result.values.map((date) => date[1]);
+				const seriesData = result.values.map((date) => Math.round(date[1]));
 				series.push({
 					stack: 'Total amount',
 					type: 'line',

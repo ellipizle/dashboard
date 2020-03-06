@@ -49,7 +49,7 @@
     <!-- </div> -->
   </div>
   <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
-    <button mat-button (click)="dialogRef.close()" color="warning">Cancel</button>
+    <button mat-button (click)="dialogRef.close()" class="cancel">Cancel</button>
     <button type="submit" mat-raised-button color="primary" (click)="submitForm()" cdkFocusInitial>
     {{formData? 'Update': 'Add'}}
     </button>

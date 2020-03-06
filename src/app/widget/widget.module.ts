@@ -14,7 +14,9 @@ import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.compon
 
 import { GaugeChartModule } from 'angular-gauge-chart';
 import { TableComponent } from './components/table/table.component';
+import { TableSummaryComponent } from './components/table/table-summary';
 import { SummaryComponent } from './components/summary/summary.component';
+import { SummaryItemComponent } from './components/summary/summary-item';
 
 const COMPONENTS = [
 	BarChartComponent,
@@ -27,7 +29,9 @@ const COMPONENTS = [
 	DonutChartComponent,
 	GaugeChartComponent,
 	TableComponent,
-	SummaryComponent
+	TableSummaryComponent,
+	SummaryComponent,
+	SummaryItemComponent
 ];
 @NgModule({
 	declarations: [ ...COMPONENTS ],
