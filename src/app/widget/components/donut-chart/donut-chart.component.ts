@@ -6,7 +6,9 @@ import {
 	ChangeDetectorRef,
 	Input,
 	ElementRef,
-	OnDestroy
+	OnDestroy,
+	EventEmitter,
+	Output
 } from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -23,6 +25,7 @@ import { data } from 'pie';
 export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input() public index: any;
+	@Output() filter: EventEmitter<any> = new EventEmitter();
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
 		this.echartsInstance.resize();
@@ -79,6 +82,9 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	}
 	onChartInit(e: ECharts) {
 		this.echartsInstance = e;
+	}
+	onChartEvent(event: any, type: string) {
+		this.filter.emit(event.data['name']);
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);

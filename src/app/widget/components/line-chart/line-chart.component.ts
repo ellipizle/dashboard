@@ -26,7 +26,7 @@ const moment = _moment;
 })
 export class LineChartComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
-
+	@Output() filter: EventEmitter<any> = new EventEmitter();
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
 	duration: any = 1581722395;
@@ -85,6 +85,10 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 	}
 	onChartInit(e: ECharts) {
 		this.echartsInstance = e;
+	}
+	onChartLegendSelected(event: any, type: string) {
+		console.log('chart event:', type, event);
+		this.filter.emit(event['name']);
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);

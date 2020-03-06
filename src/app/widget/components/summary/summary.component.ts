@@ -1,4 +1,14 @@
-import { Component, OnInit, AfterViewInit, HostListener, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Output,
+	OnInit,
+	AfterViewInit,
+	HostListener,
+	ChangeDetectorRef,
+	Input,
+	OnDestroy
+} from '@angular/core';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -12,6 +22,7 @@ import { Widget } from '../../interfaces/widget';
 })
 export class SummaryComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
+	@Output() filter: EventEmitter<any> = new EventEmitter();
 	pending: boolean;
 	finish: boolean;
 	@HostListener('window:resize', [ '$event' ])
