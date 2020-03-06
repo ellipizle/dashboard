@@ -124,9 +124,9 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
+		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+		url = this.replace(url, '{{STEP}}', `${this.step}`);
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {

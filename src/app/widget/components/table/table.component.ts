@@ -142,7 +142,7 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	// 	);
 	// }
 	getFilterData() {
-		console.log(this.item);
+		console.log(this.item.query);
 		console.log(this._excludeSegmentItemName);
 		this.dataSource = [];
 		this.dataSource = [];
