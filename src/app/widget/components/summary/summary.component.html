@@ -3,7 +3,7 @@
   <div  fxLayout="column"  fxLayoutGap="20px" >
     <div *ngFor="let data of item.query" fxFill  fxLayout="column">
 
-   <app-summary-item [query]="data"  [item]="item"></app-summary-item>
+   <app-summary-item [query]="data"  [item]="item" (filter)="filter.emit($event)"></app-summary-item>
 
     </div>
                </div>

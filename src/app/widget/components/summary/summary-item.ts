@@ -21,7 +21,7 @@ import { forkJoin } from 'rxjs';
 @Component({
 	selector: 'app-summary-item',
 	template: `
-	<div [ngClass]="{'summary-container': detailView}">
+	<div [ngClass]="{'summary-container': !detailView}" (click)="onTableClick(data.name)">
 	          <h3 class="example-h2">{{data?.name}}</h3>
               <h2>{{data?.result[0]?.value[1] | round}}</h2>
 
@@ -128,7 +128,10 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 			}
 		});
 	}
-
+	onTableClick($event) {
+		console.log($event);
+		this.filter.emit($event);
+	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
 	}
@@ -171,6 +174,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		forkJoin(this.panelService.getPanelData(url), this.panelService.getPanelData(prev_url)).subscribe(
 			(res: any) => {
 				console.log(res);
+				res[0].data['name'] = this.query.spec.title;
 				this.data = res[0].data;
 				let currentData = res[0].data;
 				let previousData = res[1].data;

@@ -51,7 +51,8 @@
               </ng-template>
                             <ng-template [ngSwitchCase]="'summary-bar'">
                     <app-summary  (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
-                        [item]="widget">
+                        [item]="widget"
+                          (filter)="onFilter($event)">
                     </app-summary>
               </ng-template>
         </ng-container>

@@ -128,45 +128,30 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 		this.dataSource = [];
 		this.dataSource = [];
 		let subFilter = this.item.query.filter((itemQ) => itemQ.spec.title === this._excludeSegmentItemName);
-		let numberOfCalls = subFilter.length;
-		for (let index = 0; index < numberOfCalls; index++) {
-			// if (this._excludeSegmentItemName == this.item.query[index].spec.title) {
-			// 	continue;
-			// }
-			let url = subFilter[index].spec.filtered_data_url;
-			console.log(url);
-			let name = subFilter[index].metadata.name;
-			let REPLACE = this.queryName(name);
-			url = this.replace(url, '+', '%2B');
-			url = this.replace(url, REPLACE, `"${this._excludeSegmentItemName}"`);
-			url = this.replace(url, REPLACE, `"${this._excludeSegmentItemName}"`);
-			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
-			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
-			url = this.replace(url, '{{STEP}}', `${this.step}`);
-			this.pending = true;
-			this.panelService.getPanelData(url).subscribe(
-				(res: any) => {
-					console.log(res);
-					let data = res.data.result;
-					let column = [];
-					for (let key in data[0].metric) {
-						column.push(key);
-					}
-					// this.displayedColumns = [ ...column ];
-					this.dataSource = [ ...data.map((result) => result.metric) ];
-					// if (index + 1 == numberOfCalls) {
-					// 	setTimeout(() => {
-					// 		this.pending = false;
-					// 	}, 1000);
-					// }
-				},
-				(error) => {
-					this.pending = false;
+		let url = subFilter[0].spec.all_data_url;
+		console.log(url);
+		url = this.replace(url, '+', '%2B');
+		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{STEP}}', `${this.step}`);
+		this.pending = true;
+		this.panelService.getPanelData(url).subscribe(
+			(res: any) => {
+				console.log(res);
+				let data = res.data.result;
+				let column = [];
+				for (let key in data[0].metric) {
+					column.push(key);
 				}
-			);
-		}
+				this.displayedColumns = [ ...column ];
+				this.dataSource = [ ...this.dataSource, ...data.map((result) => result.metric) ];
+			},
+			(error) => {
+				this.pending = false;
+			}
+		);
 	}
 	getAllData() {
 		console.log(this.item);
@@ -190,13 +175,7 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 						column.push(key);
 					}
 					this.displayedColumns = [ ...column ];
-					console.log(this.dataSource);
 					this.dataSource = [ ...this.dataSource, ...data.map((result) => result.metric) ];
-					// if (index + 1 == numberOfCalls) {
-					// 	setTimeout(() => {
-					// 		this.pending = false;
-					// 	}, 1000);
-					// }
 				},
 				(error) => {
 					this.pending = false;
