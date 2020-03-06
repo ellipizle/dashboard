@@ -16,10 +16,10 @@ import { Widget } from '../../widget/interfaces/widget';
 export class LayoutService {
 	unitHeight;
 	public itemResize(item: GridsterItem, itemComponent: GridsterItemComponentInterface): void {
-		if (itemComponent.gridster.curRowHeight > 1) {
-			this.unitHeight = itemComponent.gridster.curRowHeight;
-		}
-		itemComponent.gridster.curRowHeight += (item.cols * 100 - item.rows) / 10000;
+		// if (itemComponent.gridster.curRowHeight > 1) {
+		// 	this.unitHeight = itemComponent.gridster.curRowHeight;
+		// }
+		// itemComponent.gridster.curRowHeight += (item.cols * 100 - item.rows) / 10000;
 	}
 	public layout: Array<Widget> = [];
 	public options: GridsterConfig = {
@@ -31,6 +31,8 @@ export class LayoutService {
 		// row: 200,
 		// minRows: 5,
 		// fixedRowHeight: 120,
+		// keepFixedHeightInMobile: true,
+		// fixedRowHeight: -1,
 		gridType: 'scrollVertical',
 		displayGrid: DisplayGrid.None,
 		// fixedColWidth: number;

@@ -1,4 +1,14 @@
-import { Component, OnInit, AfterViewInit, HostListener, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	Output,
+	EventEmitter,
+	AfterViewInit,
+	HostListener,
+	ChangeDetectorRef,
+	Input,
+	OnDestroy
+} from '@angular/core';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -16,12 +26,15 @@ const moment = _moment;
 })
 export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
+	@Input() public index: any;
+	@Output() filter: EventEmitter<any> = new EventEmitter();
 	pending: boolean;
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
 		this.echartsInstance.resize();
 		this.cd.detectChanges();
 	}
+	duration: string = '';
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
 	step: any = 1;
@@ -38,6 +51,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	seriesData = [];
 	legendData = [];
 	xAxisData = [];
+	sementChar = {};
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -73,8 +87,9 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	onChartInit(e: ECharts) {
 		this.echartsInstance = e;
 	}
-	onChartEvent(event: any, type: string) {
+	onChartLegendSelected(event: any, type: string) {
 		console.log('chart event:', type, event);
+		this.filter.emit(event['name']);
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
@@ -82,6 +97,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
+				this.duration = res.short;
 				this.startTime = res.start;
 				this.endTime = res.end;
 				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
@@ -92,14 +108,17 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
+		console.log(this.item);
 		this.seriesData = [];
 		let numberOfCalls = this.item.query.length;
 		for (let index = 0; index < numberOfCalls; index++) {
 			let url = this.item.query[index].spec.base_url;
 			url = this.replace(url, '+', '%2B');
-			url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-			url = this.replace(url, '{{step}}', `${this.step}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+			url = this.replace(url, '{{STEP}}', `${this.step}`);
 			this.pending = true;
 			this.panelService.getPanelData(url).subscribe(
 				(res: any) => {
@@ -125,8 +144,13 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		let legends: Array<any> = [];
 		let length = array.length;
 		for (let index = 0; index < length; index++) {
+			console.log(array);
+
 			let results = array[index].result;
 			let name = array[index].name;
+			this.sementChar[name];
+			// console.log(name);
+			// console.log(array[index].result);
 			legends.push(name);
 			results.forEach((result, i) => {
 				if (i == 0) {

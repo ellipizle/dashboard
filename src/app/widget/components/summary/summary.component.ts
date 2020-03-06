@@ -13,6 +13,7 @@ import { Widget } from '../../interfaces/widget';
 export class SummaryComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	pending: boolean;
+	finish: boolean;
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
 		this.cd.detectChanges();
@@ -21,8 +22,8 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 	// bufferValue = 100;
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
-	duration;
-	step: any = 1;
+	duration: any = 1581722395;
+	step: any = 15;
 	url: any;
 
 	echartsInstance: ECharts;
@@ -98,6 +99,7 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
 			url = this.replace(url, '{{step}}', `${this.step}`);
 			this.pending = true;
+			this.finish = false;
 			this.panelService.getPanelData(url).subscribe(
 				(res: any) => {
 					res.data['name'] = this.item.query[index].spec.title;
@@ -106,6 +108,7 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 						setTimeout(() => {
 							console.log(this.seriesData);
 							// this.drawChart(this.formatSeries(this.seriesData));
+							this.finish = true;
 							this.pending = false;
 						}, 1000);
 					}

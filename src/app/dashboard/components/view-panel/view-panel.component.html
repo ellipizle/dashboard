@@ -9,12 +9,15 @@
         <ng-container [ngSwitch]="widget.type.metadata.name">
               <ng-template [ngSwitchCase]="'bar-chart'">
                     <app-bar
-                        [item]="widget">
+                        [item]="widget"
+                             (filter)="onFilter($event)">
                     </app-bar>
               </ng-template>
               <ng-template [ngSwitchCase]="'area-graph'">
                     <app-area-stack
-                        [item]="widget">
+                        [item]="widget"
+                           (filter)="onFilter($event)"
+                           >
                     </app-area-stack>
               </ng-template>
               <ng-template [ngSwitchCase]="'pie-chart'">
@@ -25,17 +28,20 @@
               </ng-template>
                    <ng-template [ngSwitchCase]="'line-graph'">
                     <app-line-chart
-                        [item]="widget">
+                              [item]="widget"
+                           (filter)="onFilter($event)">
                     </app-line-chart>
               </ng-template>
              <ng-template [ngSwitchCase]="'bar-animation'">
                     <app-bar-animation (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
-                        [item]="widget">
+                                                 [item]="widget"
+                           (filter)="onFilter($event)">
                     </app-bar-animation>
               </ng-template>
                  <ng-template [ngSwitchCase]="'pie-donut-chart'">
                     <app-donut-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
-                        [item]="widget">
+                        [item]="widget"
+                           (filter)="onFilter($event)">
                     </app-donut-chart>
               </ng-template>
                     <ng-template [ngSwitchCase]="'gauge'">

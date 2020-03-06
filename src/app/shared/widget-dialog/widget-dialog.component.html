@@ -13,7 +13,7 @@
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Chart Type</mat-label>
           <mat-select placeholder="Chart Type" formControlName="type">
-            <mat-option *ngFor="let chart of chartsOption " [value]="chart.metadata.name">{{chart?.metadata?.name}}</mat-option>
+            <mat-option *ngFor="let chart of chartsOption " [value]="chart.metadata.name">{{chart?.spec?.title}}</mat-option>
           </mat-select>
            <mat-error *ngIf="formSubmitted && widgetForm.get('type').invalid">chart type is require</mat-error>
         </mat-form-field>
@@ -36,7 +36,7 @@
                               <mat-form-field  fxFlexAlign="center" appearance="outline"  fxFlex="80%" >
                               <mat-label>Select Query</mat-label>
                               <mat-select placeholder="Select Query" formControlName="query" (selectionChange)="onSelected($event.value)">
-                                <mat-option *ngFor="let query of queryTypes " [value]="query.metadata.name">{{query?.metadata?.name}}</mat-option>
+                                <mat-option *ngFor="let query of queryTypes " [value]="query.metadata.name">{{query?.spec?.title}}</mat-option>
                               </mat-select>
                               <mat-error *ngIf="formSubmitted && widgetForm.get('query').invalid">query type is require</mat-error>
                             </mat-form-field>
@@ -49,7 +49,7 @@
     <!-- </div> -->
   </div>
   <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
-    <button mat-button (click)="dialogRef.close()">Cancel</button>
+    <button mat-button (click)="dialogRef.close()" color="warning">Cancel</button>
     <button type="submit" mat-raised-button color="primary" (click)="submitForm()" cdkFocusInitial>
     {{formData? 'Update': 'Add'}}
     </button>

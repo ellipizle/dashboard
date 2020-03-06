@@ -29,6 +29,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
+	duration: any = 1581722395;
 	step: any = 15;
 	url: any;
 
@@ -106,9 +107,11 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		for (let index = 0; index < numberOfCalls; index++) {
 			let url = this.item.query[index].spec.base_url;
 			url = this.replace(url, '+', '%2B');
-			url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-			url = this.replace(url, '{{step}}', `${this.step}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+			url = this.replace(url, '{{STEP}}', `${this.step}`);
 			this.pending = true;
 			this.panelService.getPanelData(url).subscribe(
 				(res: any) => {

@@ -1,4 +1,14 @@
-import { Component, AfterViewInit, HostListener, ChangeDetectorRef, Input, OnDestroy, ElementRef } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Output,
+	AfterViewInit,
+	HostListener,
+	ChangeDetectorRef,
+	Input,
+	OnDestroy,
+	ElementRef
+} from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
 import { Widget } from '../../interfaces/widget';
@@ -18,7 +28,10 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		this.echartsInstance.resize();
 		this.cd.detectChanges();
 	}
-
+	@Output() filter: EventEmitter<any> = new EventEmitter();
+	pending: boolean;
+	startTime: any = 1581722395;
+	endTime: any = 1581723395;
 	duration: any = 1581722395;
 	step: any = 15;
 	url: any;
@@ -30,7 +43,6 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	colors: any;
 	echarts: any;
 	interval;
-	pending: boolean;
 	chartData;
 	constructor(
 		private configSvc: ConfigService,
@@ -70,10 +82,16 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
 	}
+	onChartClick(event: any, type: string) {
+		console.log('chart event:', type, event);
+		this.filter.emit(event['name']);
+	}
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
 				console.log('date range called');
+				this.startTime = res.start;
+				this.endTime = res.end;
 				this.duration = res.short;
 				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
 				this.getData();
@@ -87,6 +105,8 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
 		url = this.replace(url, '{{step}}', `${this.step}`);
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(

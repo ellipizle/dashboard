@@ -25,10 +25,13 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 		if (query) {
 			console.log(this.item);
 			console.log(query);
-			this._filter = query;
+			this._excludeSegmentItemName = query;
 			this.getFilterData();
 		}
 	}
+
+	_excludeSegmentItemID: string;
+	_excludeSegmentItemName: string;
 	_filter: string;
 	displayedColumns = [];
 	dataSource: any;
@@ -43,6 +46,7 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	echarts: any;
 	interval;
 	duration;
+
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -68,9 +72,8 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
 	}
-	queryName() {
-		console.log(this.item.query[0].metadata.name);
-		switch (this.item.query[0].metadata.name) {
+	queryName(name: string) {
+		switch (name) {
 			case 'throughput-wired':
 				return '{{ELLIPEE}}';
 			case 'throughput-wireless':
@@ -108,35 +111,81 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	getData() {
 		this.currentView == 'all' ? this.getAllData() : this.getFilterData();
 	}
-	getFilterData() {
-		let url = this.item.query[0].spec.filtered_data_url;
-		let REPLACE = this.queryName();
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, REPLACE, `"${this._filter}"`);
-		url = this.replace(url, REPLACE, `"${this._filter}"`);
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				let data = res.data.result;
-				let column = [];
-				for (let key in data[0].metric) {
-					column.push(key);
-				}
-				console.log(column);
-				this.displayedColumns = column;
-				this.dataSource = data.map((result) => result.metric);
+	// getFilterData() {
+	// 	let url = this.item.query[0].spec.filtered_data_url;
+	// 	let REPLACE = this.queryName();
+	// 	url = this.replace(url, '+', '%2B');
+	// 	url = this.replace(url, REPLACE, `"${this._filter}"`);
+	// 	url = this.replace(url, REPLACE, `"${this._filter}"`);
+	// 	url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+	// 	url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+	// 	url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+	// 	url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+	// 	url = this.replace(url, '{{step}}', `${this.step}`);
+	// 	this.pending = true;
+	// 	this.panelService.getPanelData(url).subscribe(
+	// 		(res: any) => {
+	// 			let data = res.data.result;
+	// 			let column = [];
+	// 			for (let key in data[0].metric) {
+	// 				column.push(key);
+	// 			}
+	// 			console.log(column);
+	// 			this.displayedColumns = column;
+	// 			this.dataSource = data.map((result) => result.metric);
 
-				console.log(data.map((result) => result.metric));
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
+	// 			console.log(data.map((result) => result.metric));
+	// 		},
+	// 		(error) => {
+	// 			this.pending = false;
+	// 		}
+	// 	);
+	// }
+	getFilterData() {
+		console.log(this.item);
+		console.log(this._excludeSegmentItemName);
+		this.dataSource = [];
+		this.dataSource = [];
+		let subFilter = this.item.query.filter((itemQ) => itemQ.spec.title === this._excludeSegmentItemName);
+		let numberOfCalls = subFilter.length;
+		for (let index = 0; index < numberOfCalls; index++) {
+			// if (this._excludeSegmentItemName == this.item.query[index].spec.title) {
+			// 	continue;
+			// }
+			let url = subFilter[index].spec.filtered_data_url;
+			console.log(url);
+			let name = subFilter[index].metadata.name;
+			let REPLACE = this.queryName(name);
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, REPLACE, `"${this._excludeSegmentItemName}"`);
+			url = this.replace(url, REPLACE, `"${this._excludeSegmentItemName}"`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+			url = this.replace(url, '{{STEP}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					console.log(res);
+					let data = res.data.result;
+					let column = [];
+					for (let key in data[0].metric) {
+						column.push(key);
+					}
+					// this.displayedColumns = [ ...column ];
+					this.dataSource = [ ...data.map((result) => result.metric) ];
+					// if (index + 1 == numberOfCalls) {
+					// 	setTimeout(() => {
+					// 		this.pending = false;
+					// 	}, 1000);
+					// }
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
 	}
 	getAllData() {
 		let url =

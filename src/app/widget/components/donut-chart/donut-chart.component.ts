@@ -28,8 +28,9 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 		this.echartsInstance.resize();
 		this.cd.detectChanges();
 	}
-	duration: any = 1581722395;
+	startTime: any = 1581722395;
 	endTime: any = 1581723395;
+	duration: any = 1581722395;
 	step: any = 15;
 	url: any;
 
@@ -98,7 +99,9 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{step}}', `=${this.step}`);
+		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+		url = this.replace(url, '{{step}}', `${this.step}`);
 		this.pending = true;
 		this.panelService.getPanelData(url).subscribe(
 			(res: any) => {
