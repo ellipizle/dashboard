@@ -73,7 +73,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 			this.echarts = config.echart;
 
 			if (this.chartData) {
-				this.drawPie(this.formatSeries(this.chartData));
+				this.drawPie(this.chartData);
 			}
 		});
 

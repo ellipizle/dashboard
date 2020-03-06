@@ -9,6 +9,8 @@ import {
 	Input,
 	OnDestroy
 } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -19,7 +21,7 @@ import { forkJoin } from 'rxjs';
 @Component({
 	selector: 'app-summary-item',
 	template: `
-	<div class="summary-container">
+	<div [ngClass]="{'summary-container': detailView}">
 	          <h3 class="example-h2">{{data?.name}}</h3>
               <h2>{{data?.result[0]?.value[1] | round}}</h2>
 
@@ -38,9 +40,9 @@ import { forkJoin } from 'rxjs';
 			h3 {
 				margin-bottom: 2px;
 			}
-			.summary-container{
-				cursor:pointer
-			}
+.summary-container {
+	cursor: pointer;
+}
 			.summary {
 				padding: 16px;
 			}
@@ -60,7 +62,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	@Output() filter: EventEmitter<any> = new EventEmitter();
 	changeRate: string;
 	pending: boolean;
-	finish: boolean;
+	detailView: boolean;
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
 		this.cd.detectChanges();
@@ -85,12 +87,22 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	legendData = [];
 	xAxisData = [];
 	constructor(
+		private route: Router,
+		private location: Location,
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
 		private dataSource: DatasourceService,
 		private panelService: PanelService,
 		private timerService: TimerService
 	) {
+		this.route.events.subscribe((res) => {
+			let url = this.location.path().split('/');
+			if (url[2] && url[2] == 'panel') {
+				this.detailView = true;
+			} else {
+				this.detailView = false;
+			}
+		});
 		//get chart styles
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;
@@ -156,7 +168,6 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
 		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
 		this.pending = true;
-		this.finish = false;
 		forkJoin(this.panelService.getPanelData(url), this.panelService.getPanelData(prev_url)).subscribe(
 			(res: any) => {
 				console.log(res);
