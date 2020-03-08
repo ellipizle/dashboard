@@ -3,22 +3,18 @@
         <mat-icon  aria-hidden="false" aria-label="Toggle Down" *ngIf="menuToggle">keyboard_arrow_down</mat-icon>
         <mat-icon  aria-hidden="false" aria-label="Toggle Up"  *ngIf="!menuToggle">keyboard_arrow_up</mat-icon>
         </button>
-      <div #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"  (menuClosed)="menuToggle === false" (menuOpened)="menuToggle === true">
+      <div  #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"  (menuClosed)="menuToggle === false" (menuOpened)="menuToggle === true">
             <mat-menu #menu="matMenu" class="center-menu">
             <button mat-menu-item (click)="view.emit(item)">
                <mat-icon fontSet="fas" fontIcon="fa-eye"></mat-icon>
               <!-- <i class="fas fa-eye"></i> -->
-                <span>View</span>
+                <span >View</span>
             </button>
-            <button mat-menu-item (click)="edit.emit(item)">
+            <button mat-menu-item (click)="edit.emit(item)" >
                 <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>
                <!-- <i class="fas fa-edit"></i> -->
                 <span>Edit</span>
             </button>
-            <!-- <button mat-menu-item [matMenuTriggerFor]="subMenu">
-                <mat-icon fontSet="fas" fontIcon="fa-cube"></mat-icon>
-                <span>More...</span>
-            </button> -->
               <hr class="break">
               <button mat-menu-item class="remove-menu" (click)="remove.emit(item)">
                <!-- <i class="fas fa-trash-alt"></i> -->
@@ -27,6 +23,17 @@
             </button>
             </mat-menu>
 
+      </div>
+
+
+       <div *ngIf="detailView" #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"  (menuClosed)="menuToggle === false" (menuOpened)="menuToggle === true">
+            <mat-menu #menu="matMenu" class="center-menu">
+            <button mat-menu-item (click)="view.emit(item)">
+               <mat-icon fontSet="fas" fontIcon="fa-eye"></mat-icon>
+              <!-- <i class="fas fa-eye"></i> -->
+                <span>Go back</span>
+            </button>
+  </mat-menu>
       </div>
 
             <mat-menu #subMenu="matMenu">

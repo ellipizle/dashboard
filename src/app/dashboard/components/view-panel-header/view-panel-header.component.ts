@@ -3,11 +3,11 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 @Component({
-	selector: 'app-panel-header',
-	templateUrl: './panel-header.component.html',
-	styleUrls: [ './panel-header.component.scss' ]
+	selector: 'app-view-panel-header',
+	templateUrl: './view-panel-header.component.html',
+	styleUrls: [ './view-panel-header.component.scss' ]
 })
-export class PanelHeaderComponent implements OnInit {
+export class PanelViewHeaderComponent implements OnInit {
 	@ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
 	menuToggle: boolean;
 	detailView: boolean;

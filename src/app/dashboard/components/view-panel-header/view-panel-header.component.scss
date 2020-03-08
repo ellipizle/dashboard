@@ -1,0 +1,12 @@
+.mat-button {
+	border-radius: none !important;
+	width: 100%;
+}
+
+.break {
+	color: #464748;
+	border: 0.5px solid;
+}
+::ng-deep .mat-menu-content:not(:empty) {
+	padding-bottom: 0px;
+}
