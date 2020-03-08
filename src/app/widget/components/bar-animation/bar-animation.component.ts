@@ -89,6 +89,10 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
 	}
+	onChartClick(event: any, type: string) {
+		console.log('chart event:', type, event);
+		this.filter.emit(event['name']);
+	}
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {

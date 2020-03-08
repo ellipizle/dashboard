@@ -152,7 +152,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 				if (i == 0) {
 					dateList = result.values.map((date) => date[0]);
 				}
-				const seriesData = result.values.map((date) => Math.round(date[1]));
+				const seriesData = result.values.map((date) => Math.round(date[1] / 1048576));
 				series.push({
 					stack: 'Total amount',
 					type: 'line',
@@ -232,6 +232,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			],
 			yAxis: [
 				{
+					name: 'Megabyte',
 					type: 'value',
 					axisLine: {
 						lineStyle: {

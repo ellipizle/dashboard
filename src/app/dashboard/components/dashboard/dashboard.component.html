@@ -1,6 +1,6 @@
 
  <gridster [options]="options">
-    <gridster-item [item]="item" *ngFor="let item of layout; let i = index" #childgrid>
+    <gridster-item [item]="item" *ngFor="let item of layout; let i = index" #childgrid >
         <app-panel-header
         [item]="item"
         (edit)="editWidget($event)"

@@ -63,6 +63,11 @@
                          [item]="widget"  [filter]="filter">
                     </app-table-summary>
               </ng-template>
+                  <ng-template [ngSwitchCase]="'bar-chart'">
+                    <app-table-bar
+                         [item]="widget"  [filter]="filter">
+                    </app-table-bar>
+              </ng-template>
                   <ng-template ngSwitchDefault>
                          <app-table [item]="widget"  [filter]="filter"></app-table>
                   </ng-template>

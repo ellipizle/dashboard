@@ -129,8 +129,8 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			let name: string;
 			let metric = result.metric;
 			for (let key in metric) {
-				legend = key;
-				name = metric[key];
+				legend = key ? key : 'unknown';
+				name = metric[key] ? metric[key] : 'unknown';
 			}
 			dateList.push(name);
 			dataArray.push({

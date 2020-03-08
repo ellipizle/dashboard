@@ -1,12 +1,9 @@
 
-<div class="summary" >
-  <div  fxLayout="column"  fxLayoutGap="20px" >
-    <div *ngFor="let data of item.query" fxFill  fxLayout="column">
+<div class="summary"    >
 
-   <app-summary-item [query]="data"  [item]="item" (filter)="filter.emit($event)"></app-summary-item>
-
-    </div>
-               </div>
+<div  fxLayout="column" >
+   <app-summary-item  *ngFor="let data of item.query" [query]="data"  [item]="item" (filter)="filter.emit($event)"></app-summary-item>
+</div>
 </div>
 
 <!-- <div class="summary"  *ngIf="finish">

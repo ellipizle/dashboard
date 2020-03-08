@@ -129,7 +129,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 			let name: string;
 			let metric = result.metric;
 			for (let key in metric) {
-				legend = key;
+				legend = key ? key : 'unknown';
 				name = metric[key];
 			}
 			dateList.push(name);

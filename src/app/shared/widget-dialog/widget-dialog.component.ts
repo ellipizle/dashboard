@@ -84,6 +84,7 @@ export class WidgetDialogComponent implements OnInit {
 				type: this.formData.type.metadata.name
 			};
 			this.widgetForm.patchValue(data);
+			this.maxCount = this.formData.type.spec.max_queries ? this.formData.type.spec.max_queries : 1;
 			this.transformItem(this.formData.query);
 		}
 	}
@@ -99,6 +100,7 @@ export class WidgetDialogComponent implements OnInit {
 					query: [ term.metadata.name ]
 				})
 			);
+			this.maxCount--;
 		});
 	}
 
