@@ -148,7 +148,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 				if (i == 0) {
 					dateList = result.values.map((date) => date[0]);
 				}
-				const seriesData = result.values.map((date) => Math.round(date[1]));
+				const seriesData = result.values.map((date) => Math.round(date[1] / 1048576));
 				series.push({
 					type: 'bar',
 					name: name,
@@ -196,9 +196,22 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 					color: echarts.textColor
 				}
 			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross',
+					label: {
+						backgroundColor: echarts.tooltipBackgroundColor
+					}
+				}
+			},
 			xAxis: [
 				{
 					// name: this.item.query[0].spec.x_axis_label,
+					name: 'Date',
+					nameTextStyle: {
+						align: 'left'
+					},
 					data: data.dateList,
 					silent: false,
 					axisTick: {
@@ -221,6 +234,11 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 			],
 			yAxis: [
 				{
+					name: 'Megabyte',
+					nameTextStyle: {
+						align: 'right'
+					},
+					interval: 40,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor
@@ -229,6 +247,14 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 					splitLine: {
 						lineStyle: {
 							color: echarts.splitLineColor
+						}
+					},
+					axisPointer: {
+						label: {
+							formatter: function(value) {
+								let fmt = Math.round(value.value);
+								return `${fmt} MB`;
+							}
 						}
 					},
 					axisLabel: {

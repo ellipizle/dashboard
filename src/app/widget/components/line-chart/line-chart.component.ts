@@ -147,7 +147,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 				if (i == 0) {
 					dateList = result.values.map((date) => date[0]);
 				}
-				const seriesData = result.values.map((date) => Math.round(date[1]));
+				const seriesData = result.values.map((date) => Math.round(date[1] / 1048576));
 				series.push({
 					type: 'line',
 					name: name,
@@ -166,9 +166,18 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.options = {
 			backgroundColor: echarts.bg,
 			color: [ colors.danger, colors.primary, colors.info ],
+			// tooltip: {
+			// 	trigger: 'item',
+			// 	formatter: '{a} <br/>{b} : {c}'
+			// },
 			tooltip: {
-				trigger: 'item',
-				formatter: '{a} <br/>{b} : {c}'
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross',
+					label: {
+						backgroundColor: echarts.tooltipBackgroundColor
+					}
+				}
 			},
 			legend: {
 				data: data.legend,
@@ -179,13 +188,17 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 			grid: {
 				top: '4%',
 				left: '3%',
-				right: '14%',
+				right: '7%',
 				bottom: '13%',
 				containLabel: true
 			},
 			xAxis: [
 				{
-					// type: 'category',
+					name: 'Date',
+					nameTextStyle: {
+						align: 'left'
+					},
+					type: 'category',
 					data: data.dateList,
 					axisTick: {
 						alignWithLabel: true
@@ -202,12 +215,24 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 						textStyle: {
 							color: echarts.textColor
 						}
+					},
+					axisPointer: {
+						label: {
+							formatter: function(axisValue) {
+								return moment.unix(axisValue.value).format('d/M/Y, h:mm');
+							}
+						}
 					}
 				}
 			],
 			yAxis: [
 				{
+					name: 'Megabyte',
+					nameTextStyle: {
+						align: 'right'
+					},
 					type: 'log',
+					interval: 40,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor
@@ -218,7 +243,21 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 							color: echarts.splitLineColor
 						}
 					},
+					axisPointer: {
+						label: {
+							formatter: function(value) {
+								console.log(value);
+								console.log(Math.round(value.value / 1048576));
+								let fmt = Math.round(value.value);
+								return `${fmt} MB`;
+							}
+						}
+					},
 					axisLabel: {
+						show: true,
+						formatter: function(value) {
+							return `${value} MB`;
+						},
 						textStyle: {
 							color: echarts.textColor
 						}

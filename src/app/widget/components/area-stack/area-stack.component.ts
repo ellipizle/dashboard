@@ -194,15 +194,19 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 				}
 			},
 			grid: {
-				top: '4%',
+				top: '16%',
 				left: '3%',
-				right: '4%',
+				right: '7%',
 				bottom: '3%',
 				containLabel: true
 			},
 			xAxis: [
 				{
-					// type: 'category',
+					name: 'Date',
+					nameTextStyle: {
+						align: 'left'
+					},
+					type: 'category',
 					boundaryGap: false,
 					data: data.dateList,
 					axisTick: {
@@ -233,7 +237,11 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			yAxis: [
 				{
 					name: 'Megabyte',
+					nameTextStyle: {
+						align: 'right'
+					},
 					type: 'value',
+					interval: 40,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor
@@ -245,8 +253,20 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 						}
 					},
 					axisLabel: {
+						show: true,
+						formatter: function(value) {
+							return `${value} MB`;
+						},
 						textStyle: {
 							color: echarts.textColor
+						}
+					},
+					axisPointer: {
+						label: {
+							formatter: function(value) {
+								let fmt = Math.round(value.value);
+								return `${fmt} MB`;
+							}
 						}
 					}
 				}

@@ -133,7 +133,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 				name = metric[key];
 			}
 			xAxisList.push(name);
-			dataArray.push(parseInt(result.value[1]));
+			dataArray.push(Math.round(parseInt(result.value[1]) / 1048576));
 		});
 		return { xAxis: xAxisList, data: dataArray, legend: legend };
 	}
@@ -153,15 +153,18 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 				}
 			},
 			grid: {
-				top: '3%',
+				top: '16%',
 				left: '5%',
-				right: '5%',
+				right: '7%',
 				bottom: '5%',
 				containLabel: true
 			},
 			xAxis: [
 				{
-					name: this.item.query[0].spec.x_axis_label,
+					name: data.legend,
+					nameTextStyle: {
+						align: 'left'
+					},
 					type: 'category',
 					data: data.xAxis,
 					axisTick: {
@@ -181,7 +184,12 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			],
 			yAxis: [
 				{
+					name: 'Megabyte',
+					nameTextStyle: {
+						align: 'right'
+					},
 					type: 'value',
+					interval: 200,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor
@@ -192,7 +200,19 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 							color: echarts.splitLineColor
 						}
 					},
+					axisPointer: {
+						label: {
+							formatter: function(value) {
+								let fmt = Math.round(value.value);
+								return `${fmt} MB`;
+							}
+						}
+					},
 					axisLabel: {
+						show: true,
+						formatter: function(value) {
+							return `${value} MB`;
+						},
 						textStyle: {
 							color: echarts.textColor
 						}
