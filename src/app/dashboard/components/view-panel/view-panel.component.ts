@@ -15,6 +15,7 @@ import { DialogService } from '../../../shared/dialog/dialog.service';
 export class ViewPanelComponent implements OnInit {
 	widget: Widget;
 	filter: string;
+	resetDataSource: boolean;
 	constructor(
 		private dialogService: DialogService,
 		private layoutService: LayoutService,
@@ -22,9 +23,11 @@ export class ViewPanelComponent implements OnInit {
 		private _dialog: MatDialog,
 		private dashboard: DashboardService
 	) {
-		this.dashboard.getSelectedItemObs().subscribe((res) => {
-			console.log(res);
-			this.widget = res;
+		this.layoutService.getSelectedItemObs().subscribe((res) => {
+			if (res) {
+				this.widget = res;
+				this.resetDataSource = true;
+			}
 		});
 	}
 
@@ -69,6 +72,8 @@ export class ViewPanelComponent implements OnInit {
 		dialogRef.afterClosed().subscribe((res) => {
 			if (res) {
 				if (res) {
+					this.widget = res;
+					this.resetDataSource = true;
 					this.layoutService.editItem(res);
 				}
 			}

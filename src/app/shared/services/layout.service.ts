@@ -9,12 +9,28 @@ import {
 	GridType,
 	DisplayGrid
 } from 'angular-gridster2';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { Widget } from '../../widget/interfaces/widget';
 @Injectable({
 	providedIn: 'root'
 })
 export class LayoutService {
 	unitHeight;
+	selectedItem: BehaviorSubject<Widget | null> = new BehaviorSubject(null);
+	public edited$ = new Subject();
+	getEditedObs(): Observable<any> {
+		return this.edited$.asObservable();
+	}
+	getSelectedItemObs(): Observable<Widget | null> {
+		return this.selectedItem.asObservable();
+	}
+
+	setSelectedItemObs(selectedItem: any) {
+		this.selectedItem.next(selectedItem);
+	}
+	setEditedObs(range: any) {
+		this.edited$.next(range);
+	}
 	public itemResize(item: GridsterItem, itemComponent: GridsterItemComponentInterface): void {
 		// if (itemComponent.gridster.curRowHeight > 1) {
 		// 	this.unitHeight = itemComponent.gridster.curRowHeight;
@@ -79,6 +95,8 @@ export class LayoutService {
 		for (let i = 0; i < this.layout.length; i++) {
 			if (this.layout[i].id == widget.id) {
 				this.layout[i] = widget;
+				this.setSelectedItemObs(widget);
+				this.setEditedObs(true);
 			}
 		}
 	}

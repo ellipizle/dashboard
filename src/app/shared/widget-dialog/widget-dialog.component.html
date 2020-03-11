@@ -38,7 +38,7 @@
                               <mat-select placeholder="Select Query" formControlName="query" (selectionChange)="onSelected($event.value)">
                                 <mat-option *ngFor="let query of queryTypes " [value]="query.metadata.name">{{query?.spec?.title}}</mat-option>
                               </mat-select>
-                              <mat-error *ngIf="formSubmitted && widgetForm.get('query').invalid">query type is require</mat-error>
+                              <mat-error *ngIf="formSubmitted && widgetForm.get('query').invalid">query type is required</mat-error>
                             </mat-form-field>
                             </div>
                       </div>

@@ -84,7 +84,9 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	}
 	onChartClick(event: any, type: string) {
 		console.log('chart event:', type, event);
-		this.filter.emit(event['name']);
+		let name = event['name'];
+		let selected = event['selected'];
+		this.filter.emit(selected[name]);
 	}
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
@@ -146,6 +148,12 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		this.options = {
 			backgroundColor: echarts.bg,
 			color: [ colors.primaryLight ],
+			legend: {
+				data: data.xAxisList,
+				textStyle: {
+					color: echarts.textColor
+				}
+			},
 			tooltip: {
 				trigger: 'axis',
 				axisPointer: {
@@ -161,7 +169,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			},
 			xAxis: [
 				{
-					name: data.legend,
+					// name: data.legend,
 					nameTextStyle: {
 						align: 'left'
 					},
@@ -184,7 +192,6 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			],
 			yAxis: [
 				{
-					name: 'Megabyte',
 					nameTextStyle: {
 						align: 'right'
 					},

@@ -89,7 +89,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	}
 	onChartLegendSelected(event: any, type: string) {
 		console.log('chart event:', type, event);
-		this.filter.emit(event['name']);
+		this.filter.emit(event['selected']);
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
@@ -202,7 +202,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			},
 			xAxis: [
 				{
-					name: 'Date',
+					// name: 'Date',
 					nameTextStyle: {
 						align: 'left'
 					},
@@ -236,7 +236,6 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			],
 			yAxis: [
 				{
-					name: 'Megabyte',
 					nameTextStyle: {
 						align: 'right'
 					},

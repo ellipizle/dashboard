@@ -49,7 +49,7 @@
                         [item]="widget">
                     </app-gauge-chart>
               </ng-template>
-                            <ng-template [ngSwitchCase]="'summary-bar'">
+             <ng-template [ngSwitchCase]="'summary-bar'">
                     <app-summary  (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="widget"
                           (filter)="onFilter($event)">
@@ -60,16 +60,26 @@
             <ng-container [ngSwitch]="widget.type.metadata.name">
               <ng-template [ngSwitchCase]="'summary-bar'">
                     <app-table-summary
-                         [item]="widget"  [filter]="filter">
+                         [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
                     </app-table-summary>
               </ng-template>
                   <ng-template [ngSwitchCase]="'bar-chart'">
                     <app-table-bar
-                         [item]="widget"  [filter]="filter">
+                         [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
                     </app-table-bar>
               </ng-template>
+                           <ng-template [ngSwitchCase]="'pie-chart'">
+                    <app-table-pie
+                         [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
+                    </app-table-pie>
+              </ng-template>
+                                         <ng-template [ngSwitchCase]="'pie-donut-chart'">
+                    <app-table-pie
+                         [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
+                    </app-table-pie>
+              </ng-template>
                   <ng-template ngSwitchDefault>
-                         <app-table [item]="widget"  [filter]="filter"></app-table>
+                         <app-table [item]="widget"  [reset]="filter"  [reset]="resetDataSource"></app-table>
                   </ng-template>
              </ng-container>
 

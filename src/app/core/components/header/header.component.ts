@@ -144,7 +144,6 @@ export class HeaderComponent implements OnInit {
 
 	//date range
 	range: any = 'Last 1 hour';
-	// range: Range = { fromDate: new Date(), toDate: new Date() };
 	options: NgxDrpOptions;
 	presets: Array<PresetItem> = [];
 
@@ -158,7 +157,11 @@ export class HeaderComponent implements OnInit {
 		private location: Location,
 		private configSvc: ConfigService
 	) {
-		// this.noticeSvc.openSnackBar('Dashboard saved successfully', '');
+		this.layoutService.getEditedObs().subscribe((res) => {
+			if (res) {
+				this.saveDashboard();
+			}
+		});
 		this.route.events.subscribe((res) => {
 			let url = this.location.path().split('/');
 			if (url[2] && url[2] == 'panel') {

@@ -8,19 +8,11 @@ import { Widget } from '../../widget/interfaces/widget';
 })
 export class DashboardService {
 	baseUrl: string = environment.baseUrl;
-	selectedItem: BehaviorSubject<Widget | null> = new BehaviorSubject(null);
+
 	queries: BehaviorSubject<any[]> = new BehaviorSubject([]);
 	charts: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
 	constructor(private http: HttpClient) {}
-
-	getSelectedItemObs(): Observable<Widget | null> {
-		return this.selectedItem.asObservable();
-	}
-
-	setSelectedItemObs(selectedItem: any) {
-		this.selectedItem.next(selectedItem);
-	}
 
 	getQueriesObs(): Observable<any[]> {
 		return this.queries.asObservable();

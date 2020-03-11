@@ -87,8 +87,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.echartsInstance = e;
 	}
 	onChartLegendSelected(event: any, type: string) {
-		console.log('chart event:', type, event);
-		this.filter.emit(event['name']);
+		this.filter.emit(event['selected']);
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);

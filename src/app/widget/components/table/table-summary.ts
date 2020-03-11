@@ -41,6 +41,13 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getAllData();
+		}
+	}
+
 	_excludeSegmentItemID: string;
 	_excludeSegmentItemName: string;
 	_filter: string;

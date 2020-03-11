@@ -78,7 +78,7 @@ export class DashboardComponent {
 	}
 
 	public viewWidget(widget: Widget) {
-		this.dashboardSvc.setSelectedItemObs(widget);
+		this.layoutService.setSelectedItemObs(widget);
 		this.router.navigate([ 'dashboard/panel', widget.id ]);
 	}
 

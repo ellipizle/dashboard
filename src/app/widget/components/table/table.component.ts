@@ -6,13 +6,16 @@ import {
 	ChangeDetectorRef,
 	Input,
 	ElementRef,
-	OnDestroy
+	OnDestroy,
+	ViewChild
 } from '@angular/core';
 import { Widget } from '../../interfaces/widget';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
 import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 @Component({
 	selector: 'app-table',
 	templateUrl: './table.component.html',
@@ -21,20 +24,31 @@ import { TimerService } from '../../../shared/services/timer.service';
 export class TableComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input('filter')
-	set filter(query: string) {
+	set filter(query: Object) {
 		if (query) {
-			console.log(this.item);
-			console.log(query);
-			this._excludeSegmentItemName = query;
+			let array = [];
+			for (let key in query) {
+				if (query[key] == true) {
+					array.push(key);
+				}
+			}
+			this._excludeSegmentItemName = [ ...array ];
 			this.getFilterData();
 		}
 	}
 
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getAllData();
+		}
+	}
+
 	_excludeSegmentItemID: string;
-	_excludeSegmentItemName: string;
+	_excludeSegmentItemName: Array<string> = [];
 	_filter: string;
 	displayedColumns = [];
-	dataSource: any;
+	dataSource: any = new MatTableDataSource([]);
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
 	step: any = 1;
@@ -46,6 +60,9 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	echarts: any;
 	interval;
 	duration;
+	//   dataSource = new MatTableDataSource(2);
+
+	@ViewChild(MatSort) sort: MatSort;
 
 	constructor(
 		private configSvc: ConfigService,
@@ -97,6 +114,12 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 	ngAfterViewInit() {
+		this.dataSource.filterPredicate = (data: any, filter: string) => {
+			for (let key in data) {
+				return data[key].toLowerCase().includes(filter);
+			}
+		};
+
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
 				this.startTime = res.start;
@@ -108,57 +131,32 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 		});
 		this.cd.detectChanges();
 	}
+
 	getData() {
 		this.currentView == 'all' ? this.getAllData() : this.getFilterData();
 	}
-	// getFilterData() {
-	// 	let url = this.item.query[0].spec.filtered_data_url;
-	// 	let REPLACE = this.queryName();
-	// 	url = this.replace(url, '+', '%2B');
-	// 	url = this.replace(url, REPLACE, `"${this._filter}"`);
-	// 	url = this.replace(url, REPLACE, `"${this._filter}"`);
-	// 	url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-	// 	url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-	// 	url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-	// 	url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-	// 	url = this.replace(url, '{{step}}', `${this.step}`);
-	// 	this.pending = true;
-	// 	this.panelService.getPanelData(url).subscribe(
-	// 		(res: any) => {
-	// 			let data = res.data.result;
-	// 			let column = [];
-	// 			for (let key in data[0].metric) {
-	// 				column.push(key);
-	// 			}
-	// 			console.log(column);
-	// 			this.displayedColumns = column;
-	// 			this.dataSource = data.map((result) => result.metric);
 
-	// 			console.log(data.map((result) => result.metric));
-	// 		},
-	// 		(error) => {
-	// 			this.pending = false;
-	// 		}
-	// 	);
-	// }
+	applyFilter(filterValue: string) {
+		filterValue = filterValue.trim(); // Remove whitespace
+		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+		this.dataSource.filter = filterValue;
+	}
+
 	getFilterData() {
-		console.log(this.item.query);
-		console.log(this._excludeSegmentItemName);
 		this.dataSource = [];
-		this.dataSource = [];
-		let subFilter = this.item.query.filter((itemQ) => itemQ.spec.title === this._excludeSegmentItemName);
+		let subFilter = this.item.query.filter((itemQ) => this._excludeSegmentItemName.includes(itemQ.spec.title));
+
 		let numberOfCalls = subFilter.length;
 		for (let index = 0; index < numberOfCalls; index++) {
 			// if (this._excludeSegmentItemName == this.item.query[index].spec.title) {
 			// 	continue;
 			// }
 			let url = subFilter[index].spec.filtered_data_url;
-			console.log(url);
 			let name = subFilter[index].metadata.name;
 			let REPLACE = this.queryName(name);
 			url = this.replace(url, '+', '%2B');
-			url = this.replace(url, REPLACE, `"${this._excludeSegmentItemName}"`);
-			url = this.replace(url, REPLACE, `"${this._excludeSegmentItemName}"`);
+			url = this.replace(url, REPLACE, `"${subFilter[index].spec.title}"`);
+			url = this.replace(url, REPLACE, `"${subFilter[index].spec.title}"`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
@@ -167,19 +165,13 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 			this.pending = true;
 			this.panelService.getPanelData(url).subscribe(
 				(res: any) => {
-					console.log(res);
 					let data = res.data.result;
 					let column = [];
 					for (let key in data[0].metric) {
 						column.push(key);
 					}
-					// this.displayedColumns = [ ...column ];
-					this.dataSource = [ ...data.map((result) => result.metric) ];
-					// if (index + 1 == numberOfCalls) {
-					// 	setTimeout(() => {
-					// 		this.pending = false;
-					// 	}, 1000);
-					// }
+					let arr = [ ...this.dataSource, ...data.map((result) => result.metric) ];
+					this.dataSource = new MatTableDataSource(arr);
 				},
 				(error) => {
 					this.pending = false;
@@ -208,11 +200,9 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 				for (let key in data[0].metric) {
 					column.push(key);
 				}
-				console.log(column);
 				this.displayedColumns = column;
-				this.dataSource = data.map((result) => result.metric);
-
-				console.log(data.map((result) => result.metric));
+				this.dataSource = new MatTableDataSource(data.map((result) => result.metric));
+				this.dataSource.sort = this.sort;
 			},
 			(error) => {
 				this.pending = false;

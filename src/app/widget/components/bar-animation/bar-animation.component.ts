@@ -208,7 +208,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 			xAxis: [
 				{
 					// name: this.item.query[0].spec.x_axis_label,
-					name: 'Date',
+					// name: 'Date',
 					nameTextStyle: {
 						align: 'left'
 					},
@@ -234,7 +234,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 			],
 			yAxis: [
 				{
-					name: 'Megabyte',
+					// name: 'Megabyte',
 					nameTextStyle: {
 						align: 'right'
 					},

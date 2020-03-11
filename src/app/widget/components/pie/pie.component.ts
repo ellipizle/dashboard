@@ -46,6 +46,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 	interval;
 	pending: boolean;
 	chartData;
+	fielName: string;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -84,7 +85,10 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 		this.echartsInstance = e;
 	}
 	onChartEvent(event: any, type: string) {
-		this.filter.emit(event.data['name']);
+		let data = {};
+		data['name'] = this.fielName;
+		data['filters'] = event['selected'];
+		this.filter.emit(data);
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
@@ -98,6 +102,11 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			}
 		});
 		this.cd.detectChanges();
+	}
+	ngOnChanges() {
+		if (this.item && this.duration) {
+			this.getData();
+		}
 	}
 
 	getData() {
@@ -129,6 +138,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			let name: string;
 			let metric = result.metric;
 			for (let key in metric) {
+				this.fielName = key;
 				legend = key ? key : 'unknown';
 				name = metric[key] ? metric[key] : 'unknown';
 			}
