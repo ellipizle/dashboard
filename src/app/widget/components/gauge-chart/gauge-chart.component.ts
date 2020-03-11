@@ -22,6 +22,12 @@ import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 	styleUrls: [ './gauge-chart.component.scss' ]
 })
 export class GaugeChartComponent implements AfterViewInit, OnDestroy {
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getData();
+		}
+	}
 	@Input() public item: Widget;
 	@Input() public index: any;
 	@Input() public unitHeight: any;

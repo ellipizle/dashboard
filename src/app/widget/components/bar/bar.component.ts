@@ -22,6 +22,12 @@ import { data } from 'pie';
 	styleUrls: [ './bar.component.scss' ]
 })
 export class BarComponent implements AfterViewInit, OnDestroy {
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getData();
+		}
+	}
 	@Input() public item: Widget;
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {

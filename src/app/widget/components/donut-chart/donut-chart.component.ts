@@ -23,6 +23,12 @@ import { data } from 'pie';
 	styleUrls: [ './donut-chart.component.scss' ]
 })
 export class DonutChartComponent implements AfterViewInit, OnDestroy {
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getData();
+		}
+	}
 	@Input() public item: Widget;
 	@Input() public index: any;
 	@Output() filter: EventEmitter<any> = new EventEmitter();

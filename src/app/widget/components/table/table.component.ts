@@ -24,7 +24,8 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TableComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input('filter')
-	set filter(query: Object) {
+	set filter(query: any) {
+		console.log(query);
 		if (query) {
 			let array = [];
 			for (let key in query) {
@@ -38,9 +39,9 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	}
 
 	@Input('reset')
-	set reset(data: boolean) {
-		if (data) {
-			this.getAllData();
+	set reset(data: string) {
+		if (data && this.item) {
+			this.getData();
 		}
 	}
 
@@ -48,6 +49,7 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	_excludeSegmentItemName: Array<string> = [];
 	_filter: string;
 	displayedColumns = [];
+	rootDatasouce = [];
 	dataSource: any = new MatTableDataSource([]);
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
@@ -143,9 +145,10 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getFilterData() {
-		this.dataSource = [];
+		this.rootDatasouce = [];
+		this.dataSource = new MatTableDataSource(this.rootDatasouce);
 		let subFilter = this.item.query.filter((itemQ) => this._excludeSegmentItemName.includes(itemQ.spec.title));
-
+		console.log(subFilter);
 		let numberOfCalls = subFilter.length;
 		for (let index = 0; index < numberOfCalls; index++) {
 			// if (this._excludeSegmentItemName == this.item.query[index].spec.title) {
@@ -170,8 +173,8 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 					for (let key in data[0].metric) {
 						column.push(key);
 					}
-					let arr = [ ...this.dataSource, ...data.map((result) => result.metric) ];
-					this.dataSource = new MatTableDataSource(arr);
+					this.rootDatasouce = [ ...this.rootDatasouce, ...data.map((result) => result.metric) ];
+					this.dataSource = new MatTableDataSource(this.rootDatasouce);
 				},
 				(error) => {
 					this.pending = false;

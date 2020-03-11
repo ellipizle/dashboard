@@ -15,7 +15,7 @@ import { DialogService } from '../../../shared/dialog/dialog.service';
 export class ViewPanelComponent implements OnInit {
 	widget: Widget;
 	filter: string;
-	resetDataSource: boolean;
+	resetDataSource: any;
 	constructor(
 		private dialogService: DialogService,
 		private layoutService: LayoutService,
@@ -25,8 +25,10 @@ export class ViewPanelComponent implements OnInit {
 	) {
 		this.layoutService.getSelectedItemObs().subscribe((res) => {
 			if (res) {
-				this.widget = res;
-				this.resetDataSource = true;
+				this.widget = { ...res };
+				setTimeout(() => {
+					this.resetDataSource = Math.random();
+				}, 2000);
 			}
 		});
 	}
@@ -72,9 +74,10 @@ export class ViewPanelComponent implements OnInit {
 		dialogRef.afterClosed().subscribe((res) => {
 			if (res) {
 				if (res) {
-					this.widget = res;
-					this.resetDataSource = true;
+					this.widget = { ...res };
 					this.layoutService.editItem(res);
+					console.log(this.widget, 'After edit');
+					// this.resetDataSource = Math.random();
 				}
 			}
 		});

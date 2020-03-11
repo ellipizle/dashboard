@@ -23,6 +23,12 @@ import { data } from 'pie';
 	styleUrls: [ './pie.component.scss' ]
 })
 export class PieComponent implements AfterViewInit, OnDestroy {
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getData();
+		}
+	}
 	@Input() public item: Widget;
 	@Input() public index: any;
 	@Output() filter: EventEmitter<any> = new EventEmitter();

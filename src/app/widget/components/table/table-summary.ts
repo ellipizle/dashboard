@@ -13,6 +13,8 @@ import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
 import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 @Component({
 	selector: 'app-table-summary',
 	template: `
@@ -32,11 +34,17 @@ import { TimerService } from '../../../shared/services/timer.service';
 export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input('filter')
-	set filter(query: string) {
+	set filter(query: any) {
 		if (query) {
-			console.log(this.item);
-			console.log(query);
-			this._excludeSegmentItemName = query;
+			this.filterObject = { ...this.filterObject, ...query };
+			let array = [];
+			let filterObj = this.filterObject;
+			for (let key in filterObj) {
+				if (filterObj[key] == true) {
+					array.push(key);
+				}
+			}
+			this._excludeSegmentItemName = [ ...array ];
 			this.getFilterData();
 		}
 	}
@@ -49,10 +57,13 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 	}
 
 	_excludeSegmentItemID: string;
-	_excludeSegmentItemName: string;
+	filterObject = {};
+	_excludeSegmentItemName: Array<any> = [];
+
 	_filter: string;
 	displayedColumns = [];
-	dataSource: any = [];
+	rootDatasource: any = [];
+	dataSource: any = new MatTableDataSource([]);
 	startTime: any = 1581722395;
 	endTime: any = 1581723395;
 	step: any = 50;
@@ -130,42 +141,14 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 		this.currentView == 'all' ? this.getAllData() : this.getFilterData();
 	}
 	getFilterData() {
-		console.log(this.item.query);
-		console.log(this._excludeSegmentItemName);
-		this.dataSource = [];
-		this.dataSource = [];
-		let subFilter = this.item.query.filter((itemQ) => itemQ.spec.title === this._excludeSegmentItemName);
-		let url = subFilter[0].spec.all_data_url;
-		console.log(url);
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
-		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{STEP}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				console.log(res);
-				let data = res.data.result;
-				let column = [];
-				for (let key in data[0].metric) {
-					column.push(key);
-				}
-				this.displayedColumns = [ ...column ];
-				this.dataSource = [ ...this.dataSource, ...data.map((result) => result.metric) ];
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
-	}
-	getAllData() {
-		console.log(this.item);
-		console.log(this.step);
-		let numberOfCalls = this.item.query.length;
+		// console.log(this.item.query);
+		// console.log(this._excludeSegmentItemName);
+		this.rootDatasource = [];
+		this.dataSource = new MatTableDataSource([]);
+		let subFilter = this.item.query.filter((itemQ) => !this._excludeSegmentItemName.includes(itemQ.spec.title));
+		let numberOfCalls = subFilter.length;
 		for (let index = 0; index < numberOfCalls; index++) {
-			let url = this.item.query[index].spec.all_data_url;
+			let url = subFilter[index].spec.all_data_url;
 			url = this.replace(url, '+', '%2B');
 			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
 			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
@@ -175,14 +158,52 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 			this.pending = true;
 			this.panelService.getPanelData(url).subscribe(
 				(res: any) => {
-					console.log(res);
 					let data = res.data.result;
 					let column = [];
 					for (let key in data[0].metric) {
 						column.push(key);
 					}
-					this.displayedColumns = [ ...column ];
-					this.dataSource = [ ...this.dataSource, ...data.map((result) => result.metric) ];
+					console.log(data.map((result) => result.metric));
+					this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
+					console.log(this.rootDatasource);
+					this.dataSource = new MatTableDataSource(this.rootDatasource);
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
+	}
+	getAllData() {
+		this.rootDatasource = [];
+		this.filterObject = {};
+		let numberOfCalls = this.item.query.length;
+		for (let index = 0; index < numberOfCalls; index++) {
+			let url = this.item.query[index].spec.all_data_url;
+			let localObj = {};
+			let name = this.item.query[index].spec.title;
+			localObj[name] = true;
+			this.filterObject = { ...this.filterObject, ...localObj };
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{STEP}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					let data = res.data.result;
+					let column = [];
+					if (data && data.length > 0) {
+						for (let key in data[0].metric) {
+							column.push(key);
+						}
+						this.displayedColumns = [ ...column ];
+						this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
+						// this.dataSource = new MatTableDataSource(this.rootDatasource);
+						this.dataSource = new MatTableDataSource([]);
+					}
 				},
 				(error) => {
 					this.pending = false;

@@ -21,9 +21,9 @@ import { forkJoin } from 'rxjs';
 @Component({
 	selector: 'app-summary-item',
 	template: `
-	<div [ngClass]="{'summary-container': !detailView}" (click)="onTableClick(data.name)">
-	          <h3 class="example-h2">{{data?.name}}</h3>
-              <h2>{{data?.result[0]?.value[1] | round}}</h2>
+	<div [ngClass]="{'summary-container': !detailView,'deactivated': !isActive}" (click)="onTableClick(data.name)">
+	          <h3 class="title">{{data?.name}}</h3>
+              <h2 class="title">{{data?.result[0]?.value[1] | round}}</h2>
 
               <section class="example-section">
                 <mat-progress-bar
@@ -53,10 +53,24 @@ import { forkJoin } from 'rxjs';
 			.item{
 				color:#8f9bb3
 			}
+			.deactivated{
+				background:#c5cae9;
+							h2,
+			h3 {
+				color:#9fa9be
+			}
+					.mat-progress-bar {
+						background:#8f9bb3
+			}
+					.title{
+						color:#9fa9be
+					}
+			}
 	`
 	]
 })
 export class SummaryItemComponent implements AfterViewInit, OnDestroy {
+	isActive: boolean = true;
 	@Input() public item: Widget;
 	@Input() public query: Query;
 	@Output() filter: EventEmitter<any> = new EventEmitter();
@@ -130,7 +144,10 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	}
 	onTableClick($event) {
 		console.log($event);
-		this.filter.emit($event);
+		this.isActive = !this.isActive;
+		let data = {};
+		data[$event] = this.isActive;
+		this.filter.emit(data);
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);

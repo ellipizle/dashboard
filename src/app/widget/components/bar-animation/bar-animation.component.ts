@@ -25,6 +25,12 @@ const moment = _moment;
 	styleUrls: [ './bar-animation.component.scss' ]
 })
 export class BarAnimationComponent implements AfterViewInit, OnDestroy {
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getData();
+		}
+	}
 	@Input() public item: Widget;
 	@Output() filter: EventEmitter<any> = new EventEmitter();
 	@HostListener('window:resize', [ '$event' ])

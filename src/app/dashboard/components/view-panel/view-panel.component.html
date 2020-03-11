@@ -10,43 +10,50 @@
               <ng-template [ngSwitchCase]="'bar-chart'">
                     <app-bar
                         [item]="widget"
-                             (filter)="onFilter($event)">
+                             (filter)="onFilter($event)"
+                             [reset]="resetDataSource">
                     </app-bar>
               </ng-template>
               <ng-template [ngSwitchCase]="'area-graph'">
                     <app-area-stack
                         [item]="widget"
                            (filter)="onFilter($event)"
+                           [reset]="resetDataSource"
                            >
                     </app-area-stack>
               </ng-template>
               <ng-template [ngSwitchCase]="'pie-chart'">
                     <app-pie
                         [item]="widget"
-                        (filter)="onFilter($event)">
+                        (filter)="onFilter($event)"
+                        [reset]="resetDataSource">
                     </app-pie>
               </ng-template>
                    <ng-template [ngSwitchCase]="'line-graph'">
                     <app-line-chart
                               [item]="widget"
-                           (filter)="onFilter($event)">
+                           (filter)="onFilter($event)"
+                           [reset]="resetDataSource">
                     </app-line-chart>
               </ng-template>
              <ng-template [ngSwitchCase]="'bar-animation'">
                     <app-bar-animation (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                                                  [item]="widget"
-                           (filter)="onFilter($event)">
+                           (filter)="onFilter($event)"
+                           [reset]="resetDataSource">
                     </app-bar-animation>
               </ng-template>
                  <ng-template [ngSwitchCase]="'pie-donut-chart'">
                     <app-donut-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="widget"
-                           (filter)="onFilter($event)">
+                           (filter)="onFilter($event)"
+                           [reset]="resetDataSource">
                     </app-donut-chart>
               </ng-template>
                     <ng-template [ngSwitchCase]="'gauge'">
                     <app-gauge-chart (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
-                        [item]="widget">
+                        [item]="widget"
+                        [reset]="resetDataSource">
                     </app-gauge-chart>
               </ng-template>
              <ng-template [ngSwitchCase]="'summary-bar'">
@@ -79,7 +86,7 @@
                     </app-table-pie>
               </ng-template>
                   <ng-template ngSwitchDefault>
-                         <app-table [item]="widget"  [reset]="filter"  [reset]="resetDataSource"></app-table>
+                         <app-table [item]="widget"  [filter]="filter"  [reset]="resetDataSource"></app-table>
                   </ng-template>
              </ng-container>
 

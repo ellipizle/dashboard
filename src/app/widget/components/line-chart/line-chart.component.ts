@@ -25,6 +25,12 @@ const moment = _moment;
 	styleUrls: [ './line-chart.component.scss' ]
 })
 export class LineChartComponent implements AfterViewInit, OnDestroy {
+	@Input('reset')
+	set reset(data: boolean) {
+		if (data) {
+			this.getData();
+		}
+	}
 	@Input() public item: Widget;
 	@Output() filter: EventEmitter<any> = new EventEmitter();
 	startTime: any = 1581722395;

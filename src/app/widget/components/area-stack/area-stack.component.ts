@@ -25,6 +25,14 @@ const moment = _moment;
 	styleUrls: [ './area-stack.component.scss' ]
 })
 export class AreaStackComponent implements AfterViewInit, OnDestroy {
+	@Input('reset')
+	set reset(data: string) {
+		if (data && this.item) {
+			console.log(this.item);
+			console.log('getting data');
+			this.getData();
+		}
+	}
 	@Input() public item: Widget;
 	@Input() public index: any;
 	@Output() filter: EventEmitter<any> = new EventEmitter();
