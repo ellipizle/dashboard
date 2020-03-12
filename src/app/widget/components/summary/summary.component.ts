@@ -72,6 +72,7 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);

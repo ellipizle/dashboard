@@ -79,6 +79,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -116,24 +117,26 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		let url = this.item.query[0].spec.base_url;
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				this.chartData = res.data;
-				this.pending = false;
-				this.drawPie(this.formatSeries(res.data));
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
+		if (this.item && this.item.query.length > 0) {
+			let url = this.item.query[0].spec.base_url;
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+			url = this.replace(url, '{{step}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					this.chartData = res.data;
+					this.pending = false;
+					this.drawPie(this.formatSeries(res.data));
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
 	}
 	formatSeries(data) {
 		let legend: string;

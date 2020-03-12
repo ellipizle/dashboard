@@ -19,6 +19,13 @@ import { MatTableDataSource } from '@angular/material/table';
 	selector: 'app-table-bar',
 	template: `
 	<div class="table-container mat-elevation-z8">
+	    <div class="view-header">
+      <div class="field">
+    <mat-form-field appearance="outline">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+      </div>
+  </div>
   <mat-table #table [dataSource]="dataSource">
     <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
       <mat-header-cell *matHeaderCellDef> {{ col }} </mat-header-cell>
@@ -87,6 +94,7 @@ export class TableBarComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -97,6 +105,12 @@ export class TableBarComponent implements AfterViewInit, OnDestroy {
 	}
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
+	}
+
+	applyFilter(filterValue: string) {
+		filterValue = filterValue.trim(); // Remove whitespace
+		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+		this.dataSource.filter = filterValue;
 	}
 	queryName(name: string) {
 		switch (name) {
@@ -123,6 +137,11 @@ export class TableBarComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 	ngAfterViewInit() {
+		this.dataSource.filterPredicate = (data: any, filter: string) => {
+			for (let key in data) {
+				return data[key].toLowerCase().includes(filter);
+			}
+		};
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
 			if (res) {
 				this.startTime = res.start;

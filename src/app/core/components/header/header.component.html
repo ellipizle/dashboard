@@ -43,7 +43,7 @@
       <mat-button-toggle-group>
         <mat-button-toggle mat-icon-button  (click)="onRefresh()"> <mat-icon  aria-hidden="false" aria-label="Refresh">autorenew</mat-icon></mat-button-toggle>
         <mat-button-toggle mat-icon-button  [satPopoverAnchor]='poprefresh' (click)="refreshToggleClicked()">
-         <span class="refresh-time"> {{refreshTime === 'Off'?'':refreshTime}}</span>
+         <span class="refresh-time"> {{refreshTime === 'Off'?'Off':refreshTime}}</span>
              <mat-icon  aria-hidden="false" aria-label="Toggle Down" *ngIf="refreshToggle">keyboard_arrow_down</mat-icon>
               <mat-icon  aria-hidden="false" aria-label="Toggle Up" *ngIf="!refreshToggle">keyboard_arrow_up</mat-icon>
                 <sat-popover #poprefresh hasBackdrop  verticalAlign="below" horizontalAlign="end" >

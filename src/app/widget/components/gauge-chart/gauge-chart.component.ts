@@ -92,6 +92,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -102,7 +103,6 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	}
 	public ngOnChanges(changes: SimpleChanges): void {
 		if (this.unitHeight) {
-			console.log(this.parentRef['width']);
 			this.canvasWidth = this.parentRef['width'];
 			// console.log(this.elementRef.nativeElement.offsetHeight);
 			// this.onResize('');

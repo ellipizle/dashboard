@@ -81,6 +81,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -96,8 +97,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	onChartClick(event: any, type: string) {
-		console.log('chart event:', type, event);
-		this.filter.emit(event['name']);
+		this.filter.emit(event['selected']);
 	}
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {

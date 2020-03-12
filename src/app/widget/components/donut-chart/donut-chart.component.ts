@@ -8,7 +8,8 @@ import {
 	ElementRef,
 	OnDestroy,
 	EventEmitter,
-	Output
+	Output,
+	SimpleChanges
 } from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -79,6 +80,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -99,9 +101,15 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
 	}
+	ngOnChanges(simple: SimpleChanges) {
+		// console.log(simple["item"] && simple["item"].currentValue);
+		if (simple['item'] && simple['item'].currentValue) {
+			this.getData();
+		}
+	}
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
-			if (res) {
+			if (res && this.item) {
 				this.duration = res.short;
 				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
 				this.getData();
@@ -111,24 +119,26 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		let url = this.item.query[0].spec.base_url;
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
-		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
-		url = this.replace(url, '{{STEP}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				this.chartData = res.data;
-				this.pending = false;
-				this.drawPie(this.formatSeries(res.data));
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
+		if (this.item && this.item.query.length > 0) {
+			let url = this.item.query[0].spec.base_url;
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+			url = this.replace(url, '{{startTime}}', `${this.endTime}`);
+			url = this.replace(url, '{{endTime}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					this.chartData = res.data;
+					this.pending = false;
+					this.drawPie(this.formatSeries(res.data));
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
 	}
 	formatSeries(data) {
 		let legend: string;

@@ -84,6 +84,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -96,7 +97,6 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 		this.echartsInstance = e;
 	}
 	onChartLegendSelected(event: any, type: string) {
-		console.log('chart event:', type, event);
 		this.filter.emit(event['selected']);
 	}
 	replace(value, matchingString, replacerString) {
@@ -116,7 +116,6 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		console.log(this.item);
 		this.seriesData = [];
 		let numberOfCalls = this.item.query.length;
 		for (let index = 0; index < numberOfCalls; index++) {

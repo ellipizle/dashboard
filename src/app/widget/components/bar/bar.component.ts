@@ -50,6 +50,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	echarts: any;
 	interval;
 	chartData;
+	fieldName: string;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -74,6 +75,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -89,10 +91,10 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		return value.replace(matchingString, replacerString);
 	}
 	onChartClick(event: any, type: string) {
-		console.log('chart event:', type, event);
-		let name = event['name'];
-		let selected = event['selected'];
-		this.filter.emit(selected[name]);
+		let data = {};
+		data['name'] = this.fieldName;
+		data['filters'] = event['selected'];
+		this.filter.emit(data);
 	}
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
@@ -137,13 +139,35 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			let name: string;
 			let metric = result.metric;
 			for (let key in metric) {
+				this.fieldName = key;
 				legend = key;
 				name = metric[key];
 			}
 			xAxisList.push(name);
-			dataArray.push(Math.round(parseInt(result.value[1]) / 1048576));
+			dataArray.push({
+				name: name,
+				type: 'bar',
+				label: {
+					color: '#000000',
+					show: true,
+					position: 'bottom',
+					// distance: 15,
+					// align: 'left',
+					// verticalAlign: 'middle',
+					// rotate: 90,
+					// fontSize: 16,
+					// rich: {
+					// 	name: {
+					// 		textBorderColor: '#fff'
+					// 	}
+					// },
+					formatter: '{a}'
+				},
+				// barWidth: '60%',
+				data: [ Math.round(parseInt(result.value[1]) / 1048576) ]
+			});
 		});
-		return { xAxis: xAxisList, data: dataArray, legend: legend };
+		return { xAxis: xAxisList, series: dataArray, legend: legend };
 	}
 
 	drawBar(data) {
@@ -153,7 +177,13 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 
 		this.options = {
 			backgroundColor: echarts.bg,
-			color: [ colors.primaryLight ],
+			color: [
+				colors.warningLight,
+				colors.infoLight,
+				colors.dangerLight,
+				colors.successLight,
+				colors.primaryLight
+			],
 			legend: {
 				data: data.xAxisList,
 				textStyle: {
@@ -176,24 +206,24 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 			xAxis: [
 				{
 					// name: data.legend,
-					nameTextStyle: {
-						align: 'left'
-					},
-					type: 'category',
-					data: data.xAxis,
-					axisTick: {
-						alignWithLabel: true
-					},
-					axisLine: {
-						lineStyle: {
-							color: echarts.axisLineColor
-						}
-					},
-					axisLabel: {
-						textStyle: {
-							color: echarts.textColor
-						}
-					}
+					// nameTextStyle: {
+					// 	align: 'left'
+					// },
+					type: 'category'
+					// data: data.xAxis,
+					// axisTick: {
+					// 	alignWithLabel: true
+					// },
+					// axisLine: {
+					// 	lineStyle: {
+					// 		color: echarts.axisLineColor
+					// 	}
+					// },
+					// axisLabel: {
+					// 	textStyle: {
+					// 		color: echarts.textColor
+					// 	}
+					// }
 				}
 			],
 			yAxis: [
@@ -232,14 +262,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 					}
 				}
 			],
-			series: [
-				{
-					name: data.legend,
-					type: 'bar',
-					barWidth: '60%',
-					data: data.data
-				}
-			]
+			series: data.series
 		};
 	}
 

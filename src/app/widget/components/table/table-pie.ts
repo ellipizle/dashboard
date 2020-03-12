@@ -20,6 +20,13 @@ import { MatTableDataSource } from '@angular/material/table';
 	selector: 'app-table-pie',
 	template: `
 	<div class="table-container mat-elevation-z8">
+	    <div class="view-header">
+      <div class="field">
+    <mat-form-field appearance="outline">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+      </div>
+  </div>
   <mat-table #table [dataSource]="dataSource">
     <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
       <mat-header-cell *matHeaderCellDef> {{ col }} </mat-header-cell>
@@ -36,9 +43,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input('filter')
 	set filter(obj: Object) {
-		console.log(obj);
-
-		if (obj) {
+		if (obj && obj !== 'undefined') {
 			let name = obj['name'];
 			let query = obj['filters'];
 			let array = [];
@@ -48,13 +53,9 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 				}
 			}
 			this._excludeSegmentItemName = [ ...array ];
-			console.log(this.item);
-			console.log(this.dataGrid);
 			this.dataSource = new MatTableDataSource(
 				this.dataGrid.filter((itemQ) => this._excludeSegmentItemName.includes(itemQ[name]))
 			);
-			// let subFilter =this._excludeSegmentItemName.includes(itemQ.spec.title));
-			// this.getFilterData();
 		}
 	}
 
@@ -100,6 +101,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 		this.timerService.getIntervalObs().subscribe((res) => {
 			let self = this;
 			if (typeof res === 'number') {
+				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
 					self.getData();
 				}, res);
@@ -111,6 +113,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 	replace(value, matchingString, replacerString) {
 		return value.replace(matchingString, replacerString);
 	}
+
 	queryName(name: string) {
 		switch (name) {
 			case 'throughput-wired':
@@ -147,7 +150,11 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 				this.startTime = res.start;
 				this.endTime = res.end;
 				this.duration = res.short;
-				this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
+				this.step = Math.round(
+					(res.end - res.start) / this.item.type.spec.panel_datapoint_count
+						? this.item.type.spec.panel_datapoint_count
+						: 1
+				);
 				this.getData();
 			}
 		});
@@ -203,38 +210,38 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 	getAllData() {
+		console.log(this.item);
 		this.dataGrid = [];
-		let url =
-			this.item.type.metadata.name == 'summary-bar'
-				? this.item.query[2].spec.all_data_url
-				: this.item.query[0].spec.all_data_url;
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
-		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				let data = res.data.result;
-				let column = [];
-				for (let key in data[0].metric) {
-					column.push(key);
-				}
-				this.displayedColumns = column;
-				let arr = [ ...this.dataGrid, ...data.map((result) => result.metric) ];
-				this.dataGrid = arr;
-				this.dataSource = new MatTableDataSource(arr);
+		if (this.item && this.item.query.length > 0) {
+			let url = this.item.query[0].spec.all_data_url;
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+			url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{step}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					let data = res.data.result;
+					let column = [];
+					for (let key in data[0].metric) {
+						column.push(key);
+					}
+					this.displayedColumns = column;
+					let arr = [ ...this.dataGrid, ...data.map((result) => result.metric) ];
+					this.dataGrid = arr;
+					this.dataSource = new MatTableDataSource(arr);
 
-				this.dataSource.sort = this.sort;
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
+					this.dataSource.sort = this.sort;
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
 	}
 
 	ngOnDestroy(): void {

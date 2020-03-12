@@ -12,6 +12,10 @@ mat-header-row {
 }
 .view-header {
 	background: #ffffff;
+	padding: 20px 20px 0px;
+	.field {
+		width: 350px;
+	}
 }
 
 .table-header {
