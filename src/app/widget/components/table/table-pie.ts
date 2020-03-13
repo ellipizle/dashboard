@@ -27,9 +27,9 @@ import { MatTableDataSource } from '@angular/material/table';
     </mat-form-field>
       </div>
   </div>
-  <mat-table #table [dataSource]="dataSource">
+  <mat-table #table [dataSource]="dataSource" matSort>
     <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
-      <mat-header-cell *matHeaderCellDef> {{ col }} </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ col }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{ element[col] }} </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -234,7 +234,6 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 					let arr = [ ...this.dataGrid, ...data.map((result) => result.metric) ];
 					this.dataGrid = arr;
 					this.dataSource = new MatTableDataSource(arr);
-
 					this.dataSource.sort = this.sort;
 				},
 				(error) => {
