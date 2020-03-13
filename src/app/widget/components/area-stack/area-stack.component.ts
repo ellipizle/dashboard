@@ -229,7 +229,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							return moment.unix(time).format('D/M/Y, h:mm');
+							return moment.unix(time).format('M/D/Y, h:mm');
 						},
 						textStyle: {
 							color: echarts.textColor
@@ -238,7 +238,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(axisValue) {
-								return moment.unix(axisValue.value).format('D/M/Y, h:mm');
+								return moment.unix(axisValue.value).format('M/D/Y, h:mm');
 							}
 						}
 					}

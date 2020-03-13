@@ -230,7 +230,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							return moment.unix(time).format('D/M/Y, h:mm');
+							return moment.unix(time).format('M/D/Y, h:mm');
 						},
 						textStyle: {
 							color: echarts.textColor

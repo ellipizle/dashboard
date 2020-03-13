@@ -99,50 +99,48 @@ export class HeaderComponent implements OnInit {
 		);
 	}
 	public setRange(range) {
-		let start = moment().utc(false);
-		let end = moment().utc(false);
+		let now = new Date();
+		let start = moment.utc();
+		let end = moment.utc();
 		switch (range.short) {
-			case '5m': {
+			case '5m':
 				range.start = start.subtract(5, 'minutes').unix();
 				range.end = end.unix();
-			}
-			case '15m': {
+				return range;
+			case '15m':
 				range.start = start.subtract(15, 'minutes').unix();
 				range.end = end.unix();
-			}
-			case '30m': {
+				return range;
+			case '30m':
 				range.start = start.subtract(30, 'minutes').unix();
 				range.end = end.unix();
-			}
-			case '1h': {
-				range.start = start.subtract(1, 'h').unix();
+				return range;
+			case '1h':
+				range.start = start.subtract(1, 'hours').unix();
 				range.end = end.unix();
-			}
-			case '3h': {
+				return range;
+
+			case '3h':
 				range.start = start.subtract(3, 'hours').unix();
 				range.end = end.unix();
-			}
-			case '6h': {
+				return range;
+			case '6h':
 				range.start = start.subtract(6, 'hours').unix();
 				range.end = end.unix();
-			}
-			case '12h': {
+				return range;
+			case '12h':
 				range.start = start.subtract(12, 'hours').unix();
 				range.end = end.unix();
-			}
-			case '24h': {
+				return range;
+			case '24h':
 				range.start = start.subtract(24, 'hours').unix();
 				range.end = end.unix();
-			}
-			case '2d': {
+				return range;
+			case '2d':
 				range.start = start.subtract(2, 'd').unix();
 				range.end = end.unix();
-			}
+				return range;
 		}
-		// console.log(moment().subtract(30, 'm').unix());
-		// console.log(moment().subtract(30, 'minutes').unix());
-		// console.log(range);
-		return range;
 	}
 	themes = [ 'Dark', 'Default' ];
 	selectedTheme: string = 'default';

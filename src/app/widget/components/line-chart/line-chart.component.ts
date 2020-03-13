@@ -225,7 +225,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(axisValue) {
-								return moment.unix(axisValue.value).format('D/M/Y, h:mm');
+								return moment.unix(axisValue.value).format('M/D/Y, h:mm');
 							}
 						}
 					}
