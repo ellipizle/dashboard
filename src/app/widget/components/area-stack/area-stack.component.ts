@@ -116,6 +116,9 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
+		// console.log('1');
+		// console.log(this.startTime);
+		// console.log(this.endTime);
 		this.seriesData = [];
 		let numberOfCalls = this.item.query.length;
 		for (let index = 0; index < numberOfCalls; index++) {
@@ -157,7 +160,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			legends.push(name);
 			results.forEach((result, i) => {
 				if (i == 0) {
-					dateList = result.values.map((date) => date[0]);
+					dateList = result.values.map((date) => Math.round(date[0]));
 				}
 				const seriesData = result.values.map((date) => Math.round(date[1] / 1048576));
 				series.push({
@@ -226,7 +229,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							return moment.unix(time).format('d/M/Y, h:mm');
+							return moment.unix(time).format('D/M/Y, h:mm');
 						},
 						textStyle: {
 							color: echarts.textColor
@@ -235,7 +238,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(axisValue) {
-								return moment.unix(axisValue.value).format('d/M/Y, h:mm');
+								return moment.unix(axisValue.value).format('D/M/Y, h:mm');
 							}
 						}
 					}

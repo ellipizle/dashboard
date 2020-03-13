@@ -216,7 +216,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							return moment.unix(time).format('d/M/Y, h:mm');
+							return moment.unix(time).format('D/M/Y, h:mm');
 						},
 						textStyle: {
 							color: echarts.textColor
@@ -225,7 +225,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(axisValue) {
-								return moment.unix(axisValue.value).format('d/M/Y, h:mm');
+								return moment.unix(axisValue.value).format('D/M/Y, h:mm');
 							}
 						}
 					}
@@ -252,8 +252,6 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(value) {
-								console.log(value);
-								console.log(Math.round(value.value / 1048576));
 								let fmt = Math.round(value.value);
 								return `${fmt} MB`;
 							}

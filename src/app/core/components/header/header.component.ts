@@ -99,45 +99,49 @@ export class HeaderComponent implements OnInit {
 		);
 	}
 	public setRange(range) {
+		let start = moment().utc(false);
+		let end = moment().utc(false);
 		switch (range.short) {
 			case '5m': {
-				range.start = moment().subtract(5, 'minutes').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(5, 'minutes').unix();
+				range.end = end.unix();
 			}
 			case '15m': {
-				range.start = moment().subtract(15, 'minutes').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(15, 'minutes').unix();
+				range.end = end.unix();
 			}
 			case '30m': {
-				range.start = moment().subtract(30, 'minutes').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(30, 'minutes').unix();
+				range.end = end.unix();
 			}
 			case '1h': {
-				range.start = moment().subtract(1, 'h').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(1, 'h').unix();
+				range.end = end.unix();
 			}
 			case '3h': {
-				range.start = moment().subtract(3, 'h').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(3, 'hours').unix();
+				range.end = end.unix();
 			}
 			case '6h': {
-				range.start = moment().subtract(6, 'h').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(6, 'hours').unix();
+				range.end = end.unix();
 			}
 			case '12h': {
-				range.start = moment().subtract(12, 'h').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(12, 'hours').unix();
+				range.end = end.unix();
 			}
 			case '24h': {
-				range.start = moment().subtract(24, 'h').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(24, 'hours').unix();
+				range.end = end.unix();
 			}
 			case '2d': {
-				range.start = moment().subtract(2, 'd').unix();
-				range.end = moment().unix();
+				range.start = start.subtract(2, 'd').unix();
+				range.end = end.unix();
 			}
 		}
-		// console.log(moment().subtract(1, 'h').unix());
+		// console.log(moment().subtract(30, 'm').unix());
+		// console.log(moment().subtract(30, 'minutes').unix());
+		// console.log(range);
 		return range;
 	}
 	themes = [ 'Dark', 'Default' ];
