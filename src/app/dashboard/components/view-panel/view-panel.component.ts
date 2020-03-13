@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Widget } from '../../../widget/interfaces/widget';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { DashboardService } from '../../../shared/services/dashboard.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { WidgetDialogComponent } from '../../../shared/widget-dialog/widget-dialog.component';
 import { JsonDialogComponent } from '../../../shared/json-dialog/json-dialog.component';
 import { LayoutService } from '../../../shared/services/layout.service';
@@ -20,6 +20,7 @@ export class ViewPanelComponent implements OnInit {
 		private dialogService: DialogService,
 		private layoutService: LayoutService,
 		private router: Router,
+		private activatedRoute: ActivatedRoute,
 		private _dialog: MatDialog,
 		private dashboard: DashboardService
 	) {
@@ -29,6 +30,17 @@ export class ViewPanelComponent implements OnInit {
 				setTimeout(() => {
 					this.resetDataSource = Math.random();
 				}, 2000);
+			}
+		});
+		this.activatedRoute.params.subscribe((params) => {
+			if (this.widget) {
+			} else {
+				let widget = JSON.parse(localStorage.getItem('panel'));
+				if (widget) {
+					this.widget = widget;
+				} else {
+					this.router.navigate([ '' ]);
+				}
 			}
 		});
 	}

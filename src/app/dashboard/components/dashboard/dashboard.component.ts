@@ -78,6 +78,7 @@ export class DashboardComponent {
 	}
 
 	public viewWidget(widget: Widget) {
+		window.localStorage.setItem('panel', JSON.stringify(widget));
 		this.layoutService.setSelectedItemObs(widget);
 		this.router.navigate([ 'dashboard/panel', widget.id ]);
 	}

@@ -200,7 +200,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 			},
 			xAxis: [
 				{
-					name: 'Date',
+					// name: 'Date',
 					nameTextStyle: {
 						align: 'left'
 					},
@@ -233,7 +233,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 			],
 			yAxis: [
 				{
-					name: 'Megabyte',
+					// name: 'Megabyte',
 					nameTextStyle: {
 						align: 'right'
 					},

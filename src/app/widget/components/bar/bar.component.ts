@@ -178,10 +178,6 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		this.options = {
 			backgroundColor: echarts.bg,
 			color: [
-				colors.warningLight,
-				colors.infoLight,
-				colors.dangerLight,
-				colors.successLight,
 				colors.primaryLight
 			],
 			legend: {
