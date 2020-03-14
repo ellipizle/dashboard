@@ -18,6 +18,7 @@ import { Widget } from '../../interfaces/widget';
 import { data } from 'time-series';
 import * as _moment from 'moment';
 import { combineLatest } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 const moment = _moment;
 @Component({
 	selector: 'app-area-stack',
@@ -25,6 +26,7 @@ const moment = _moment;
 	styleUrls: [ './area-stack.component.scss' ]
 })
 export class AreaStackComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: string) {
 		if (data && this.item) {
@@ -229,7 +231,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							return moment.unix(time).format('M/D/Y, h:mm');
+							return moment.unix(time).format('M/D/Y, h:mm a');
 						},
 						textStyle: {
 							color: echarts.textColor
@@ -238,7 +240,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(axisValue) {
-								return moment.unix(axisValue.value).format('M/D/Y, h:mm');
+								return moment.unix(axisValue.value).format('M/D/Y, h:mm a');
 							}
 						}
 					}
@@ -250,7 +252,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 						align: 'right'
 					},
 					type: 'value',
-					interval: 40,
+					interval: 20,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor
@@ -286,5 +288,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

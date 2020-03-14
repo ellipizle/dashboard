@@ -18,6 +18,7 @@ import { TimerService } from '../../../shared/services/timer.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
 import * as _moment from 'moment';
+import { Subject } from 'rxjs';
 const moment = _moment;
 @Component({
 	selector: 'app-line-chart',
@@ -25,6 +26,7 @@ const moment = _moment;
 	styleUrls: [ './line-chart.component.scss' ]
 })
 export class LineChartComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: boolean) {
 		if (data) {
@@ -172,10 +174,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.options = {
 			backgroundColor: echarts.bg,
 			color: [ colors.danger, colors.primary, colors.info ],
-			// tooltip: {
-			// 	trigger: 'item',
-			// 	formatter: '{a} <br/>{b} : {c}'
-			// },
+
 			tooltip: {
 				trigger: 'axis',
 				axisPointer: {
@@ -216,7 +215,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							return moment.unix(time).format('D/M/Y, h:mm');
+							return moment.unix(time).format('M/D/Y, h:mm a');
 						},
 						textStyle: {
 							color: echarts.textColor
@@ -225,7 +224,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(axisValue) {
-								return moment.unix(axisValue.value).format('M/D/Y, h:mm');
+								return moment.unix(axisValue.value).format('M/D/Y, h:mm a');
 							}
 						}
 					}
@@ -237,8 +236,8 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					nameTextStyle: {
 						align: 'right'
 					},
-					type: 'log',
-					interval: 40,
+					type: 'value',
+					interval: 20,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor
@@ -274,5 +273,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

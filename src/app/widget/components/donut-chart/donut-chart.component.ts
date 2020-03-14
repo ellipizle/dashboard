@@ -18,12 +18,14 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-donut-chart',
 	templateUrl: './donut-chart.component.html',
 	styleUrls: [ './donut-chart.component.scss' ]
 })
 export class DonutChartComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: boolean) {
 		if (data) {
@@ -103,9 +105,9 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	}
 	ngOnChanges(simple: SimpleChanges) {
 		// console.log(simple["item"] && simple["item"].currentValue);
-		if (simple['item'] && simple['item'].currentValue) {
-			this.getData();
-		}
+		// if (simple['item'] && simple['item'].currentValue) {
+		// 	this.getData();
+		// }
 	}
 	ngAfterViewInit() {
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
@@ -223,5 +225,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

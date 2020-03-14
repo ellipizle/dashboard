@@ -16,12 +16,14 @@ import { TimerService } from '../../../shared/services/timer.service';
 import { PanelService } from '../../../shared/services/panel.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-bar',
 	templateUrl: './bar.component.html',
 	styleUrls: [ './bar.component.scss' ]
 })
 export class BarComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: boolean) {
 		if (data) {
@@ -177,9 +179,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 
 		this.options = {
 			backgroundColor: echarts.bg,
-			color: [
-				colors.primaryLight
-			],
+			color: [ colors.primaryLight ],
 			legend: {
 				data: data.xAxisList,
 				textStyle: {
@@ -228,7 +228,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 						align: 'right'
 					},
 					type: 'value',
-					interval: 200,
+					// interval: 20,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor

@@ -17,12 +17,14 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-pie',
 	templateUrl: './pie.component.html',
 	styleUrls: [ './pie.component.scss' ]
 })
 export class PieComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: boolean) {
 		if (data) {
@@ -221,5 +223,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

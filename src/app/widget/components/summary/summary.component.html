@@ -2,7 +2,7 @@
 <div class="summary"    >
 
 <div  fxLayout="column" >
-   <app-summary-item  *ngFor="let data of item.query" [query]="data"  [item]="item" (filter)="filter.emit($event)"></app-summary-item>
+   <app-summary-item  *ngFor="let data of item.query; let i = index" [query]="data"  [index]="i"  [item]="item" (filter)="filter.emit($event)"></app-summary-item>
 </div>
 </div>
 

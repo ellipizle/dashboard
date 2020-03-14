@@ -15,12 +15,14 @@ import { DatasourceService } from '../../services/datasource.service';
 import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { Widget } from '../../interfaces/widget';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-summary',
 	templateUrl: './summary.component.html',
 	styleUrls: [ './summary.component.scss' ]
 })
 export class SummaryComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input() public item: Widget;
 	@Output() filter: EventEmitter<any> = new EventEmitter();
 	pending: boolean;
@@ -137,5 +139,7 @@ export class SummaryComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

@@ -15,6 +15,7 @@ import { ResizedEvent } from 'angular-resize-event';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { DatasourceService } from '../../services/datasource.service';
 import { Widget } from '../../interfaces/widget';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-bar-chart',
 	templateUrl: './bar-chart.component.html',

@@ -15,13 +15,14 @@ import { Widget } from '../../interfaces/widget';
 import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
-
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-gauge-chart',
 	templateUrl: './gauge-chart.component.html',
 	styleUrls: [ './gauge-chart.component.scss' ]
 })
 export class GaugeChartComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: boolean) {
 		if (data) {
@@ -182,5 +183,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

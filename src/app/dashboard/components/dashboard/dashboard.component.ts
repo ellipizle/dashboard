@@ -44,11 +44,13 @@ export class DashboardComponent {
 	) {
 		//get queries
 		this.dashboardSvc.getQueries().subscribe((res) => {
+			localStorage.setItem('queries', JSON.stringify(res['items']));
 			this.dashboardSvc.setQueriesObs(res['items']);
 		});
 
 		//get charts
 		this.dashboardSvc.getCharts().subscribe((res) => {
+			localStorage.setItem('charts', JSON.stringify(res['items']));
 			this.dashboardSvc.setChartsObs(res['items']);
 		});
 	}

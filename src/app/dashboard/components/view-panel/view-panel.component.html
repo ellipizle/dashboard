@@ -64,7 +64,7 @@
               </ng-template>
         </ng-container>
             <hr>
-            <ng-container [ngSwitch]="widget.type.metadata.name">
+             <ng-container [ngSwitch]="widget.type.metadata.name">
               <ng-template [ngSwitchCase]="'summary-bar'">
                     <app-table-summary
                          [item]="widget"  [filter]="filter"  [reset]="resetDataSource">

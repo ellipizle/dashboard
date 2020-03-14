@@ -16,12 +16,14 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-table',
 	templateUrl: './table.component.html',
 	styleUrls: [ './table.component.scss' ]
 })
 export class TableComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input() public item: Widget;
 	@Input('filter')
 	set filter(query: any) {
@@ -215,6 +217,8 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 		// this.themeSubscription.unsubscribe();
 	}
 }

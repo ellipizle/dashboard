@@ -15,6 +15,7 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-table-summary',
 	template: `
@@ -39,6 +40,7 @@ import { MatTableDataSource } from '@angular/material/table';
 	styleUrls: [ './table.component.scss' ]
 })
 export class TableSummaryComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input() public item: Widget;
 	@Input('filter')
 	set filter(query: any) {
@@ -82,6 +84,7 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 	echarts: any;
 	interval;
 	duration;
+	isShowTable;
 
 	constructor(
 		private configSvc: ConfigService,
@@ -232,6 +235,8 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 		// this.themeSubscription.unsubscribe();
 	}
 }

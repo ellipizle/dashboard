@@ -16,6 +16,7 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-table-pie',
 	template: `
@@ -40,6 +41,7 @@ import { MatTableDataSource } from '@angular/material/table';
 	styleUrls: [ './table.component.scss' ]
 })
 export class TablePieComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input() public item: Widget;
 	@Input('filter')
 	set filter(obj: Object) {
@@ -146,7 +148,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 		};
 
 		this.timerService.getDateRangeObs().subscribe((res: any) => {
-			if (res) {
+			if (res && this.item) {
 				this.startTime = res.start;
 				this.endTime = res.end;
 				this.duration = res.short;
@@ -183,6 +185,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 			let url = subFilter[index].spec.filtered_data_url;
 			let name = subFilter[index].metadata.name;
 			let REPLACE = this.queryName(name);
+
 			url = this.replace(url, '+', '%2B');
 			url = this.replace(url, REPLACE, `"${subFilter[index].spec.title}"`);
 			url = this.replace(url, REPLACE, `"${subFilter[index].spec.title}"`);
@@ -209,11 +212,17 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 			);
 		}
 	}
-	getAllData() {
+	getAllData() {}
+	getAllDxata() {
 		console.log(this.item);
 		this.dataGrid = [];
 		if (this.item && this.item.query.length > 0) {
 			let url = this.item.query[0].spec.all_data_url;
+			if (url === 'undefined') {
+				return;
+			}
+			console.log(url);
+			console.log(this.duration);
 			url = this.replace(url, '+', '%2B');
 			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
 			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
@@ -244,6 +253,8 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 		// this.themeSubscription.unsubscribe();
 	}
 }

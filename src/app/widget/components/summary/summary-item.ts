@@ -18,17 +18,21 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { Widget, Query } from '../../interfaces/widget';
 import { forkJoin } from 'rxjs';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-summary-item',
 	template: `
 	<div [ngClass]="{'summary-container': !detailView,'deactivated': !isActive}" (click)="onTableClick(data.name)">
-	          <h3 class="title">{{data?.name}}</h3>
-              <h2 class="title">{{data?.result[0]?.value[1] | round}}</h2>
-
+			  <h3 class="title">{{data?.name}}</h3>
+						<div>
+			  <h2 class="title">{{data?.result[0]?.value[1] | round}}</h2>
+			  <span  class="title">{{data?.result[3]?.value[1] | round}}</span>
+</div>
               <section class="example-section">
                 <mat-progress-bar
-                    class="example-margin"
-                    [value]="data?.result[0]?.value[1]">
+					class="example-margin"
+					mode="determinate"
+                    [value]="realValue">
                 </mat-progress-bar>
 			  </section>
 			  <div class="item">{{changeRate}}</div>
@@ -42,6 +46,8 @@ import { forkJoin } from 'rxjs';
 			}
 .summary-container {
 	cursor: pointer;
+	    margin: 10px 0px;
+    padding: 0px 10px 0px 10px;
 }
 			.summary {
 				padding: 16px;
@@ -70,8 +76,10 @@ import { forkJoin } from 'rxjs';
 	]
 })
 export class SummaryItemComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	isActive: boolean = true;
 	@Input() public item: Widget;
+	@Input() public index: Widget;
 	@Input() public query: Query;
 	@Output() filter: EventEmitter<any> = new EventEmitter();
 	changeRate: string;
@@ -100,6 +108,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	seriesData = [];
 	legendData = [];
 	xAxisData = [];
+	realValue;
 	constructor(
 		private route: Router,
 		private location: Location,
@@ -188,20 +197,37 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		prev_url = this.replace(prev_url, '{{ENDTIME}}', `${this.endTime}`);
 		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
 		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
+
+		let total_url = this.query.spec.total_url;
+		console.log('PREV_URL', prev_url);
+		prev_url = this.replace(prev_url, '+', '%20');
+		prev_url = this.replace(prev_url, '+', '%20');
+		prev_url = this.replace(prev_url, '{{DURATION}}', `${this.duration}`);
+		prev_url = this.replace(prev_url, '{{DURATION}}', `${this.duration}`);
+		prev_url = this.replace(prev_url, '{{STARTTIME}}', `${this.startTime}`);
+		prev_url = this.replace(prev_url, '{{ENDTIME}}', `${this.endTime}`);
+		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
+		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
 		this.pending = true;
-		forkJoin(this.panelService.getPanelData(url), this.panelService.getPanelData(prev_url)).subscribe(
+		forkJoin(
+			this.panelService.getPanelData(url),
+			this.panelService.getPanelData(prev_url),
+			this.panelService.getPanelData(total_url)
+		).subscribe(
 			(res: any) => {
 				console.log(res);
 				res[0].data['name'] = this.query.spec.title;
 				this.data = res[0].data;
 				let currentData = res[0].data;
 				let previousData = res[1].data;
+				let totalData = res[2].data;
+				this.realValue = parseInt(currentData.result[0].value[1]) * parseInt(totalData.result[0].value[1]);
 				console.log(Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]));
 				let change = Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]);
 				this.changeRate =
 					change < 0
-						? `Decreased by ${Math.abs(change)}% ${this.duration} ago`
-						: `Increased by ${change}% ${this.duration} ago`;
+						? `Decreased by ${Math.abs(change)} from ${this.duration} ago`
+						: `Increased by ${change} from ${this.duration} ago`;
 
 				// res.data['name'] = this.query.spec.title;
 				// this.seriesData.push(res.data);

@@ -39,6 +39,7 @@ export interface Query {
 		uid?: string;
 	};
 	spec?: {
+		total_url?: string;
 		all_data_url?: string;
 		filtered_data_url?: string;
 		prev_url?: string;

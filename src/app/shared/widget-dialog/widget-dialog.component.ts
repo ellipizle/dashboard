@@ -30,11 +30,19 @@ export class WidgetDialogComponent implements OnInit {
 		private dashboardSvc: DashboardService
 	) {
 		this.dashboardSvc.getQueriesObs().subscribe((res) => {
-			if (res) this.queryOption = res;
+			if (res && res.length > 0) {
+				this.queryOption = res;
+			} else {
+				this.queryOption = JSON.parse(localStorage.getItem('queries'));
+			}
 		});
 
 		this.dashboardSvc.getChartsObs().subscribe((res) => {
-			if (res) this.chartsOption = res;
+			if (res && res.length > 0) {
+				this.chartsOption = res;
+			} else {
+				this.chartsOption = JSON.parse(localStorage.getItem('charts'));
+			}
 		});
 		this.widgetForm.get('type').valueChanges.subscribe((val: any) => {
 			let chart = this.chartsOption.find((chart) => chart.metadata.name === val);

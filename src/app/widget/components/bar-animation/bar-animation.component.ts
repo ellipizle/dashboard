@@ -16,6 +16,7 @@ import { TimerService } from '../../../shared/services/timer.service';
 import { PanelService } from '../../../shared/services/panel.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
+import { Subject } from 'rxjs';
 import * as _moment from 'moment';
 import { combineLatest } from 'rxjs/operators';
 const moment = _moment;
@@ -25,6 +26,7 @@ const moment = _moment;
 	styleUrls: [ './bar-animation.component.scss' ]
 })
 export class BarAnimationComponent implements AfterViewInit, OnDestroy {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: boolean) {
 		if (data) {
@@ -235,6 +237,13 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 						textStyle: {
 							color: echarts.textColor
 						}
+					},
+					axisPointer: {
+						label: {
+							formatter: function(axisValue) {
+								return moment.unix(axisValue.value).format('M/D/Y, h:mm');
+							}
+						}
 					}
 				}
 			],
@@ -244,7 +253,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 					nameTextStyle: {
 						align: 'right'
 					},
-					interval: 40,
+					interval: 20,
 					axisLine: {
 						lineStyle: {
 							color: echarts.axisLineColor
@@ -263,7 +272,12 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 							}
 						}
 					},
+
 					axisLabel: {
+						show: true,
+						formatter: function(value) {
+							return `${value} MB`;
+						},
 						textStyle: {
 							color: echarts.textColor
 						}
@@ -360,5 +374,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 	}
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

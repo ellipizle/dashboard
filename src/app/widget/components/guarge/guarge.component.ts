@@ -14,6 +14,7 @@ import { ResizedEvent } from 'angular-resize-event';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { DatasourceService } from '../../services/datasource.service';
 import { Widget } from '../../interfaces/widget';
+import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-guarge',
 	templateUrl: './guarge.component.html',
@@ -21,6 +22,7 @@ import { Widget } from '../../interfaces/widget';
 	encapsulation: ViewEncapsulation.None
 })
 export class GuargeComponent implements OnInit, OnChanges, AfterViewInit {
+	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input() public item: Widget;
 	@Input() public data: any;
 	@Input() public unitHeight: number;
