@@ -212,8 +212,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 			);
 		}
 	}
-	getAllData() {}
-	getAllDxata() {
+	getAllData() {
 		console.log(this.item);
 		this.dataGrid = [];
 		if (this.item && this.item.query.length > 0) {

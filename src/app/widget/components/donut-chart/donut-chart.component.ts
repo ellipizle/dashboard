@@ -158,7 +158,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 			dateList.push(name);
 			dataArray.push({
 				name: name,
-				value: Math.round(result.value[1] / 1048576)
+				value: Math.round(result.value[1])
 			});
 		});
 		return { dateList: dateList, data: dataArray, legend: legend };
@@ -179,7 +179,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 			],
 			tooltip: {
 				trigger: 'item',
-				formatter: `{a} <br/>{b} : {c}MB ({d}%)`
+				formatter: '{a} <br/>{b} : {c} ({d}%)'
 			},
 			legend: {
 				orient: 'vertical',
