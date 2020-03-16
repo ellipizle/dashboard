@@ -50,5 +50,6 @@ export interface Query {
 		query_category?: string;
 		x_axis_label?: string;
 		title?: string;
+		units?: string;
 	};
 }

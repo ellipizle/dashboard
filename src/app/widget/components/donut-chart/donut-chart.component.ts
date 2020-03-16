@@ -56,6 +56,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	pending: boolean;
 	chartData;
 	fielName;
+	unitType;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -123,6 +124,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 	getData() {
 		if (this.item && this.item.query.length > 0) {
 			let url = this.item.query[0].spec.base_url;
+			this.unitType = this.item.query[0].spec.units;
 			url = this.replace(url, '+', '%2B');
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
@@ -158,7 +160,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 			dateList.push(name);
 			dataArray.push({
 				name: name,
-				value: Math.round(result.value[1])
+				value: this.unitType == 'bytes' ? Math.round(result.value[1] / 1048576) : Math.round(result.value[1])
 			});
 		});
 		return { dateList: dateList, data: dataArray, legend: legend };
@@ -179,7 +181,7 @@ export class DonutChartComponent implements AfterViewInit, OnDestroy {
 			],
 			tooltip: {
 				trigger: 'item',
-				formatter: '{a} <br/>{b} : {c} ({d}%)'
+				formatter: this.unitType == 'bytes' ? `{a} <br/>{b} : {c}MB ({d}%)` : '{a} <br/>{b} : {c} ({d}%)'
 			},
 			legend: {
 				orient: 'vertical',
