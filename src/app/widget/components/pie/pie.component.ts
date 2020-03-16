@@ -177,7 +177,7 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 			],
 			tooltip: {
 				trigger: 'item',
-				formatter: '{a} <br/>{b} : {c} ({d}%)'
+				formatter: `{a} <br/>{b} : {c}MB ({d}%)`
 			},
 			legend: {
 				orient: 'vertical',

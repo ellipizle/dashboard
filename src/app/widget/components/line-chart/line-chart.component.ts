@@ -177,6 +177,13 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 
 			tooltip: {
 				trigger: 'axis',
+				formatter: function(params) {
+					let string = `	${params[0].axisValueLabel} <br/>`;
+					params.forEach((param) => {
+						string += `${param.seriesName} : ${param.value} MB <br/>`;
+					});
+					return string;
+				},
 				axisPointer: {
 					type: 'cross',
 					label: {

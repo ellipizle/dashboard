@@ -170,7 +170,10 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 					type: 'line',
 					name: name,
 					areaStyle: { normal: { opacity: this.echarts.areaOpacity } },
-					data: seriesData
+					data: seriesData,
+					tooltip: {
+						formatter: '{b0}: {c0}<br />blackssd {b1}: {c1}'
+					}
 				});
 			});
 		}
@@ -192,6 +195,18 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 			],
 			tooltip: {
 				trigger: 'axis',
+
+				formatter: function(params) {
+					console.log(params);
+					let string = `	${params[0].axisValueLabel} <br/>`;
+					params.forEach((param) => {
+						string += `${param.seriesName} : ${param.value} MB <br/>`;
+					});
+					return string;
+
+					// If axis.type is 'time'
+					// return 'some text' + echarts.format.formatTime(params.value);
+				},
 				axisPointer: {
 					type: 'cross',
 					label: {
@@ -273,6 +288,7 @@ export class AreaStackComponent implements AfterViewInit, OnDestroy {
 						}
 					},
 					axisPointer: {
+						show: true,
 						label: {
 							formatter: function(value) {
 								let fmt = Math.round(value.value);

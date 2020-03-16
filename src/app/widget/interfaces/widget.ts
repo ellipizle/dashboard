@@ -42,6 +42,7 @@ export interface Query {
 		total_url?: string;
 		all_data_url?: string;
 		filtered_data_url?: string;
+		prev_data_url?: string;
 		prev_url?: string;
 		base_url?: string;
 		param?: string;

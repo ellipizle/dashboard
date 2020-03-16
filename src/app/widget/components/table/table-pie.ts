@@ -26,7 +26,7 @@ import { Subject } from 'rxjs';
     <mat-form-field appearance="outline">
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
     </mat-form-field>
-      </div>
+	  </div>
   </div>
   <mat-table #table [dataSource]="dataSource" matSort>
     <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">

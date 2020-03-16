@@ -206,6 +206,13 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 			},
 			tooltip: {
 				trigger: 'axis',
+				formatter: function(params) {
+					let string = `	${params[0].axisValueLabel} <br/>`;
+					params.forEach((param) => {
+						string += `${param.seriesName} : ${param.value} MB <br/>`;
+					});
+					return string;
+				},
 				axisPointer: {
 					type: 'cross',
 					label: {
@@ -290,88 +297,6 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		};
 	}
 
-	drawAnimatedBar(data) {
-		console.log(data);
-		const xAxisData = [];
-		const data1 = [];
-		const data2 = [];
-		const colors: any = this.colors;
-		const echarts: any = this.echarts;
-		this.options = {
-			backgroundColor: echarts.bg,
-			color: [ colors.primaryLight, colors.infoLight ],
-			legend: {
-				data: [ 'bar', 'bar2' ],
-				align: 'left',
-				textStyle: {
-					color: echarts.textColor
-				}
-			},
-			xAxis: [
-				{
-					data: xAxisData,
-					silent: false,
-					axisTick: {
-						alignWithLabel: true
-					},
-					axisLine: {
-						lineStyle: {
-							color: echarts.axisLineColor
-						}
-					},
-					axisLabel: {
-						textStyle: {
-							color: echarts.textColor
-						}
-					}
-				}
-			],
-			yAxis: [
-				{
-					axisLine: {
-						lineStyle: {
-							color: echarts.axisLineColor
-						}
-					},
-					splitLine: {
-						lineStyle: {
-							color: echarts.splitLineColor
-						}
-					},
-					axisLabel: {
-						textStyle: {
-							color: echarts.textColor
-						}
-					}
-				}
-			],
-			series: [
-				{
-					name: 'bar',
-					type: 'bar',
-					data: data1,
-					animationDelay: (idx) => idx * 10
-				},
-				{
-					name: 'bar2',
-					type: 'bar',
-					data: data2,
-					animationDelay: (idx) => idx * 10 + 100
-				}
-			],
-			animationEasing: 'elasticOut',
-			animationDelayUpdate: (idx) => idx * 5
-		};
-
-		for (let i = 0; i < 100; i++) {
-			xAxisData.push('Category ' + i);
-			data1.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5);
-			data2.push((Math.cos(i / 5) * (i / 5 - 10) + i / 6) * 5);
-		}
-		console.log(xAxisData);
-		console.log(data1);
-		console.log(data2);
-	}
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
 		this.unsubscribe$.next();

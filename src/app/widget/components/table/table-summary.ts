@@ -21,11 +21,14 @@ import { Subject } from 'rxjs';
 	template: `
 	<div class="table-container mat-elevation-z8">
 	    <div class="view-header">
-      <div class="field">
-    <mat-form-field appearance="outline">
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-    </mat-form-field>
-      </div>
+     	 <div class="field">
+			<mat-form-field appearance="outline">
+			<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+			</mat-form-field>
+		</div>
+		<div class="field table-toggle">
+			<mat-slide-toggle [(ngModel)]="showAgoData" (change)="onToggleData($event.checked)">Show {{duration}} ago data</mat-slide-toggle>
+		</div>
   </div>
   <mat-table #table [dataSource]="dataSource" matSort>
     <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
@@ -41,6 +44,7 @@ import { Subject } from 'rxjs';
 })
 export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 	private unsubscribe$: Subject<void> = new Subject<void>();
+	showAgoData: boolean;
 	@Input() public item: Widget;
 	@Input('filter')
 	set filter(query: any) {
@@ -49,10 +53,11 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 			let array = [];
 			let filterObj = this.filterObject;
 			for (let key in filterObj) {
-				if (filterObj[key] == true) {
+				if (filterObj[key] == false) {
 					array.push(key);
 				}
 			}
+			console.log('set');
 			this._excludeSegmentItemName = [ ...array ];
 			this.getFilterData();
 		}
@@ -136,6 +141,10 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 				return '{{ELLIPEE}}';
 		}
 	}
+	onToggleData(event) {
+		console.log(event);
+		this.getFilterData();
+	}
 	ngAfterViewInit() {
 		this.dataSource.filterPredicate = (data: any, filter: string) => {
 			for (let key in data) {
@@ -163,15 +172,17 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 		this.dataSource.filter = filterValue;
 	}
 	getFilterData() {
-		// console.log(this.item.query);
+		console.log(this._excludeSegmentItemName);
+		console.log(this.item.query);
 		// console.log(this._excludeSegmentItemName);
 		this.rootDatasource = [];
 		this.dataSource = new MatTableDataSource([]);
-		let subFilter = this.item.query.filter((itemQ) => !this._excludeSegmentItemName.includes(itemQ.spec.title));
+		let subFilter = this.item.query.filter((itemQ) => this._excludeSegmentItemName.includes(itemQ.spec.title));
 		let numberOfCalls = subFilter.length;
 		for (let index = 0; index < numberOfCalls; index++) {
-			let url = subFilter[index].spec.all_data_url;
-			url = this.replace(url, '+', '%2B');
+			let url = this.showAgoData ? subFilter[index].spec.prev_data_url : subFilter[index].spec.all_data_url;
+			// url = this.replace(url, '+', '%2B');
+			// url = this.replace(url, '+', '%2B');
 			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
 			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
@@ -185,7 +196,7 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 					for (let key in data[0].metric) {
 						column.push(key);
 					}
-					console.log(data.map((result) => result.metric));
+					console.log(index);
 					this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
 					console.log(this.rootDatasource);
 					this.dataSource = new MatTableDataSource(this.rootDatasource);

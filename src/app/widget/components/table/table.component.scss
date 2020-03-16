@@ -15,6 +15,10 @@ mat-header-row {
 	padding: 20px 20px 0px;
 	.field {
 		width: 350px;
+		display: inline-block;
+	}
+	.table-toggle {
+		margin-left: 100px;
 	}
 }
 

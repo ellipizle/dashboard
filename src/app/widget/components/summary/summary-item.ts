@@ -25,8 +25,8 @@ import { Subject } from 'rxjs';
 	<div [ngClass]="{'summary-container': !detailView,'deactivated': !isActive}" (click)="onTableClick(data.name)">
 			  <h3 class="title">{{data?.name}}</h3>
 						<div>
-			  <h2 class="title">{{data?.result[0]?.value[1] | round}}</h2>
-			  <span  class="title">{{data?.result[3]?.value[1] | round}}</span>
+			  <h2 class="section title">{{data?.result[0]?.value[1] | round}}</h2>
+			  <span  class="percentage title" *ngIf="index === 0">{{percentageData?.result[0]?.value[1] | round}}</span>
 </div>
               <section class="example-section">
                 <mat-progress-bar
@@ -55,7 +55,12 @@ import { Subject } from 'rxjs';
 			.mat-progress-bar {
 				height: 22px;
 			}
-
+.section{
+	display:inline-block
+}
+.percentage{
+	float:right
+}
 			.item{
 				color:#8f9bb3
 			}
@@ -109,6 +114,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	legendData = [];
 	xAxisData = [];
 	realValue;
+	percentageData;
 	constructor(
 		private route: Router,
 		private location: Location,
@@ -218,12 +224,15 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 				console.log(res);
 				res[0].data['name'] = this.query.spec.title;
 				this.data = res[0].data;
+				this.percentageData = res[2].data;
 				let currentData = res[0].data;
 				let previousData = res[1].data;
 				let totalData = res[2].data;
-				this.realValue = parseInt(currentData.result[0].value[1]) * parseInt(totalData.result[0].value[1]);
+				this.realValue =
+					parseInt(currentData.result[0].value[1]) / parseInt(totalData.result[0].value[1]) * 100;
 				console.log(Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]));
 				let change = Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]);
+				// let change =(base_url / total_url) * 100
 				this.changeRate =
 					change < 0
 						? `Decreased by ${Math.abs(change)} from ${this.duration} ago`
