@@ -23,10 +23,14 @@ import { Subject } from 'rxjs';
 	selector: 'app-summary-item',
 	template: `
 	<div [ngClass]="{'summary-container': !detailView,'deactivated': !isActive}" (click)="onTableClick(data.name)">
+							<div *ngIf="index === 0">
+			  <h2 class="total-title">{{percentageData?.label}}: {{percentageData?.value| round}}</h2>
+
+</div>
 			  <h3 class="title">{{data?.name}}</h3>
 						<div>
 			  <h2 class="section title">{{data?.result[0]?.value[1] | round}}</h2>
-			  <span  class="percentage title" *ngIf="index === 0">{{percentageData?.result[0]?.value[1] | round}}</span>
+
 </div>
               <section class="example-section">
                 <mat-progress-bar
@@ -43,6 +47,10 @@ import { Subject } from 'rxjs';
 			h2,
 			h3 {
 				margin-bottom: 2px;
+			}
+			.total-title{
+				text-align:center;
+				font-size:1rem
 			}
 .summary-container {
 	cursor: pointer;
@@ -84,7 +92,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	private unsubscribe$: Subject<void> = new Subject<void>();
 	isActive: boolean = true;
 	@Input() public item: Widget;
-	@Input() public index: Widget;
+	@Input() public index: any;
 	@Input() public query: Query;
 	@Output() filter: EventEmitter<any> = new EventEmitter();
 	changeRate: string;
@@ -159,7 +167,6 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		});
 	}
 	onTableClick($event) {
-		console.log($event);
 		this.isActive = !this.isActive;
 		let data = {};
 		data[$event] = this.isActive;
@@ -182,8 +189,6 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		console.log(this.item);
-		console.log(this.step);
 		this.seriesData = [];
 		let url = this.query.spec.base_url;
 		url = this.replace(url, '+', '%2B');
@@ -194,7 +199,6 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		url = this.replace(url, '{{STEP}}', `${this.step}`);
 		url = this.replace(url, '{{STEP}}', `${this.step}`);
 		let prev_url = this.query.spec.prev_url;
-		console.log('PREV_URL', prev_url);
 		prev_url = this.replace(prev_url, '+', '%20');
 		prev_url = this.replace(prev_url, '+', '%20');
 		prev_url = this.replace(prev_url, '{{DURATION}}', `${this.duration}`);
@@ -205,7 +209,6 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
 
 		let total_url = this.query.spec.total_url;
-		console.log('PREV_URL', prev_url);
 		prev_url = this.replace(prev_url, '+', '%20');
 		prev_url = this.replace(prev_url, '+', '%20');
 		prev_url = this.replace(prev_url, '{{DURATION}}', `${this.duration}`);
@@ -221,27 +224,25 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 			this.panelService.getPanelData(total_url)
 		).subscribe(
 			(res: any) => {
-				console.log(res);
 				res[0].data['name'] = this.query.spec.title;
 				this.data = res[0].data;
-				this.percentageData = res[2].data;
+				if (this.index == 0) {
+					let percentage = {};
+					percentage['value'] = res[2].data.result[0].value[1];
+					percentage['label'] = this.query.spec.total_label;
+					this.percentageData = percentage;
+				}
+
 				let currentData = res[0].data;
 				let previousData = res[1].data;
 				let totalData = res[2].data;
 				this.realValue =
 					parseInt(currentData.result[0].value[1]) / parseInt(totalData.result[0].value[1]) * 100;
-				console.log(Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]));
 				let change = Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]);
-				// let change =(base_url / total_url) * 100
 				this.changeRate =
 					change < 0
 						? `Decreased by ${Math.abs(change)} from ${this.duration} ago`
 						: `Increased by ${change} from ${this.duration} ago`;
-
-				// res.data['name'] = this.query.spec.title;
-				// this.seriesData.push(res.data);
-				// this.finish = true;
-				// this.pending = false;
 			},
 			(error) => {
 				this.pending = false;

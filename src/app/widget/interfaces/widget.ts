@@ -51,5 +51,6 @@ export interface Query {
 		x_axis_label?: string;
 		title?: string;
 		units?: string;
+		total_label?: string;
 	};
 }
