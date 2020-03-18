@@ -27,7 +27,7 @@
 						"stylePreprocessorOptions": {
 							"includePaths": [ "src/styles" ]
 						},
-						"scripts": []
+						"scripts": [ "src/assets/js/ResponsiveGauge.min.js", "node_modules/d3/index.js" ]
 					},
 					"configurations": {
 						"production": {

@@ -196,7 +196,7 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 					for (let key in data[0].metric) {
 						column.push(key);
 					}
-					console.log(index);
+					console.log(`selected index-${index}`, data.map((result) => result.metric));
 					this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
 					console.log(this.rootDatasource);
 					this.dataSource = new MatTableDataSource(this.rootDatasource);

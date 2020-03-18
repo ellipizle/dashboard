@@ -161,7 +161,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					name: name,
 					data: seriesData,
 					lineStyle: {
-						width: 4
+						width: 3
 					}
 				});
 			});
@@ -177,11 +177,11 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.options = {
 			backgroundColor: echarts.bg,
 			color: [
-				colors.warningLight,
-				colors.infoLight,
-				colors.dangerLight,
+				colors.primaryLight,
 				colors.successLight,
-				colors.primaryLight
+				colors.dangerLight,
+				colors.infoLight,
+				colors.warningLight
 			],
 
 			tooltip: {

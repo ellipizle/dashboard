@@ -1,0 +1,37 @@
+.gauges-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	flex-direction: row;
+}
+/* ------ Default Style ---------- */
+mwl-gauge {
+	// flex: 1;
+	// height: 50px;
+	// display: block;
+	// padding: 10px;
+	// background-color: #222;
+	// margin: 7px;
+	position: relative;
+	border-radius: 3px;
+	width: 150px;
+	height: 100%;
+	display: block;
+	padding: 10px;
+	background: none;
+}
+mwl-gauge > .gauge > .dial {
+	stroke: #334455;
+	stroke-width: 3;
+}
+mwl-gauge > .gauge > .value {
+	stroke: orange;
+	stroke-dasharray: none;
+	stroke-width: 6;
+}
+mwl-gauge > .gauge > .value-text {
+	fill: #ccc;
+	font-weight: 100;
+	font-size: 1em;
+}

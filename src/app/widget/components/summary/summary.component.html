@@ -1,8 +1,11 @@
 
 <div class="summary"    >
+			<div *ngIf="percentageData">
+			  <h2 class="total-title">{{percentageData?.label}}: {{percentageData?.value| round}}</h2>
 
+</div>
 <div  fxLayout="column" >
-   <app-summary-item  *ngFor="let data of item.query; let i = index" [query]="data"  [index]="i"  [item]="item" (filter)="filter.emit($event)"></app-summary-item>
+   <app-summary-item  *ngFor="let data of item.query; let i = index" [query]="data"  [index]="i"  [item]="item" (filter)="filter.emit($event)"  (total)="onTotal($event)"></app-summary-item>
 </div>
 </div>
 

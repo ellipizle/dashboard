@@ -217,7 +217,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 		this.dataGrid = [];
 		if (this.item && this.item.query.length > 0) {
 			let url = this.item.query[0].spec.all_data_url;
-			if (url === 'undefined') {
+			if (typeof url === 'undefined') {
 				return;
 			}
 			console.log(url);

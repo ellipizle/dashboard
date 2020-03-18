@@ -1,8 +1,14 @@
-<div class="spinner" *ngIf="pending"><i class="fas fa-spinner fa-spin"></i></div>
-<rg-gauge-chart class="echart"
- [canvasWidth]="canvasWidth"
-    [needleValue]="needleValue"
-    [centralLabel]="centralLabel"
-    [options]="options"
-    [name]="name"
-    [bottomLabel]="bottomLabel"></rg-gauge-chart>
+    <div class="gauges-container" [style.background-color]="echarts.bg">
+
+      <mwl-gauge [style.width.px]="canvasWidth"
+
+        [max]="100"
+        [dialStartAngle]="180"
+        [dialEndAngle]="0"
+        [value]="needleValue"
+
+        [animated]="true"
+        [animationDuration]="2">
+      </mwl-gauge>
+
+    </div>

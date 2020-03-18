@@ -168,29 +168,6 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 		return { dateList: dateList, data: series, legend: legends };
 	}
 
-	// formatSeries(data) {
-	// 	let legend: string;
-	// 	let results = data.result;
-	// 	let dateList: Array<any> = [];
-	// 	let dataArray: Array<any> = [];
-	// 	results.forEach((result, index) => {
-	// 		let name: string;
-	// 		let metric = result.metric;
-	// 		for (let key in metric) {
-	// 			legend = key;
-	// 			name = metric[key];
-	// 		}
-	// 		dateList.push(name);
-	// 		dataArray.push({
-	// 			name: name,
-	// 			type: 'bar',
-	// 			data: result.value,
-	// 			animationDelay: (idx) => idx * 10 + (index + 1 * 100)
-	// 		});
-	// 	});
-	// 	return { dateList: dateList, data: dataArray, legend: legend };
-	// }
-
 	drawBar(data) {
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
@@ -239,7 +216,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 					},
 					axisLabel: {
 						formatter: function(time) {
-							return moment.unix(time).format('M/D/Y, h:mm');
+							return moment.unix(time).format('M/D/Y, h:mm a');
 						},
 						textStyle: {
 							color: echarts.textColor
@@ -248,7 +225,7 @@ export class BarAnimationComponent implements AfterViewInit, OnDestroy {
 					axisPointer: {
 						label: {
 							formatter: function(axisValue) {
-								return moment.unix(axisValue.value).format('M/D/Y, h:mm');
+								return moment.unix(axisValue.value).format('M/D/Y, h:mm a');
 							}
 						}
 					}

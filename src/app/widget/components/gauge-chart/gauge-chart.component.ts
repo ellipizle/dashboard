@@ -7,7 +7,8 @@ import {
 	Input,
 	ElementRef,
 	OnDestroy,
-	SimpleChanges
+	SimpleChanges,
+	ViewEncapsulation
 } from '@angular/core';
 import { ConfigService } from '../../../core/services/config.service';
 import { DatasourceService } from '../../services/datasource.service';
@@ -16,10 +17,12 @@ import { PanelService } from '../../../shared/services/panel.service';
 import { TimerService } from '../../../shared/services/timer.service';
 import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { Subject } from 'rxjs';
+declare var ResponsiveGauge: any;
 @Component({
 	selector: 'app-gauge-chart',
 	templateUrl: './gauge-chart.component.html',
-	styleUrls: [ './gauge-chart.component.scss' ]
+	styleUrls: [ './gauge-chart.component.scss' ],
+	encapsulation: ViewEncapsulation.None
 })
 export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	private unsubscribe$: Subject<void> = new Subject<void>();
@@ -57,6 +60,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	public centralLabel = '';
 	public name = 'Gauge chart';
 	public bottomLabel = '65';
+
 	public options = {
 		hasNeedle: true,
 		needleColor: 'gray',
@@ -66,6 +70,18 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		rangeLabel: [ '0', '100' ],
 		needleStartValue: 50
 	};
+	percentageValue: (value: number) => string;
+
+	gaugeValues: any = {
+		1: 100,
+		2: 50,
+		3: 50,
+		4: 50,
+		5: 50,
+		6: 50,
+		7: 50
+	};
+
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -74,6 +90,9 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		private timerService: TimerService,
 		private elementRef: ElementRef
 	) {
+		this.percentageValue = function(value: number): string {
+			return `${Math.round(value)} / ${this['max']}`;
+		};
 		//get chart styles
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
 			this.colors = config.theme.variables;

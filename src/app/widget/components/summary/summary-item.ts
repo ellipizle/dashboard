@@ -23,10 +23,7 @@ import { Subject } from 'rxjs';
 	selector: 'app-summary-item',
 	template: `
 	<div [ngClass]="{'summary-container': !detailView,'deactivated': !isActive}" (click)="onTableClick(data.name)">
-							<div *ngIf="index === 0">
-			  <h2 class="total-title">{{percentageData?.label}}: {{percentageData?.value| round}}</h2>
 
-</div>
 			  <h3 class="title">{{data?.name}}</h3>
 						<div>
 			  <h2 class="section title">{{data?.result[0]?.value[1] | round}}</h2>
@@ -48,10 +45,7 @@ import { Subject } from 'rxjs';
 			h3 {
 				margin-bottom: 2px;
 			}
-			.total-title{
-				text-align:center;
-				font-size:1rem
-			}
+
 .summary-container {
 	cursor: pointer;
 	    margin: 10px 0px;
@@ -94,6 +88,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input() public index: any;
 	@Input() public query: Query;
+	@Output() total = new EventEmitter();
 	@Output() filter: EventEmitter<any> = new EventEmitter();
 	changeRate: string;
 	pending: boolean;
@@ -230,7 +225,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 					let percentage = {};
 					percentage['value'] = res[2].data.result[0].value[1];
 					percentage['label'] = this.query.spec.total_label;
-					this.percentageData = percentage;
+					this.total.emit(percentage);
 				}
 
 				let currentData = res[0].data;

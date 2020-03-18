@@ -53,6 +53,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	interval;
 	chartData;
 	fieldName: string;
+	private unitType: any;
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -113,24 +114,28 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
-		let url = this.item.query[0].spec.base_url;
-		url = this.replace(url, '+', '%2B');
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-		url = this.replace(url, '{{startTime}}', `${this.startTime}`);
-		url = this.replace(url, '{{endTime}}', `${this.endTime}`);
-		url = this.replace(url, '{{step}}', `${this.step}`);
-		this.pending = true;
-		this.panelService.getPanelData(url).subscribe(
-			(res: any) => {
-				this.chartData = res.data;
-				this.pending = false;
-				this.drawBar(this.formatSeries(res.data));
-			},
-			(error) => {
-				this.pending = false;
-			}
-		);
+		if (this.item && this.item.query.length > 0) {
+			let url = this.item.query[0].spec.base_url;
+			this.unitType = this.item.query[0].spec.units;
+			url = this.replace(url, '+', '%2B');
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+			url = this.replace(url, '{{startTime}}', `${this.startTime}`);
+			url = this.replace(url, '{{endTime}}', `${this.endTime}`);
+			url = this.replace(url, '{{step}}', `${this.step}`);
+			this.pending = true;
+			this.panelService.getPanelData(url).subscribe(
+				(res: any) => {
+					console.log(res);
+					this.chartData = res.data;
+					this.pending = false;
+					this.drawBar(this.formatSeries(res.data));
+				},
+				(error) => {
+					this.pending = false;
+				}
+			);
+		}
 	}
 	formatSeries(data) {
 		let legend: string;
@@ -153,20 +158,10 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 					color: '#000000',
 					show: true,
 					position: 'bottom',
-					// distance: 15,
-					// align: 'left',
-					// verticalAlign: 'middle',
-					// rotate: 90,
-					// fontSize: 16,
-					// rich: {
-					// 	name: {
-					// 		textBorderColor: '#fff'
-					// 	}
-					// },
 					formatter: '{a}'
 				},
 				// barWidth: '60%',
-				data: [ Math.round(parseInt(result.value[1]) / 1048576) ]
+				data: [ this.unitType == 'bytes' ? Math.round(result.value[1] / 1048576) : Math.round(result.value[1]) ]
 			});
 		});
 		return { xAxis: xAxisList, series: dataArray, legend: legend };
@@ -176,7 +171,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 		// console.log(this.item.query.spec.x_axis_label)
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
-
+		var self = this;
 		this.options = {
 			backgroundColor: echarts.bg,
 			color: [ colors.primaryLight ],
@@ -241,16 +236,16 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 					},
 					axisPointer: {
 						label: {
-							formatter: function(value) {
+							formatter: (value) => {
 								let fmt = Math.round(value.value);
-								return `${fmt} MB`;
+								return self.unitType == 'bytes' ? `${fmt} MB` : `${fmt}`;
 							}
 						}
 					},
 					axisLabel: {
 						show: true,
-						formatter: function(value) {
-							return `${value} MB`;
+						formatter: (value) => {
+							return self.unitType == 'bytes' ? `${value} MB` : `${value}`;
 						},
 						textStyle: {
 							color: echarts.textColor

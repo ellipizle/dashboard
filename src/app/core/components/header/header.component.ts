@@ -70,19 +70,10 @@ export class HeaderComponent implements OnInit {
 	};
 
 	getDashboard() {
-		this.dashboardSvc
-			.getDashboard()
-			.pipe
-			// map((res) => {
-			// 	let dash: any = res;
-			// 	dash.spec.dashboard_layouts = JSON.parse(dash.spec.dashboard_layouts);
-			// 	return dash;
-			// })
-			()
-			.subscribe((res: any) => {
-				this.dash = res;
-				this.layoutService.layout = JSON.parse(res.spec.dashboard_layouts[0].layout);
-			});
+		this.dashboardSvc.getDashboard().subscribe((res: any) => {
+			this.dash = res;
+			this.layoutService.layout = JSON.parse(res.spec.dashboard_layouts[0].layout);
+		});
 	}
 
 	saveDashboard() {
@@ -162,7 +153,7 @@ export class HeaderComponent implements OnInit {
 	) {
 		this.layoutService.getEditedObs().subscribe((res) => {
 			if (res) {
-				this.saveDashboard();
+				// this.saveDashboard();
 			}
 		});
 		this.route.events.subscribe((res) => {

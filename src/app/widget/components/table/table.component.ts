@@ -186,6 +186,7 @@ export class TableComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 	getAllData() {
+		console.log(this.item);
 		let url =
 			this.item.type.metadata.name == 'summary-bar'
 				? this.item.query[2].spec.all_data_url
