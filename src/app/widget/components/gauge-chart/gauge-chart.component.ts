@@ -71,8 +71,8 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		private timerService: TimerService,
 		private elementRef: ElementRef
 	) {
-		this.percentageValue = function(value: number): string {
-			return `${Math.round(value)}%`;
+		this.percentageValue = (value: number) => {
+			return `${Math.round(value)} ${this.unitType} `;
 		};
 		//get chart styles
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {

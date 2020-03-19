@@ -199,6 +199,9 @@ export class TableBarComponent implements AfterViewInit, OnDestroy {
 			this.item.type.metadata.name == 'summary-bar'
 				? this.item.query[2].spec.all_data_url
 				: this.item.query[0].spec.all_data_url;
+		if (typeof url === 'undefined') {
+			return;
+		}
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
 		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);

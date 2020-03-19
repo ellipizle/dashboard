@@ -23,12 +23,12 @@ mwl-gauge {
 }
 mwl-gauge > .gauge > .dial {
 	stroke: #cac9c9;
-	stroke-width: 3;
+	stroke-width: 8;
 }
 mwl-gauge > .gauge > .value {
 	stroke: #598bff;
 	stroke-dasharray: none;
-	stroke-width: 6;
+	stroke-width: 11;
 }
 mwl-gauge > .gauge > .value-text {
 	fill: #000;
