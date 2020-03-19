@@ -60,28 +60,9 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	public centralLabel = '';
 	public name = 'Gauge chart';
 	public bottomLabel = '65';
-
-	public options = {
-		hasNeedle: true,
-		needleColor: 'gray',
-		needleUpdateSpeed: 1000,
-		arcColors: [ 'rgb(44, 151, 222)', 'lightgray' ],
-		arcDelimiters: [ 30 ],
-		rangeLabel: [ '0', '100' ],
-		needleStartValue: 50
-	};
+	needleLable;
+	unitType;
 	percentageValue: (value: number) => string;
-
-	gaugeValues: any = {
-		1: 100,
-		2: 50,
-		3: 50,
-		4: 50,
-		5: 50,
-		6: 50,
-		7: 50
-	};
-
 	constructor(
 		private configSvc: ConfigService,
 		private cd: ChangeDetectorRef,
@@ -91,7 +72,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		private elementRef: ElementRef
 	) {
 		this.percentageValue = function(value: number): string {
-			return `${Math.round(value)} / ${this['max']}`;
+			return `${Math.round(value)}%`;
 		};
 		//get chart styles
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
@@ -146,7 +127,9 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getData() {
+		console.log(this.item);
 		let url = this.item.query[0].spec.base_url;
+		this.unitType = this.item.query[0].spec.units;
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
@@ -192,8 +175,9 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	drawPie(data) {
 		const colors: any = this.colors;
 		const echarts: any = this.echarts;
-		this.options.arcDelimiters = [ Math.round(data.result[0].value[1]) ];
+		// this.options.arcDelimiters = [ Math.round(data.result[0].value[1]) ];
 		this.needleValue = Math.round(data.result[0].value[1]);
+		this.needleLable = `${Math.round(data.result[0].value[1])} %`;
 		this.bottomLabel = `${data.result[0].metric[Object.keys(data.result[0].metric)[0]]} ${Math.round(
 			data.result[0].value[1]
 		)}`;
