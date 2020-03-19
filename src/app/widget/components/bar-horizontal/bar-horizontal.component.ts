@@ -189,7 +189,7 @@ export class BarHorizontalComponent implements AfterViewInit, OnDestroy {
 			},
 			grid: {
 				top: '16%',
-				left: '5%',
+				left: '10%',
 				right: '7%',
 				bottom: '5%',
 				containLabel: true
