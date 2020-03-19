@@ -162,7 +162,8 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 					data: seriesData,
 					lineStyle: {
 						width: 3
-					}
+					},
+					symbolSize: 10
 				});
 			});
 		}
