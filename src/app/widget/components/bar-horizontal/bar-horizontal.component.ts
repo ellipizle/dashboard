@@ -174,7 +174,21 @@ export class BarHorizontalComponent implements AfterViewInit, OnDestroy {
 		var self = this;
 		this.options = {
 			backgroundColor: echarts.bg,
-			color: [ colors.primaryLight ],
+			color: [
+				'#38a2da',
+				'#34c5e9',
+				'#67e1e4',
+				'#9fe6b8',
+				'#ffdb5c',
+				'#ff9f7e',
+				'#fb7293',
+				'#e062ae',
+				'#e690d2',
+				'#e7bcf4',
+				'#9d97f5',
+				'#8378ea',
+				'#97bfff'
+			],
 			legend: {
 				data: data.xAxisList,
 				textStyle: {
