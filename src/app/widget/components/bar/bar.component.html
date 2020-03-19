@@ -1,2 +1,2 @@
-<div class="spinner" *ngIf="pending"><i class="fas fa-spinner fa-spin"></i></div>
+<div class="spinner" [style.background-color]="echarts.bg" *ngIf="pending"><i class="fas fa-spinner fa-spin"></i></div>
 <div echarts [options]="options"  (chartLegendSelectChanged)="onChartClick($event, 'chartClick')" class="echart"  (chartInit)="onChartInit($event)"></div>

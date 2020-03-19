@@ -48,6 +48,7 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 	@Input() public item: Widget;
 	@Input('filter')
 	set filter(query: any) {
+		this.dataSource = new MatTableDataSource([]);
 		if (query) {
 			this.filterObject = { ...this.filterObject, ...query };
 			let array = [];

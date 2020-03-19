@@ -1,4 +1,5 @@
-    <div class="gauges-container" [style.background-color]="echarts.bg">
+<div class="spinner" [style.background-color]="echarts.bg" *ngIf="pending"><i class="fas fa-spinner fa-spin"></i></div>
+<div class="gauges-container" [style.background-color]="echarts.bg">
 
       <mwl-gauge [style.width.px]="canvasWidth"
 
