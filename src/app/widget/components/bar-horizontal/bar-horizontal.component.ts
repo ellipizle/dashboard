@@ -18,11 +18,11 @@ import { graphic, ECharts, EChartOption, EChartsOptionConfig } from 'echarts';
 import { data } from 'pie';
 import { Subject } from 'rxjs';
 @Component({
-	selector: 'app-bar',
-	templateUrl: './bar.component.html',
-	styleUrls: [ './bar.component.scss' ]
+	selector: 'app-bar-horizontal',
+	templateUrl: './bar-horizontal.component.html',
+	styleUrls: [ './bar-horizontal.component.scss' ]
 })
-export class BarComponent implements AfterViewInit, OnDestroy {
+export class BarHorizontalComponent implements AfterViewInit, OnDestroy {
 	private unsubscribe$: Subject<void> = new Subject<void>();
 	@Input('reset')
 	set reset(data: boolean) {
@@ -157,7 +157,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 				label: {
 					color: this.echarts.textColor,
 					show: true,
-					position: 'bottom',
+					position: 'left',
 					formatter: '{a}'
 				},
 				// barWidth: '60%',
@@ -194,7 +194,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 				bottom: '5%',
 				containLabel: true
 			},
-			xAxis: [
+			yAxis: [
 				{
 					// name: data.legend,
 					// nameTextStyle: {
@@ -217,7 +217,7 @@ export class BarComponent implements AfterViewInit, OnDestroy {
 					// }
 				}
 			],
-			yAxis: [
+			xAxis: [
 				{
 					nameTextStyle: {
 						align: 'right'

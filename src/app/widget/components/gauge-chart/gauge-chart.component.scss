@@ -35,3 +35,8 @@ mwl-gauge > .gauge > .value-text {
 	font-weight: 100;
 	font-size: .5em;
 }
+mwl-gauge.black > .gauge > .value-text {
+	fill: #fff;
+	font-weight: 100;
+	font-size: .5em;
+}

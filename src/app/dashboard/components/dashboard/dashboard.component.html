@@ -9,6 +9,11 @@
         (remove)="removeWidget($event)">
     </app-panel-header>
         <ng-container [ngSwitch]="item.type.metadata.name">
+                <ng-template [ngSwitchCase]="'horizontal-bar-chart'">
+                    <app-bar-horizontal
+                        [item]="item">
+                    </app-bar-horizontal>
+              </ng-template>
               <ng-template [ngSwitchCase]="'bar-chart'">
                     <app-bar (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
                         [item]="item">

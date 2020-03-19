@@ -7,7 +7,14 @@
         (remove)="removeWidget($event)">
     </app-view-panel-header>
         <ng-container [ngSwitch]="widget.type.metadata.name">
-              <ng-template [ngSwitchCase]="'bar-chart'">
+                  <ng-template [ngSwitchCase]="'horizontal-bar-chart'">
+                    <app-bar-horizontal
+                        [item]="widget"
+                             (filter)="onFilter($event)"
+                             [reset]="resetDataSource">
+                    </app-bar-horizontal>
+              </ng-template>
+              <ng-template [ngSwitchCase]="''">
                     <app-bar
                         [item]="widget"
                              (filter)="onFilter($event)"
@@ -71,6 +78,11 @@
                     </app-table-summary>
               </ng-template>
                  <ng-template [ngSwitchCase]="'bar-chart' ">
+                    <app-table-pie
+                         [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
+                    </app-table-pie>
+              </ng-template>
+                  <ng-template [ngSwitchCase]="'horizontal-bar-chart' ">
                     <app-table-pie
                          [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
                     </app-table-pie>

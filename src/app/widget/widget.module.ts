@@ -7,6 +7,7 @@ import { AreaStackComponent } from './components/area-stack/area-stack.component
 import { BarAnimationComponent } from './components/bar-animation/bar-animation.component';
 import { PieComponent } from './components/pie/pie.component';
 import { BarComponent } from './components/bar/bar.component';
+import { BarHorizontalComponent } from './components/bar-horizontal/bar-horizontal.component';
 import { DonutChartComponent } from './components/donut-chart/donut-chart.component';
 import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.component';
 import { TableComponent } from './components/table/table.component';
@@ -31,7 +32,8 @@ const COMPONENTS = [
 	TableSummaryComponent,
 	SummaryComponent,
 	SummaryItemComponent,
-	TablePieComponent
+	TablePieComponent,
+	BarHorizontalComponent
 ];
 @NgModule({
 	declarations: [ ...COMPONENTS ],

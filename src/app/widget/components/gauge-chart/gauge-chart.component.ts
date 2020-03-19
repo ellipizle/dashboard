@@ -62,6 +62,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 	public bottomLabel = '65';
 	needleLable;
 	unitType;
+	theme: boolean;
 	percentageValue: (value: number) => string;
 	constructor(
 		private configSvc: ConfigService,
@@ -76,6 +77,7 @@ export class GaugeChartComponent implements AfterViewInit, OnDestroy {
 		};
 		//get chart styles
 		this.themeSubscription = this.configSvc.getSelectedThemeObs().subscribe((config: any) => {
+			this.theme = config.theme.name == 'default' ? false : true;
 			this.colors = config.theme.variables;
 			this.echarts = config.echart;
 
