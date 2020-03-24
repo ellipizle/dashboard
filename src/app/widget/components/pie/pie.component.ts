@@ -121,8 +121,8 @@ export class PieComponent implements AfterViewInit, OnDestroy {
 
 	getData() {
 		if (this.item && this.item.query.length > 0) {
-			this.unitType = this.item.query[0].spec.units;
-			let url = this.item.query[0].spec.base_url;
+			this.unitType = this.item.query[0].spec.query_info.units;
+			let url = this.item.query[0].spec.query_info.base_url;
 			url = this.replace(url, '+', '%2B');
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);

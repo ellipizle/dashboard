@@ -19,78 +19,112 @@ import { TimerService } from '../../../shared/services/timer.service';
 import { Widget, Query } from '../../interfaces/widget';
 import { forkJoin } from 'rxjs';
 import { Subject } from 'rxjs';
+import * as _moment from 'moment';
+const moment = _moment;
 @Component({
-	selector: 'app-summary-item',
+	selector: 'app-summary-chart-item',
 	template: `
-	<div [ngClass]="{'summary-container': !detailView,'deactivated': !isActive}" (click)="onTableClick(data.name)">
-
-			  <h3 class="title">{{data?.name}}</h3>
-						<div>
+	<div class="whole"   [style.background-color]="echarts.bg" >
+	<div class="summary" [ngClass]="{'deactivated': !isActive}" (click)="onTableClick(data.name)">
+	<div class="summary-container">
+		  <h3 class="title">{{data?.name}}</h3>
 			  <h2 class="section title">{{data?.result[0]?.value[1] | round}}</h2>
 
-</div>
-              <section class="example-section">
-                <mat-progress-bar
-					class="example-margin"
-					mode="determinate"
-                    [value]="realValue">
-                </mat-progress-bar>
-			  </section>
-			  <div class="item">{{changeRate}}</div>
-</div>
+							 <div class="item" *ngIf="change > 0" fxLayout="row">
+							<span class="material-icons green-color" fxFlex="7%">
+								trending_up
+								</span>
+								<span fxFlex="grow">Increased by {{changeRate}} from {{duration}} ago</span>
+							</div>
+							<div class="item" *ngIf="change < 0" fxLayout="row">
+							<span class="material-icons red-color" fxFlex="7%">
+								trending_down
+								</span>
+								<span fxFlex="grow">Increased by {{changeRate}} from {{duration}} ago</span>
+							</div>
+								<div class="item" *ngIf="change == 0" fxLayout="row">
+							<span class="material-icons " fxFlex="7%">
+								remove
+								</span>
+								<span fxFlex="grow">Increased by {{changeRate}} from {{duration}} ago</span>
+							</div>
+			</div>
+			</div>
+			</div>
+	<div echarts [options]="options"  (chartClick)="onChartClick($event, 'chartClick')" class="echart"  (chartInit)="onChartInit($event)"></div>
+
 	`,
 	styles: [
 		`
+		.whole {
+	cursor: pointer;
+			}
+		.summary:hover {
+
+			}
+		.green-color{
+			color:green
+		}
+				.red-color{
+			color:red
+		}
+		.item-text{
+			display:inline-block;
+		}
+				.item-icon{
+			display:inline-block;
+		}
+		.echart {
+	height: calc(100% - 158px);
+	width: 100%;
+}
 			h2,
 			h3 {
 				margin-bottom: 2px;
 			}
 
-.summary-container {
-	cursor: pointer;
-	    margin: 10px 0px;
-    padding: 0px 10px 0px 10px;
-}
-			.summary {
-				padding: 16px;
+				.summary-container {
+					width: 80%;
+    margin: 0 auto;
+				}
+			.container {
+				padding: 0 16px;
 			}
 			.mat-progress-bar {
 				height: 22px;
 			}
 .section{
-	display:inline-block
+	display:inline-block;
+	    font-size: 64px;
+    padding: 15px;
 }
 .percentage{
 	float:right
 }
-			.item{
-				color:#8f9bb3
-			}
+
 			.deactivated{
 				background:#c5cae9;
 							h2,
 			h3 {
 				color:#9fa9be
 			}
-					.mat-progress-bar {
-						background:#8f9bb3
-			}
-					.title{
-						color:#9fa9be
-					}
+
 			}
 	`
 	]
 })
-export class SummaryItemComponent implements AfterViewInit, OnDestroy {
+export class SummaryChartItemComponent implements AfterViewInit, OnDestroy {
 	private unsubscribe$: Subject<void> = new Subject<void>();
 	isActive: boolean = true;
+	unitType;
+	fieldName;
 	@Input() public item: Widget;
 	@Input() public index: any;
 	@Input() public query: Query;
 	@Output() total = new EventEmitter();
 	@Output() filter: EventEmitter<any> = new EventEmitter();
-	changeRate: string;
+	changeRate: any;
+	change: any;
 	pending: boolean;
 	detailView: boolean;
 	@HostListener('window:resize', [ '$event' ])
@@ -161,10 +195,20 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 			}
 		});
 	}
+	onChartInit(e: ECharts) {
+		this.echartsInstance = e;
+	}
 	onTableClick($event) {
 		this.isActive = !this.isActive;
 		let data = {};
-		data[$event] = this.isActive;
+		data['name'] = 'all';
+		data['filter'] = !this.isActive;
+		this.filter.emit(data);
+	}
+	onChartClick(event: any, type: string) {
+		let data = {};
+		data['name'] = 'filter';
+		data['filters'] = event['seriesName'];
 		this.filter.emit(data);
 	}
 	replace(value, matchingString, replacerString) {
@@ -186,7 +230,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 	getData() {
 		this.seriesData = [];
 		let url = this.query.spec.query_info.base_url;
-		console.log(url);
+		console.log(this.query);
 		url = this.replace(url, '+', '%2B');
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
@@ -213,11 +257,21 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		prev_url = this.replace(prev_url, '{{ENDTIME}}', `${this.endTime}`);
 		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
 		prev_url = this.replace(prev_url, '{{STEP}}', `${this.step}`);
+		let chart_url = this.query.spec.query_info.chart_url;
+		chart_url = this.replace(chart_url, '+', '%20');
+		chart_url = this.replace(chart_url, '+', '%20');
+		chart_url = this.replace(chart_url, '{{DURATION}}', `${this.duration}`);
+		chart_url = this.replace(chart_url, '{{DURATION}}', `${this.duration}`);
+		chart_url = this.replace(chart_url, '{{STARTTIME}}', `${this.startTime}`);
+		chart_url = this.replace(chart_url, '{{ENDTIME}}', `${this.endTime}`);
+		chart_url = this.replace(chart_url, '{{STEP}}', `${this.step}`);
+		chart_url = this.replace(chart_url, '{{STEP}}', `${this.step}`);
 		this.pending = true;
 		forkJoin(
 			this.panelService.getPanelData(url),
 			this.panelService.getPanelData(prev_url),
-			this.panelService.getPanelData(total_url)
+			this.panelService.getPanelData(total_url),
+			this.panelService.getPanelData(chart_url)
 		).subscribe(
 			(res: any) => {
 				res[0].data['name'] = this.query.spec.query_info.title;
@@ -235,10 +289,18 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 				this.realValue =
 					parseInt(currentData.result[0].value[1]) / parseInt(totalData.result[0].value[1]) * 100;
 				let change = Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]);
-				this.changeRate =
-					change < 0
-						? `Decreased by ${Math.abs(change)} from ${this.duration} ago`
-						: `Increased by ${change} from ${this.duration} ago`;
+				this.change = change;
+				// this.changeRate =
+				// 	change < 0
+				// 		? ` Decreased by ${Math.abs(change)} from ${this.duration} ago`
+				// 		: ` ${"<span class='material-icons'>call_missed_outgoing</span>"}  Increased by ${change} from ${this
+				// 				.duration} ago`;
+				if (change < 0) {
+					this.changeRate = Math.abs(change);
+				} else {
+					this.changeRate = change;
+				}
+				this.drawBar(this.formatSeries(res[3].data));
 			},
 			(error) => {
 				this.pending = false;
@@ -246,6 +308,108 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 		);
 	}
 
+	formatSeries(data) {
+		console.log(data);
+		let legend: string;
+		let results = data.result[0].values;
+		let xAxisList: Array<any> = [];
+		let dataArray: Array<any> = [];
+		results.forEach((result) => {
+			xAxisList.push(name);
+			dataArray.push({
+				name: result[0],
+				type: 'bar',
+				label: {
+					color: this.echarts.textColor,
+					show: false,
+					position: 'bottom',
+					formatter: '{a}'
+				},
+				// barWidth: '60%',
+				data: [ this.unitType == 'bytes' ? Math.round(result[1] / 1048576) : Math.round(result[1]) ]
+			});
+		});
+		return { xAxis: xAxisList, series: dataArray, legend: legend };
+	}
+
+	drawBar(data) {
+		console.log(data);
+		const colors: any = this.colors;
+		const echarts: any = this.echarts;
+		var self = this;
+		this.options = {
+			backgroundColor: echarts.bg,
+			color: [ colors.primaryLight ],
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'shadow'
+				}
+			},
+			grid: {
+				show: false,
+				top: '2%',
+				left: '1%',
+				right: '1%',
+				bottom: '5%'
+				// containLabel: false
+			},
+			xAxis: {
+				type: 'category',
+				axisLabel: {
+					show: false
+				},
+				axisLine: {
+					show: false
+				},
+				axisTick: {
+					show: false
+				}
+			},
+			yAxis: [
+				{
+					nameTextStyle: {
+						align: 'right'
+					},
+					type: 'value',
+					// interval: 20,
+					axisLine: {
+						show: false,
+						lineStyle: {
+							color: echarts.axisLineColor
+						}
+					},
+					splitLine: {
+						show: false,
+						lineStyle: {
+							color: echarts.splitLineColor
+						}
+					},
+					axisTick: {
+						show: false
+					},
+					axisPointer: {
+						label: {
+							formatter: (value) => {
+								let fmt = Math.round(value.value);
+								return self.unitType == 'bytes' ? `${fmt} MB` : `${fmt}`;
+							}
+						}
+					},
+					axisLabel: {
+						show: false,
+						formatter: (value) => {
+							return self.unitType == 'bytes' ? `${value} MB` : `${value}`;
+						},
+						textStyle: {
+							color: echarts.textColor
+						}
+					}
+				}
+			],
+			series: data.series
+		};
+	}
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
 	}

@@ -31,7 +31,7 @@ export class DashboardService {
 	}
 
 	getQueries() {
-		return this.http.get(`${this.baseUrl}apis/ws.io/v1/dashboardqueries`);
+		return this.http.get(`${this.baseUrl}apis/ws.io/v1/dashboardquerys`);
 	}
 
 	getCharts() {

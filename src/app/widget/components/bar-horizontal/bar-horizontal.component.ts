@@ -115,8 +115,8 @@ export class BarHorizontalComponent implements AfterViewInit, OnDestroy {
 
 	getData() {
 		if (this.item && this.item.query.length > 0) {
-			let url = this.item.query[0].spec.base_url;
-			this.unitType = this.item.query[0].spec.units;
+			let url = this.item.query[0].spec.query_info.base_url;
+			this.unitType = this.item.query[0].spec.query_info.units;
 			url = this.replace(url, '+', '%2B');
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
@@ -174,7 +174,14 @@ export class BarHorizontalComponent implements AfterViewInit, OnDestroy {
 		var self = this;
 		this.options = {
 			backgroundColor: echarts.bg,
-			color: [ '#ffdb5c', '#ff9f7e', '#e7bcf4', '#e690d2', '#97bfff', '#9d97f5' ],
+			// color: [ '#ffdb5c', '#ff9f7e', '#e7bcf4', '#e690d2', '#97bfff', '#9d97f5' ],
+			color: [
+				colors.primaryLight,
+				colors.successLight,
+				colors.dangerLight,
+				colors.infoLight,
+				colors.warningLight
+			],
 			legend: {
 				data: data.xAxisList,
 				textStyle: {

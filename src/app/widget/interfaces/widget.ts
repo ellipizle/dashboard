@@ -39,18 +39,22 @@ export interface Query {
 		uid?: string;
 	};
 	spec?: {
-		total_url?: string;
-		all_data_url?: string;
-		filtered_data_url?: string;
-		prev_data_url?: string;
-		prev_url?: string;
-		base_url?: string;
-		param?: string;
-		port?: number;
-		query_category?: string;
-		x_axis_label?: string;
-		title?: string;
-		units?: string;
-		total_label?: string;
+		query_info: {
+			chart_url?: string;
+			total_url?: string;
+			all_data_url?: string;
+			filtered_data_url?: string;
+			prev_data_url?: string;
+			prev_url?: string;
+			base_url?: string;
+			param?: string;
+			port?: number;
+			query_category?: string;
+			x_axis_label?: string;
+			title?: string;
+			units?: string;
+			total_label?: string;
+		};
+		category?: string;
 	};
 }

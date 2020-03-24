@@ -36,7 +36,7 @@
                               <mat-form-field  fxFlexAlign="center" appearance="outline"  fxFlex="80%" >
                               <mat-label>Select Query</mat-label>
                               <mat-select placeholder="Select Query" formControlName="query" (selectionChange)="onSelected($event.value)">
-                                <mat-option *ngFor="let query of queryTypes " [value]="query.metadata.name">{{query?.spec?.title}}</mat-option>
+                                <mat-option *ngFor="let query of queryTypes " [value]="query.metadata.name">{{query?.spec?.query_info?.title}}</mat-option>
                               </mat-select>
                               <mat-error *ngIf="formSubmitted && widgetForm.get('query').invalid">query type is required</mat-error>
                             </mat-form-field>

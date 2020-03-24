@@ -165,7 +165,7 @@ export class TableBarComponent implements AfterViewInit, OnDestroy {
 		this.dataSource = [];
 		this.dataSource = [];
 
-		let url = this.item.query[0].spec.filtered_data_url;
+		let url = this.item.query[0].spec.query_info.filtered_data_url;
 		let name = this.item.query[0].metadata.name;
 		let REPLACE = this.queryName(name);
 		url = this.replace(url, '+', '%2B');
@@ -197,8 +197,8 @@ export class TableBarComponent implements AfterViewInit, OnDestroy {
 	getAllData() {
 		let url =
 			this.item.type.metadata.name == 'summary-bar'
-				? this.item.query[2].spec.all_data_url
-				: this.item.query[0].spec.all_data_url;
+				? this.item.query[2].spec.query_info.all_data_url
+				: this.item.query[0].spec.query_info.all_data_url;
 		if (typeof url === 'undefined') {
 			return;
 		}

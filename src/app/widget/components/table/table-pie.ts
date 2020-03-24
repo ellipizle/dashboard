@@ -175,20 +175,22 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 
 	getFilterData() {
 		this.dataSource = [];
-		let subFilter = this.item.query.filter((itemQ) => this._excludeSegmentItemName.includes(itemQ.spec.title));
+		let subFilter = this.item.query.filter((itemQ) =>
+			this._excludeSegmentItemName.includes(itemQ.spec.query_info.title)
+		);
 
 		let numberOfCalls = subFilter.length;
 		for (let index = 0; index < numberOfCalls; index++) {
 			// if (this._excludeSegmentItemName == this.item.query[index].spec.title) {
 			// 	continue;
 			// }
-			let url = subFilter[index].spec.filtered_data_url;
+			let url = subFilter[index].spec.query_info.filtered_data_url;
 			let name = subFilter[index].metadata.name;
 			let REPLACE = this.queryName(name);
 
 			url = this.replace(url, '+', '%2B');
-			url = this.replace(url, REPLACE, `"${subFilter[index].spec.title}"`);
-			url = this.replace(url, REPLACE, `"${subFilter[index].spec.title}"`);
+			url = this.replace(url, REPLACE, `"${subFilter[index].spec.query_info.title}"`);
+			url = this.replace(url, REPLACE, `"${subFilter[index].spec.query_info.title}"`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
@@ -216,7 +218,7 @@ export class TablePieComponent implements AfterViewInit, OnDestroy {
 		console.log(this.item);
 		this.dataGrid = [];
 		if (this.item && this.item.query.length > 0) {
-			let url = this.item.query[0].spec.all_data_url;
+			let url = this.item.query[0].spec.query_info.all_data_url;
 			if (typeof url === 'undefined') {
 				return;
 			}

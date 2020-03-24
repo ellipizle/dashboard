@@ -56,6 +56,11 @@
                         [item]="item">
                     </app-summary>
               </ng-template>
+                                    <ng-template [ngSwitchCase]="'summary-with-chart'">
+                    <app-summary-chart  (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="item">
+                    </app-summary-chart>
+              </ng-template>
         </ng-container>
 
 

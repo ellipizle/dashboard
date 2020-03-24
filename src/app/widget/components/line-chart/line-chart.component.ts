@@ -117,7 +117,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 		this.seriesData = [];
 		let numberOfCalls = this.item.query.length;
 		for (let index = 0; index < numberOfCalls; index++) {
-			let url = this.item.query[index].spec.base_url;
+			let url = this.item.query[index].spec.query_info.base_url;
 			url = this.replace(url, '+', '%2B');
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
 			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
@@ -127,7 +127,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 			this.pending = true;
 			this.panelService.getPanelData(url).subscribe(
 				(res: any) => {
-					res.data['name'] = this.item.query[index].spec.title;
+					res.data['name'] = this.item.query[index].spec.query_info.title;
 					this.seriesData.push(res.data);
 					if (index + 1 == numberOfCalls) {
 						setTimeout(() => {

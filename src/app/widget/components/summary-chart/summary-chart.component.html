@@ -1,0 +1,4 @@
+
+
+   <app-summary-chart-item  *ngFor="let data of item.query; let i = index" [query]="data"  [index]="i"  [item]="item" (filter)="filter.emit($event)"  (total)="onTotal($event)"></app-summary-chart-item>
+

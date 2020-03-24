@@ -14,7 +14,7 @@
                              [reset]="resetDataSource">
                     </app-bar-horizontal>
               </ng-template>
-              <ng-template [ngSwitchCase]="''">
+               <ng-template [ngSwitchCase]="'bar-chart'">
                     <app-bar
                         [item]="widget"
                              (filter)="onFilter($event)"
@@ -69,6 +69,12 @@
                           (filter)="onFilter($event)">
                     </app-summary>
               </ng-template>
+                  <ng-template [ngSwitchCase]="'summary-with-chart'">
+                    <app-summary-chart  (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()"
+                        [item]="widget"
+                          (filter)="onFilter($event)">
+                    </app-summary-chart>
+              </ng-template>
         </ng-container>
             <hr>
              <ng-container [ngSwitch]="widget.type.metadata.name">
@@ -76,6 +82,11 @@
                     <app-table-summary
                          [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
                     </app-table-summary>
+              </ng-template>
+                        <ng-template [ngSwitchCase]="'summary-with-chart'">
+                    <app-table-summary-chart
+                         [item]="widget"  [filter]="filter"  [reset]="resetDataSource">
+                    </app-table-summary-chart>
               </ng-template>
                  <ng-template [ngSwitchCase]="'bar-chart' ">
                     <app-table-pie

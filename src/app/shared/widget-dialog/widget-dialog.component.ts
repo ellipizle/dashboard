@@ -46,7 +46,9 @@ export class WidgetDialogComponent implements OnInit {
 		});
 		this.widgetForm.get('type').valueChanges.subscribe((val: any) => {
 			let chart = this.chartsOption.find((chart) => chart.metadata.name === val);
-			this.queryTypes = this.queryOption.filter((type) => type.spec.query_category === chart.spec.category);
+			this.queryTypes = this.queryOption.filter(
+				(type) => type.spec.query_info.query_category === chart.spec.category
+			);
 			this.maxCount = chart.spec.max_queries ? chart.spec.max_queries : 1;
 			this.clearItem();
 		});

@@ -16,8 +16,10 @@ import { TimerService } from '../../../shared/services/timer.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
+import * as _moment from 'moment';
+const moment = _moment;
 @Component({
-	selector: 'app-table-summary',
+	selector: 'app-table-summary-chart',
 	template: `
 	<div class="table-container mat-elevation-z8">
 	    <div class="view-header">
@@ -42,32 +44,36 @@ import { Subject } from 'rxjs';
 	`,
 	styleUrls: [ './table.component.scss' ]
 })
-export class TableSummaryComponent implements AfterViewInit, OnDestroy {
+export class TableSummaryChartComponent implements AfterViewInit, OnDestroy {
 	private unsubscribe$: Subject<void> = new Subject<void>();
 	showAgoData: boolean;
 	@Input() public item: Widget;
 	@Input('filter')
 	set filter(query: any) {
 		this.dataSource = new MatTableDataSource([]);
-		if (query) {
-			this.filterObject = { ...this.filterObject, ...query };
-			let array = [];
-			let filterObj = this.filterObject;
-			for (let key in filterObj) {
-				if (filterObj[key] == false) {
-					array.push(key);
-				}
+		if (query && query.name == 'filter') {
+			this.currentView = 'filter';
+			this._excludeSegmentItemID = query.filters;
+			if (this.isShowTable) {
+				this.getFilterData();
 			}
-			console.log('set');
-			this._excludeSegmentItemName = [ ...array ];
-			this.getFilterData();
+		} else if (query && query.name == 'all') {
+			this.isShowTable = query.filter;
+			if (this.isShowTable) {
+				this.getAllData();
+			}
 		}
 	}
 
 	@Input('reset')
 	set reset(data: boolean) {
 		if (data) {
-			this.getAllData();
+			// this.isShowTable = true;
+			if (this.isShowTable) {
+				this.getAllData();
+			}
+		} else {
+			this.dataSource = new MatTableDataSource([]);
 		}
 	}
 
@@ -100,7 +106,9 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 	) {
 		this.timerService.getRefreshObs().subscribe((res) => {
 			if (res) {
-				this.getData();
+				if (this._excludeSegmentItemID || this.isShowTable) {
+					this.getData();
+				}
 			}
 		});
 		this.timerService.getIntervalObs().subscribe((res) => {
@@ -108,7 +116,9 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 			if (typeof res === 'number') {
 				window.clearInterval(this.interval);
 				this.interval = window.setInterval(function() {
-					self.getData();
+					if (self._excludeSegmentItemID || self.isShowTable) {
+						self.getData();
+					}
 				}, res);
 			} else {
 				window.clearInterval(this.interval);
@@ -143,8 +153,9 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 	onToggleData(event) {
-		console.log(event);
-		this.getFilterData();
+		if (this.isShowTable) {
+			this.getAllData();
+		}
 	}
 	ngAfterViewInit() {
 		this.dataSource.filterPredicate = (data: any, filter: string) => {
@@ -158,12 +169,15 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 				this.endTime = res.end;
 				this.duration = res.short;
 				// this.step = Math.round((res.end - res.start) / this.item.type.spec.panel_datapoint_count);
-				this.getData();
+				if (this._excludeSegmentItemID || this.isShowTable) {
+					this.getData();
+				}
 			}
 		});
 		this.cd.detectChanges();
 	}
 	getData() {
+		console.log('twiste');
 		this.currentView == 'all' ? this.getAllData() : this.getFilterData();
 	}
 
@@ -178,76 +192,73 @@ export class TableSummaryComponent implements AfterViewInit, OnDestroy {
 		// console.log(this._excludeSegmentItemName);
 		this.rootDatasource = [];
 		this.dataSource = new MatTableDataSource([]);
-		let subFilter = this.item.query.filter((itemQ) =>
-			this._excludeSegmentItemName.includes(itemQ.spec.query_info.title)
-		);
-		let numberOfCalls = subFilter.length;
-		for (let index = 0; index < numberOfCalls; index++) {
-			let url = this.showAgoData
-				? subFilter[index].spec.query_info.prev_data_url
-				: subFilter[index].spec.query_info.all_data_url;
-			// url = this.replace(url, '+', '%2B');
-			// url = this.replace(url, '+', '%2B');
-			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
-			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
-			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-			url = this.replace(url, '{{STEP}}', `${this.step}`);
-			this.pending = true;
-			this.panelService.getPanelData(url).subscribe(
-				(res: any) => {
-					let data = res.data.result;
-					let column = [];
-					for (let key in data[0].metric) {
-						column.push(key);
-					}
-					console.log(`selected index-${index}`, data.map((result) => result.metric));
-					this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
-					console.log(this.rootDatasource);
-					this.dataSource = new MatTableDataSource(this.rootDatasource);
-				},
-				(error) => {
-					this.pending = false;
+		let url = this.item.query[0].spec.query_info.filtered_data_url;
+		let t = moment.utc().unix() - moment.unix(parseInt(this._excludeSegmentItemID)).utc().unix();
+		url = this.replace(url, '{{OFFSET_IN_MIN}}', `${t}`);
+		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{STEP}}', `${this.step}`);
+		this.pending = true;
+		this.panelService.getPanelData(url).subscribe(
+			(res: any) => {
+				let data = res.data.result;
+				let column = [];
+				for (let key in data[0].metric) {
+					column.push(key);
 				}
-			);
-		}
+				this.displayedColumns = [ ...column ];
+				this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
+
+				this.dataSource = new MatTableDataSource(this.rootDatasource);
+			},
+			(error) => {
+				this.pending = false;
+			}
+		);
 	}
 	getAllData() {
+		console.log('in all data');
+		console.log(this.item);
+		this.dataSource = new MatTableDataSource([]);
 		this.rootDatasource = [];
 		this.filterObject = {};
 		let numberOfCalls = this.item.query.length;
-		for (let index = 0; index < numberOfCalls; index++) {
-			let url = this.item.query[index].spec.query_info.all_data_url;
-			let localObj = {};
-			let name = this.item.query[index].spec.query_info.title;
-			localObj[name] = true;
-			this.filterObject = { ...this.filterObject, ...localObj };
-			url = this.replace(url, '+', '%2B');
-			url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
-			url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
-			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-			url = this.replace(url, '{{DURATION}}', `${this.duration}`);
-			url = this.replace(url, '{{STEP}}', `${this.step}`);
-			this.pending = true;
-			this.panelService.getPanelData(url).subscribe(
-				(res: any) => {
-					let data = res.data.result;
-					let column = [];
-					if (data && data.length > 0) {
-						for (let key in data[0].metric) {
-							column.push(key);
-						}
-						this.displayedColumns = [ ...column ];
-						this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
-						// this.dataSource = new MatTableDataSource(this.rootDatasource);
-						this.dataSource = new MatTableDataSource([]);
+		// for (let index = 0; index < numberOfCalls; index++) {
+		let url = this.showAgoData
+			? this.item.query[0].spec.query_info.prev_data_url
+			: this.item.query[0].spec.query_info.all_data_url;
+		let localObj = {};
+		let name = this.item.query[0].spec.query_info.title;
+		localObj[name] = true;
+		this.filterObject = { ...this.filterObject, ...localObj };
+		// url = this.replace(url, '+', '%2B');
+		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
+		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
+		url = this.replace(url, '{{STEP}}', `${this.step}`);
+		this.pending = true;
+		this.panelService.getPanelData(url).subscribe(
+			(res: any) => {
+				let data = res.data.result;
+				let column = [];
+				if (data && data.length > 0) {
+					for (let key in data[0].metric) {
+						column.push(key);
 					}
-				},
-				(error) => {
-					this.pending = false;
+					this.displayedColumns = [ ...column ];
+					this.rootDatasource = [ ...this.rootDatasource, ...data.map((result) => result.metric) ];
+					this.dataSource = new MatTableDataSource(this.rootDatasource);
+					// this.dataSource = new MatTableDataSource([]);
 				}
-			);
-		}
+			},
+			(error) => {
+				this.pending = false;
+			}
+		);
+		// }
 	}
 
 	ngOnDestroy(): void {
