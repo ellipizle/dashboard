@@ -84,7 +84,7 @@ const moment = _moment;
 
 
 			.summary-container {
-			width: 80%;
+			width: 98%;
     margin: 0 auto;
     padding-top: 15px;
 
