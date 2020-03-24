@@ -26,28 +26,29 @@ const moment = _moment;
 	template: `
 	<div class="whole"   [style.background-color]="echarts.bg" >
 	<div class="summary" [ngClass]="{'deactivated': !isActive}" (click)="onTableClick(data.name)">
-	<div class="summary-container">
-		  <h3 class="title">{{data?.name}}</h3>
-			  <h2 class="section title">{{data?.result[0]?.value[1] | round}}</h2>
-
-							 <div class="item" *ngIf="change > 0" fxLayout="row">
+			<div class="summary-container">
+		  			<div class="title">{{data?.name}}</div>
+			 		 <div class="section" >{{data?.result[0]?.value[1] | round}}</div>
+			<div>
+					<div class="item" *ngIf="change > 0" fxLayout="row">
 							<span class="material-icons green-color" fxFlex="7%">
 								trending_up
 								</span>
 								<span fxFlex="grow">Increased by {{changeRate}} from {{duration}} ago</span>
-							</div>
-							<div class="item" *ngIf="change < 0" fxLayout="row">
+					</div>
+					<div class="item" *ngIf="change < 0" fxLayout="row">
 							<span class="material-icons red-color" fxFlex="7%">
 								trending_down
 								</span>
-								<span fxFlex="grow">Increased by {{changeRate}} from {{duration}} ago</span>
-							</div>
-								<div class="item" *ngIf="change == 0" fxLayout="row">
+								<span fxFlex="grow">Decreased by {{changeRate}} from {{duration}} ago</span>
+					</div>
+					<div class="item" *ngIf="change == 0" fxLayout="row">
 							<span class="material-icons " fxFlex="7%">
 								remove
 								</span>
 								<span fxFlex="grow">Increased by {{changeRate}} from {{duration}} ago</span>
-							</div>
+					</div>
+					</div>
 			</div>
 			</div>
 			</div>
@@ -56,12 +57,13 @@ const moment = _moment;
 	`,
 	styles: [
 		`
+		.title{
+			font-size:2.5rem
+		}
 		.whole {
 	cursor: pointer;
 			}
-		.summary:hover {
 
-			}
 		.green-color{
 			color:green
 		}
@@ -70,36 +72,33 @@ const moment = _moment;
 		}
 		.item-text{
 			display:inline-block;
+
 		}
-				.item-icon{
+		.item-icon{
 			display:inline-block;
 		}
 		.echart {
-	height: calc(100% - 158px);
-	width: 100%;
-}
-			h2,
-			h3 {
-				margin-bottom: 2px;
-			}
+			height: calc(100% - 295px);
+			width: 100%;
+		}
 
-				.summary-container {
-					width: 80%;
+
+			.summary-container {
+			width: 80%;
     margin: 0 auto;
+    padding-top: 15px;
+
 				}
-			.container {
-				padding: 0 16px;
-			}
-			.mat-progress-bar {
-				height: 22px;
-			}
-.section{
-	display:inline-block;
-	    font-size: 64px;
-    padding: 15px;
+
+		.section{
+display: inline-block;
+    font-size: 9rem;
+    padding: 45px;
+    margin-top: 25px;
 }
-.percentage{
-	float:right
+.item{
+		padding: 15px;
+			font-size:1.5rem
 }
 
 			.deactivated{
@@ -126,7 +125,9 @@ export class SummaryChartItemComponent implements AfterViewInit, OnDestroy {
 	changeRate: any;
 	change: any;
 	pending: boolean;
+
 	detailView: boolean;
+
 	@HostListener('window:resize', [ '$event' ])
 	onResized(event) {
 		this.cd.detectChanges();
@@ -164,6 +165,7 @@ export class SummaryChartItemComponent implements AfterViewInit, OnDestroy {
 		this.route.events.subscribe((res) => {
 			let url = this.location.path().split('/');
 			if (url[2] && url[2] == 'panel') {
+				console.log('is detail panel');
 				this.detailView = true;
 			} else {
 				this.detailView = false;
@@ -208,7 +210,7 @@ export class SummaryChartItemComponent implements AfterViewInit, OnDestroy {
 	onChartClick(event: any, type: string) {
 		let data = {};
 		data['name'] = 'filter';
-		data['filters'] = event['seriesName'];
+		data['filters'] = event['value'][0];
 		this.filter.emit(data);
 	}
 	replace(value, matchingString, replacerString) {
@@ -300,7 +302,12 @@ export class SummaryChartItemComponent implements AfterViewInit, OnDestroy {
 				} else {
 					this.changeRate = change;
 				}
-				this.drawBar(this.formatSeries(res[3].data));
+				// this.drawBar(this.formatSeries(res[3].data));
+				this.dBar(res[3].data);
+				let url = this.location.path().split('/');
+				if (url[2] && url[2] == 'panel') {
+					this.onTableClick(this.data.name);
+				}
 			},
 			(error) => {
 				this.pending = false;
@@ -331,7 +338,63 @@ export class SummaryChartItemComponent implements AfterViewInit, OnDestroy {
 		});
 		return { xAxis: xAxisList, series: dataArray, legend: legend };
 	}
+	dBar(data) {
+		const colors: any = this.colors;
+		const echarts: any = this.echarts;
+		var self = this;
+		this.options = {
+			backgroundColor: echarts.bg,
+			color: [ colors.infoLight ],
+			legend: {},
+			grid: {
+				show: false,
+				top: '2%',
+				left: '1%',
+				right: '1%',
+				bottom: '5%'
+			},
+			tooltip: {
+				trigger: 'axis',
+				formatter: function(params) {
+					return `	${moment.unix(params[0].axisValueLabel).format('M/D/Y, h:mm a')} : ${params[0].value[1]} `;
+				}
+			},
+			dataset: {
+				source: data.result[0].values
+			},
+			xAxis: {
+				type: 'category',
+				axisLabel: {
+					show: false
+				},
+				axisLine: {
+					show: false
+				},
+				axisTick: {
+					show: false
+				}
+			},
+			yAxis: {
+				axisLabel: {
+					show: false
+				},
+				axisLine: {
+					show: false
+				},
+				axisTick: {
+					show: false
+				},
 
+				splitLine: {
+					show: false,
+					lineStyle: {
+						color: echarts.splitLineColor
+					}
+				}
+			},
+			series: [ { type: 'bar' } ]
+		};
+	}
 	drawBar(data) {
 		console.log(data);
 		const colors: any = this.colors;
@@ -339,9 +402,9 @@ export class SummaryChartItemComponent implements AfterViewInit, OnDestroy {
 		var self = this;
 		this.options = {
 			backgroundColor: echarts.bg,
-			color: [ colors.primaryLight ],
+			color: [ colors.infoLight ],
 			tooltip: {
-				trigger: 'axis',
+				trigger: 'cross',
 				axisPointer: {
 					type: 'shadow'
 				}

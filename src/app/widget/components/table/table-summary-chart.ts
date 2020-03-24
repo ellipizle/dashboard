@@ -194,7 +194,8 @@ export class TableSummaryChartComponent implements AfterViewInit, OnDestroy {
 		this.dataSource = new MatTableDataSource([]);
 		let url = this.item.query[0].spec.query_info.filtered_data_url;
 		let t = moment.utc().unix() - moment.unix(parseInt(this._excludeSegmentItemID)).utc().unix();
-		url = this.replace(url, '{{OFFSET_IN_MIN}}', `${t}`);
+		let min = Math.round(t / 60);
+		url = this.replace(url, '{{OFFSET_IN_MIN}}', `${min}`);
 		url = this.replace(url, '{{STARTTIME}}', `${this.startTime}`);
 		url = this.replace(url, '{{ENDTIME}}', `${this.endTime}`);
 		url = this.replace(url, '{{DURATION}}', `${this.duration}`);
