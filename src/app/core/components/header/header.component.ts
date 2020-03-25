@@ -81,7 +81,9 @@ export class HeaderComponent implements OnInit {
 		this.dash.spec.dashboard_layouts[0].layout = JSON.stringify(layout);
 		// if(this.dash.spec)
 		this.dashboardSvc.saveDashboard(this.dash).subscribe(
-			(res) => {
+			(res: any) => {
+				// console.log(res)
+				this.dash = res;
 				this.noticeSvc.openSnackBar('Dashboard saved successfully', '');
 			},
 			(error) => {
