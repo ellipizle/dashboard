@@ -1,4 +1,32 @@
+ <div class="whole"   [style.background-color]="echarts.bg" >
+	<div class="summary" [ngClass]="{'deactivated': !isActive}" (click)="onTableClick(data.name)">
+			<div class="summary-container">
+		  			<div class="title">{{data?.name}}</div>
+			 		 <div class="section" >{{data?.result[0]?.value[1] | round}}</div>
+			<div>
+					<div class="item" *ngIf="change > 0" fxLayout="row">
+							<span class="material-icons green-color" fxFlex="7%">
+								trending_up
+								</span>
+								<span fxFlex="grow">Increased by <span class="green-color">{{changeRate}}</span> from {{duration}} ago</span>
+					</div>
+					<div class="item" *ngIf="change < 0" fxLayout="row">
+							<span class="material-icons red-color" fxFlex="7%">
+								trending_down
+								</span>
+								<span fxFlex="grow">Decreased by <span class="red-color">{{changeRate}}</span> from {{duration}} ago</span>
+					</div>
+					<div class="item" *ngIf="change == 0" fxLayout="row">
+							<span class="material-icons " fxFlex="7%">
+								remove
+								</span>
+								<span fxFlex="grow">Increased by <span class="">{{changeRate}}</span> from {{duration}} ago</span>
+					</div>
+					</div>
+			</div>
+			</div>
 
 
-   <app-summary-chart-item  *ngFor="let data of item.query; let i = index" [query]="data"  [index]="i"  [item]="item" (filter)="filter.emit($event)"  (total)="onTotal($event)"></app-summary-chart-item>
 
+	<div echarts [options]="options"  (chartClick)="onChartClick($event, 'chartClick')" style="height:100px" (chartInit)="onChartInit($event)"></div>
+	</div>

@@ -17,7 +17,6 @@ import { TableSummaryComponent } from './components/table/table-summary';
 import { TableSummaryChartComponent } from './components/table/table-summary-chart';
 import { SummaryComponent } from './components/summary/summary.component';
 import { SummaryItemComponent } from './components/summary/summary-item';
-import { SummaryChartItemComponent } from './components/summary-chart/summary-chart-item';
 import { SummaryChartComponent } from './components/summary-chart/summary-chart.component';
 import { NgxGaugeModule } from 'ngx-gauge';
 import { GaugeModule } from 'angular-gauge';
@@ -37,7 +36,6 @@ const COMPONENTS = [
 	SummaryItemComponent,
 	TablePieComponent,
 	BarHorizontalComponent,
-	SummaryChartItemComponent,
 	SummaryChartComponent,
 	TableSummaryChartComponent
 ];

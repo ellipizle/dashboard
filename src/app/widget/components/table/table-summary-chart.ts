@@ -28,9 +28,7 @@ const moment = _moment;
 			<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 			</mat-form-field>
 		</div>
-		<div class="field table-toggle">
-			<mat-slide-toggle [(ngModel)]="showAgoData" (change)="onToggleData($event.checked)">Show {{duration}} ago data</mat-slide-toggle>
-		</div>
+
   </div>
   <mat-table #table [dataSource]="dataSource" matSort>
     <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
@@ -54,9 +52,9 @@ export class TableSummaryChartComponent implements AfterViewInit, OnDestroy {
 		if (query && query.name == 'filter') {
 			this.currentView = 'filter';
 			this._excludeSegmentItemID = query.filters;
-			if (this.isShowTable) {
-				this.getFilterData();
-			}
+			// if (this.isShowTable) {
+			this.getFilterData();
+			// }
 		} else if (query && query.name == 'all') {
 			this.isShowTable = query.filter;
 			if (this.isShowTable) {
