@@ -232,6 +232,7 @@ export class SummaryItemComponent implements AfterViewInit, OnDestroy {
 				let currentData = res[0].data;
 				let previousData = res[1].data;
 				let totalData = res[2].data;
+				console.log(res);
 				this.realValue =
 					parseInt(currentData.result[0].value[1]) / parseInt(totalData.result[0].value[1]) * 100;
 				let change = Math.round(currentData.result[0].value[1]) - Math.round(previousData.result[0].value[1]);

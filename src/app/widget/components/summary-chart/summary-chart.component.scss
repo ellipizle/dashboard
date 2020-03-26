@@ -1,12 +1,18 @@
 :host {
-	margin-top: 30px;
+	// margin-top: 30px;
 	.title {
 		color: rgba(0, 0, 0, .54);
 		font-size: 2rem;
+		margin: 5px 0 30px 0;
+	}
+	.item-wrapper {
+		height: 130px;
+		// text-align: center;
 	}
 	.whole {
 		cursor: pointer;
-		padding: 10px;
+		padding: 0px 10px;
+		height: 330px;
 	}
 
 	.green-color {
@@ -16,24 +22,34 @@
 		color: red;
 	}
 	.item-text {
-		display: inline-block;
+		// display: inline-block;
+		margin: auto;
+		line-height: 25px;
 	}
 	.item-icon {
 		display: inline-block;
+	}
+	.material-icons {
+		font-size: 54px;
+		width: 100% !important;
+		height: 100% !important;
 	}
 	.echart {
 		height: calc(100% - 405px);
 		width: 100%;
 		position: relative;
+		margin-top: 50px;
 	}
 
 	.summary-container {
 		width: 98%;
 		margin: 0 auto;
-		padding-top: 15px;
+		padding-top: 0 15px;
+		height: 150px;
 	}
+
 	.summary {
-		margin-top: 10px;
+		margin-bottom: 50px;
 	}
 	.summary-title {
 		font-size: 24px;
@@ -43,13 +59,12 @@
 	}
 
 	.section {
-		display: inline-block;
-		font-size: 7rem;
-		padding: 50px 2px 4px 0px;
-		margin-top: 10px;
+		text-align: center;
+		margin: auto 0;
+		font-size: 5rem;
 	}
 	.item {
-		padding: 15px;
+		margin: auto 0;
 		font-size: 1.5rem;
 	}
 

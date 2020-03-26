@@ -7,7 +7,8 @@ import {
 	HostListener,
 	ChangeDetectorRef,
 	Input,
-	OnDestroy
+	OnDestroy,
+	ViewEncapsulation
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -192,8 +193,10 @@ export class SummaryChartComponent implements OnDestroy {
 			(res: any) => {
 				res[0].data['name'] = this.item.query[0].spec.query_info.title;
 				this.data = res[0].data;
+				console.log(res);
 				if (this.index == 0) {
 					let percentage = {};
+					console.log(res[2].data.result[0].value[1]);
 					percentage['value'] = res[2].data.result[0].value[1];
 					percentage['label'] = this.item.query[0].spec.query_info.total_label;
 					this.total.emit(percentage);
@@ -243,7 +246,7 @@ export class SummaryChartComponent implements OnDestroy {
 				top: '5%',
 				left: '1%',
 				right: '1%',
-				bottom: '0%'
+				bottom: '0'
 			},
 			tooltip: {
 				trigger: 'axis',
