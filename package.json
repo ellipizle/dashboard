@@ -38,7 +38,7 @@
 		"ngx-echarts": "^4.2.2",
 		"ngx-gauge": "^1.0.0-beta.12",
 		"ngx-mat-daterange-picker": "^1.1.4",
-		"node-sass": "^4.12.0",
+		"node-sass": "^7.0.0",
 		"npx": "^10.2.2",
 		"rxjs": "~6.4.0",
 		"saturn-datepicker": "^7.4.0",
